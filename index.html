@@ -1,0 +1,1190 @@
+<!doctype html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pensora · Finanzrechner</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect x='3' y='2' width='3.2' height='20' rx='0.4' fill='%23fafafa'/%3E%3Ccircle cx='15' cy='8' r='5' fill='%23fafafa'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--bg1:#0a0a0a;--bg2:#111;--bg3:#161616;--line:#1c1c1c;--line2:#262626;--fg:#fafafa;--fg2:#a3a3a3;--fg3:#6b6b6b;--fg4:#404040;--loss:#FF6B6B;--loss-dim:rgba(255,107,107,0.12);--sans:'Geist',system-ui,sans-serif;--mono:'Geist Mono',ui-monospace,monospace;--rmd:12px;--rlg:18px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--fg)}
+body{font-family:var(--sans);-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","tnum";line-height:1.45;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}input,select,textarea{font-family:inherit;color:var(--fg)}
+a{color:inherit;text-decoration:none}
+/* nav */ .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
+.brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px;letter-spacing:-.035em;background:none;border:none;color:var(--fg);cursor:pointer}
+/* btns */ .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 18px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--fg);font-size:14px;font-weight:500;transition:background .15s;cursor:pointer}
+.btn:hover{background:var(--bg3);border-color:#333}.btnp{background:var(--fg);border-color:var(--fg);color:var(--bg);font-weight:600}.btnp:hover{background:#fff}.btng{border-color:transparent;color:var(--fg2)}.btng:hover{color:var(--fg);background:var(--bg2)}
+.btnlg{height:52px;padding:0 28px;font-size:15px}.btnxl{height:60px;padding:0 36px;font-size:16px;border-radius:999px;width:100%}
+/* cards */ .card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--rlg);padding:24px}.cardf{background:transparent;border:1px solid var(--line);border-radius:var(--rlg);padding:24px}
+/* type */ .stat{font-family:var(--sans);font-feature-settings:"tnum","zero","ss01";letter-spacing:-.045em;line-height:.95;font-weight:500}
+.ey{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3);font-weight:500}
+.h1{font-size:88px;line-height:.98;letter-spacing:-.045em;font-weight:600}.h2{font-size:56px;line-height:1.02;letter-spacing:-.035em;font-weight:600}
+.lead{font-size:19px;color:var(--fg2);line-height:1.5;letter-spacing:-.005em}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:500;background:var(--bg2);color:var(--fg2);border:1px solid var(--line)}
+.badgew{background:var(--loss-dim);color:var(--loss);border-color:rgba(255,107,107,.28)}
+/* form */ .lbl{font-size:13px;color:var(--fg2);font-weight:500}.hint{font-size:12px;color:var(--fg3)}
+.inp{height:48px;padding:0 16px;background:var(--bg1);border:1px solid var(--line2);border-radius:var(--rmd);color:var(--fg);font-size:15px;width:100%;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.inp:focus{outline:none;border-color:var(--fg2);background:var(--bg2)}
+.sel{height:48px;padding:0 16px;background:var(--bg1);border:1px solid var(--line2);border-radius:var(--rmd);color:var(--fg);font-size:15px;width:100%;appearance:none;-webkit-appearance:none}
+.sel:focus{outline:none;border-color:var(--fg2);background:var(--bg2)}
+.sw{position:relative}.sw::after{content:"";position:absolute;right:14px;top:50%;transform:translateY(-50%);border:5px solid transparent;border-top-color:var(--fg3);pointer-events:none}
+.sfx{display:flex;align-items:center;background:var(--bg1);border:1px solid var(--line2);border-radius:var(--rmd);overflow:hidden}
+.sfx input{flex:1;height:48px;padding:0 16px;border:0;color:var(--fg);font-size:15px;background:transparent;-webkit-appearance:none;appearance:none}.sfx input:focus{outline:none}
+.sfxt{padding:0 14px;color:var(--fg3);font-size:13px;border-left:1px solid var(--line);height:100%;display:flex;align-items:center;font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.seg{display:inline-flex;padding:3px;background:var(--bg1);border:1px solid var(--line);border-radius:var(--rmd)}
+.seg button{height:36px;padding:0 14px;border:0;background:transparent;color:var(--fg2);border-radius:9px;font-size:13px;font-weight:500;transition:all .15s;cursor:pointer}
+.seg button.on{background:var(--bg3);color:var(--fg);box-shadow:0 0 0 1px var(--line2) inset}
+.segf{display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+.tog{width:40px;height:22px;border-radius:999px;background:var(--bg3);border:1px solid var(--line2);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tog::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--fg2);transition:transform .2s,background .2s}
+.tog.on{background:var(--fg);border-color:var(--fg)}.tog.on::after{transform:translateX(18px);background:var(--bg)}
+.stepper{display:flex;gap:6px}.step{height:3px;flex:1;background:var(--bg3);border-radius:999px;overflow:hidden}
+.step.done{background:var(--fg)}.step.active{position:relative}.step.active::after{content:"";position:absolute;inset:0;width:50%;background:var(--fg);border-radius:999px}
+/* layout */ .row{display:flex;align-items:center}.col{display:flex;flex-direction:column}.grow{flex:1}
+.g8{gap:8px}.g12{gap:12px}.g16{gap:16px}.g20{gap:20px}.g24{gap:24px}.g32{gap:32px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mt40{margin-top:40px}
+.bart{height:8px;background:var(--bg3);border-radius:999px;overflow:hidden}.barf{height:100%;border-radius:999px;background:var(--fg);transition:width .5s}
+/* screens */ .screen{display:none}.screen.active{display:block}
+.vscr{overflow-y:auto;height:calc(100vh - 73px)}.fbody{overflow-y:auto;height:calc(100vh - 125px)}
+table{border-collapse:collapse;width:100%}tr{border-top:1px solid var(--line)}tr:first-child{border-top:none}td{padding:12px 0;font-size:13px}
+input[type=range]{width:100%;height:4px;accent-color:var(--fg);cursor:pointer}
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;font-family:var(--mono)}
+.ti{flex:1;padding:20px 28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}.ti:last-child{border-right:0}
+.tl{color:var(--fg3);font-size:10px;letter-spacing:.1em;text-transform:uppercase}.tv{color:var(--fg);font-weight:500;font-size:20px}.td{color:var(--fg3);font-size:11px}
+.foot{border-top:1px solid var(--line);padding:56px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;color:var(--fg3);font-size:13px}
+.foot h5{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg2);margin:0 0 16px;font-weight:500}
+.foot a{display:block;color:var(--fg3);padding:5px 0;cursor:pointer}.foot a:hover{color:var(--fg)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style></head><body>
+<div id="s-hub" class="screen active">
+<nav class="nav">
+  <button class="brand"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+  <div class="row g32"><a style="font-size:13px;color:var(--fg2)">Über uns</a><a style="font-size:13px;color:var(--fg2)">Kontakt</a></div>
+  <button class="btn btnp" onclick="alert('Calendly-Link einfügen')">Beratung buchen</button>
+</nav>
+<div class="vscr">
+<section style="padding:88px 56px 72px">
+  <div style="max-width:900px">
+    <div class="ey" style="margin-bottom:20px">Finanzrechner · 2025 · Geprüfte Formeln</div>
+    <h1 class="h1" style="margin-bottom:24px">Deine Finanzen.<br/><span style="color:var(--fg3)">Klartext.</span></h1>
+    <p class="lead" style="max-width:56ch;margin-bottom:40px">Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungscheck. Keine Anmeldung. Daten bleiben lokal.</p>
+  </div>
+</section>
+<div class="ticker">
+  <div class="ti"><div class="tl">Rentenwert 2025 (DRV)</div><div class="tv">40,79 €/EP</div><div class="td">ab 01.07.2025</div></div>
+  <div class="ti"><div class="tl">Rürup-Max 2025 (§10 EStG)</div><div class="tv">29.344 €</div><div class="td">Single · 100% absetzbar</div></div>
+  <div class="ti"><div class="tl">Ruhegehaltssatz-Max</div><div class="tv">71,75 %</div><div class="td">§ 14 BeamtVG</div></div>
+  <div class="ti"><div class="tl">Ø Versorgungslücke</div><div class="tv">938 €/Mo.</div><div class="td">Lehrkräfte</div></div>
+</div>
+<section style="padding:72px 56px 96px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+<div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('pension')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">01</span>
+        <span class="badge">Beamte</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">Pensionsrechner</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">Beamtenpension nach § 14 BeamtVG mit korrekter Ruhegehaltssatz-Formel, Mindestversorgung, Steuer und KV.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">§ 14 BeamtVG</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">17 Bundesländer</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">PKV/GKV Beihilfe</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div><div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('rente')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">02</span>
+        <span class="badge">Angestellte</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">Rentenrechner</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">Gesetzliche Rente nach § 64 SGB VI. Entgeltpunkte, Rentenwert 2025, Besteuerungsanteil und Rentenlücke.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">§ 64 SGB VI</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Rentenwert 40,79€</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Besteuerungsanteil</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div><div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('depot')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">03</span>
+        <span class="badge">ETF · Altersvorsorge</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">AV-Depot-Rechner</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">ETF-Altersvorsorge: Zinseszins-Depot, reale Rendite, 4%-Entnahmerate und Sparrate zum Ziel.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Zinseszins-Formel</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">4%-Regel</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Realrendite</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div><div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('ruerup')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">04</span>
+        <span class="badge">Steueroptimierung</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">Rürup-Rechner</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">Steuerlicher Vorteil der Basisrente nach § 10 EStG. 100% absetzbar 2025. Netto-Kosten und Rentenprognose.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">§ 10 EStG</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">100% absetzbar</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">ETF-Rürup</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div><div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('cashflow')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">05</span>
+        <span class="badge">Finanzplanung</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">Cashflow-Rechner</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">Monatlichen Cashflow analysieren: empfohlene Aufteilung für AV, Vermögensaufbau und Liquidität.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">50/15/15 Regel</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Notgroschen-Ziel</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Direkt zu AV-Rechner</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div><div class="card" style="cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='var(--fg2)'" onmouseout="this.style.borderColor='var(--line)'" onclick="showCalc('versicherung')">
+      <div class="row" style="justify-content:space-between;margin-bottom:20px">
+        <span style="font-size:11px;font-family:var(--mono);color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">06</span>
+        <span class="badge">Marktvergleich</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:10px">Versicherungscheck</h3>
+      <p style="font-size:14px;color:var(--fg2);line-height:1.55;margin-bottom:20px">Vergleich deiner Versicherungskosten mit dem Marktdurchschnitt 2025. Einsparpotenzial konkret beziffern.</p>
+      <div class="row g8" style="flex-wrap:wrap"><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">GDV-Daten 2025</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">8 Kategorien</span><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Vertragscheck-CTA</span></div>
+      <div class="row" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);justify-content:flex-end"><span style="font-size:13px;color:var(--fg2)">Starten →</span></div>
+    </div></div></section>
+<footer class="foot">
+  <div><div class="brand" style="margin-bottom:16px"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</div><p>Unabhängige Finanzplanung.<br/>Keine Provisionen. Nur Klarheit.</p></div>
+  <div><h5>Rechner</h5><a onclick="showCalc('pension')">Pensionsrechner</a><a onclick="showCalc('rente')">Rentenrechner</a><a onclick="showCalc('depot')">AV-Depot-Rechner</a><a onclick="showCalc('ruerup')">Rürup-Rechner</a></div>
+  <div><h5>Tools</h5><a onclick="showCalc('cashflow')">Cashflow-Rechner</a><a onclick="showCalc('versicherung')">Versicherungscheck</a></div>
+  <div><h5>Rechtliches</h5><a>Impressum</a><a>Datenschutz</a><a>BaFin-Hinweise</a></div>
+</footer></div></div>
+<div id="s-pension" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Pensionsrechner</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button></div>
+</nav>
+<div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <div class="row g12"><span id="p-ctr" style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase"></span><span id="p-sn" style="font-size:15px;font-weight:500"></span></div>
+    <span id="p-pct" style="font-family:var(--mono);font-size:13px;color:var(--fg)"></span>
+  </div>
+  <div id="p-st" class="stepper"></div>
+</div>
+<div class="fbody">
+<div style="display:grid;grid-template-columns:1fr 320px">
+<div style="padding:36px 56px">
+  <div id="p-ey" class="ey"></div>
+  <h2 id="p-title" style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1"></h2>
+  <p id="p-desc" style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px"></p>
+  <div id="p-c" style="margin-top:28px"></div>
+  <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
+    <button id="p-back" class="btn btnlg" onclick="pBack()">← Zurück</button>
+    <div class="row g12">
+      <button class="btn btng" onclick="pNext()">Überspringen</button>
+      <button id="p-next" class="btn btnp btnlg" onclick="pNext()">Weiter →</button>
+    </div>
+  </div>
+</div>
+<aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)"><div class="ey" style="margin-bottom:14px">Zwischenstand</div>
+<div class="row g8" style="align-items:baseline"><span class="stat" id="p-sn" style="font-size:52px">–</span><span style="color:var(--fg2)"> €</span></div>
+<div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Netto / Monat · vorläufig</div>
+<div style="margin-top:16px;height:6px;border-radius:999px;background:var(--bg3);overflow:hidden"><div id="p-sb" style="height:100%;background:var(--fg);width:0%;transition:width .4s"></div></div>
+<div class="row" style="justify-content:space-between;margin-top:8px;font-size:11px;color:var(--fg3);font-family:var(--mono)"><span id="p-spct">0 % v. Brutto</span><span>Ziel: 80 %</span></div>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
+  <div class="row" style="justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)"><span style="color:var(--fg3)">Versorgungsziel</span><span id="p-sz" style="font-family:var(--mono)">–</span></div>
+  <div class="row" style="justify-content:space-between;padding:8px 0"><span style="color:var(--fg3)">Lücke</span><span id="p-sl" style="font-family:var(--mono)">–</span></div>
+</div></aside>
+</div></div></div><div id="s-pension-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Pension</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('pension')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="pr-c" style="padding:36px 56px 80px"></div></div></div><div id="s-rente" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Rentenrechner</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button></div>
+</nav>
+<div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <div class="row g12"><span id="r-ctr" style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase"></span><span id="r-sn" style="font-size:15px;font-weight:500"></span></div>
+    <span id="r-pct" style="font-family:var(--mono);font-size:13px;color:var(--fg)"></span>
+  </div>
+  <div id="r-st" class="stepper"></div>
+</div>
+<div class="fbody">
+<div style="display:grid;grid-template-columns:1fr 320px">
+<div style="padding:36px 56px">
+  <div id="r-ey" class="ey"></div>
+  <h2 id="r-title" style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1"></h2>
+  <p id="r-desc" style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px"></p>
+  <div id="r-c" style="margin-top:28px"></div>
+  <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
+    <button id="r-back" class="btn btnlg" onclick="rBack()">← Zurück</button>
+    <div class="row g12">
+      <button class="btn btng" onclick="rNext()">Überspringen</button>
+      <button id="r-next" class="btn btnp btnlg" onclick="rNext()">Weiter →</button>
+    </div>
+  </div>
+</div>
+<aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)"><div class="ey" style="margin-bottom:14px">Rentenvorschau</div>
+<div class="row g8" style="align-items:baseline"><span class="stat" id="r-sn" style="font-size:52px">–</span><span style="color:var(--fg2)"> €</span></div>
+<div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Nettorente / Monat</div>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
+  <div class="row" style="justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)"><span style="color:var(--fg3)">Entgeltpunkte</span><span id="r-sep" style="font-family:var(--mono)">–</span></div>
+  <div class="row" style="justify-content:space-between;padding:8px 0"><span style="color:var(--fg3)">Rentenlücke</span><span id="r-sl" style="font-family:var(--mono)">–</span></div>
+</div></aside>
+</div></div></div><div id="s-rente-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Rente</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('rente')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="rr-c" style="padding:36px 56px 80px"></div></div></div><div id="s-depot" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">AV-Depot-Rechner</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button></div>
+</nav>
+<div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <div class="row g12"><span id="d-ctr" style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase"></span><span id="d-sn" style="font-size:15px;font-weight:500"></span></div>
+    <span id="d-pct" style="font-family:var(--mono);font-size:13px;color:var(--fg)"></span>
+  </div>
+  <div id="d-st" class="stepper"></div>
+</div>
+<div class="fbody">
+<div style="display:grid;grid-template-columns:1fr 320px">
+<div style="padding:36px 56px">
+  <div id="d-ey" class="ey"></div>
+  <h2 id="d-title" style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1"></h2>
+  <p id="d-desc" style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px"></p>
+  <div id="d-c" style="margin-top:28px"></div>
+  <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
+    <button id="d-back" class="btn btnlg" onclick="dBack()">← Zurück</button>
+    <div class="row g12">
+      <button class="btn btng" onclick="dNext()">Überspringen</button>
+      <button id="d-next" class="btn btnp btnlg" onclick="dNext()">Weiter →</button>
+    </div>
+  </div>
+</div>
+<aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)"><div class="ey" style="margin-bottom:14px">Depot-Vorschau</div>
+<div class="stat" id="d-sn" style="font-size:40px">–</div>
+<div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Depotgröße</div>
+<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
+  <div class="row" style="justify-content:space-between;padding:8px 0"><span style="color:var(--fg3)">4%-Entnahme</span><span id="d-se" style="font-family:var(--mono)">–</span></div>
+</div></aside>
+</div></div></div><div id="s-depot-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Depot</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('depot')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="dr-c" style="padding:36px 56px 80px"></div></div></div><div id="s-ruerup" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Rürup-Rechner</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button></div>
+</nav>
+<div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <div class="row g12"><span id="ru-ctr" style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase"></span><span id="ru-sn" style="font-size:15px;font-weight:500"></span></div>
+    <span id="ru-pct" style="font-family:var(--mono);font-size:13px;color:var(--fg)"></span>
+  </div>
+  <div id="ru-st" class="stepper"></div>
+</div>
+<div class="fbody">
+<div style="display:grid;grid-template-columns:1fr 320px">
+<div style="padding:36px 56px">
+  <div id="ru-ey" class="ey"></div>
+  <h2 id="ru-title" style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1"></h2>
+  <p id="ru-desc" style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px"></p>
+  <div id="ru-c" style="margin-top:28px"></div>
+  <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
+    <button id="ru-back" class="btn btnlg" onclick="ruBack()">← Zurück</button>
+    <div class="row g12">
+      <button class="btn btng" onclick="ruNext()">Überspringen</button>
+      <button id="ru-next" class="btn btnp btnlg" onclick="ruNext()">Weiter →</button>
+    </div>
+  </div>
+</div>
+<aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)"><div class="ey" style="margin-bottom:14px">Steuervorteil</div>
+<div class="stat" id="ru-sv" style="font-size:40px">–</div>
+<div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">€ / Monat gespart</div>
+<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
+  <div class="row" style="justify-content:space-between;padding:8px 0"><span style="color:var(--fg3)">Monatsrente (netto)</span><span id="ru-sr" style="font-family:var(--mono)">–</span></div>
+</div></aside>
+</div></div></div><div id="s-ruerup-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Rürup</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('ruerup')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="rur-c" style="padding:36px 56px 80px"></div></div></div><div id="s-cashflow" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Cashflow-Rechner</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button></div>
+</nav>
+<div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="row" style="justify-content:space-between;margin-bottom:10px">
+    <div class="row g12"><span id="c-ctr" style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase"></span><span id="c-sn" style="font-size:15px;font-weight:500"></span></div>
+    <span id="c-pct" style="font-family:var(--mono);font-size:13px;color:var(--fg)"></span>
+  </div>
+  <div id="c-st" class="stepper"></div>
+</div>
+<div class="fbody">
+<div style="display:grid;grid-template-columns:1fr 320px">
+<div style="padding:36px 56px">
+  <div id="c-ey" class="ey"></div>
+  <h2 id="c-title" style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1"></h2>
+  <p id="c-desc" style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px"></p>
+  <div id="c-c" style="margin-top:28px"></div>
+  <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
+    <button id="c-back" class="btn btnlg" onclick="cBack()">← Zurück</button>
+    <div class="row g12">
+      <button class="btn btng" onclick="cNext()">Überspringen</button>
+      <button id="c-next" class="btn btnp btnlg" onclick="cNext()">Weiter →</button>
+    </div>
+  </div>
+</div>
+<aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)"><div class="ey" style="margin-bottom:14px">Cashflow</div>
+<div class="stat" id="c-sf" style="font-size:40px">–</div>
+<div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">Freier Cashflow</div>
+<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
+  <div class="row" style="justify-content:space-between;padding:8px 0"><span style="color:var(--fg3)">AV aktuell</span><span id="c-sav" style="font-family:var(--mono)">–</span></div>
+</div></aside>
+</div></div></div><div id="s-cashflow-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Cashflow</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('cashflow')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="cr-c" style="padding:36px 56px 80px"></div></div></div><div id="s-versicherung" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Versicherungscheck</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btnp" onclick="vCalc()">Analyse starten →</button></div>
+</nav>
+<div class="vscr"><div style="padding:36px 56px;max-width:900px">
+  <div class="ey" style="margin-bottom:12px">Versicherungscheck · Marktdurchschnitt 2025 (GDV, Check24)</div>
+  <h2 style="font-size:40px;font-weight:500;letter-spacing:-.03em;margin-bottom:12px">Was zahlst du für Versicherungen?</h2>
+  <p style="font-size:15px;color:var(--fg2);margin-bottom:12px">Gib deine monatlichen Beiträge ein — Pensora vergleicht sie mit dem Marktdurchschnitt 2025 und zeigt Einsparpotenzial.</p>
+  <div id="v-live-total" style="font-family:var(--mono);font-size:14px;color:var(--fg3);margin-bottom:24px;padding:12px 16px;background:var(--bg2);border-radius:var(--rmd);border:1px solid var(--line)">0 €/Mo. gesamt</div>
+  <div id="v-form" style="display:grid;grid-template-columns:1fr 1fr;gap:20px"></div>
+  <div class="row" style="margin-top:32px;justify-content:flex-end">
+    <button class="btn btnp btnlg" onclick="vCalc()">Analyse starten →</button>
+  </div>
+</div></div></div><div id="s-versicherung-r" class="screen">
+<nav class="nav">
+  <div class="row g16">
+    <button class="brand" onclick="gotoHub()"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</button>
+    <span style="color:var(--line2);font-size:16px">/</span>
+    <span style="color:var(--fg2);font-size:14px">Ergebnis · Versicherungscheck</span>
+  </div>
+  <div class="row g8"><button class="btn btng" onclick="gotoHub()">← Hub</button><button class="btn btng" onclick="showCalc('versicherung')">← Neu berechnen</button><button class="btn btnp" onclick="alert('Calendly')">Beratung buchen →</button></div>
+</nav>
+<div class="vscr"><div id="vr-c" style="padding:36px 56px 80px"></div></div></div><script>
+// ── Utils ──────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const de0 = new Intl.NumberFormat('de-DE',{maximumFractionDigits:0});
+const de1 = new Intl.NumberFormat('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1});
+const fmtE = n => de0.format(Math.round(Math.abs(n)))+' €';
+const fmtP = n => de1.format(n*100)+' %';
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const e=$(id);if(e)e.classList.add('active');window.scrollTo(0,0);}
+function gotoHub(){showScreen('s-hub');}
+function showCalc(n){
+  initAll();
+  switch(n){
+    case 'pension':   pStep=0;showScreen('s-pension');renderP();break;
+    case 'rente':     rStep=0;showScreen('s-rente');renderR();break;
+    case 'depot':     dStep=0;showScreen('s-depot');renderD();break;
+    case 'ruerup':    ruStep=0;showScreen('s-ruerup');renderRu();break;
+    case 'cashflow':  cStep=0;showScreen('s-cashflow');renderC();break;
+    case 'versicherung':showScreen('s-versicherung');renderVForm();break;
+  }
+}
+function segOn(btn){const s=btn.closest('.seg');if(s)s.querySelectorAll('button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function togClick(el,onL,offL){el.classList.toggle('on');const on=el.classList.contains('on');const lb=el.nextElementSibling;if(lb)lb.textContent=on?onL:offL;return on;}
+function stpr(id,tot,cur){const e=$(id);if(!e)return;e.innerHTML=Array.from({length:tot},(_,i)=>`<div class="step ${i<cur?'done':i===cur?'active':''}"></div>`).join('');}
+function taxDE(zvE,kirche){
+  let e=0;
+  if(zvE>12096){if(zvE<=17443)e=(zvE-12096)*0.14;else if(zvE<=68480)e=(zvE-17443)*0.24+750;else if(zvE<=277825)e=(zvE-68480)*0.42+12896+750;else e=(zvE-277825)*0.45+(277825-68480)*0.42+12896+750;}
+  const k=kirche?e*0.09:0,s=e<18130?0:e*0.055;
+  return{e,k,s,tot:e+k+s};
+}
+
+// ── SHARED CHART HELPERS ────────────────────────────────────────────────────
+function lineChart(series, years, opts={}) {
+  const w=800,h=280,pad=40;
+  const allVals=series.flatMap(s=>s.data);
+  const maxY=Math.max(...allVals)*1.12;
+  const xs=i=>pad+(i/(years))*(w-pad*2);
+  const ys=v=>h-pad-Math.max(0,Math.min(v/maxY,1))*(h-pad*2);
+  const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+  const area=arr=>`M${xs(0)},${h-pad} ${arr.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(arr.length-1)},${h-pad} Z`;
+  const yr=new Date().getFullYear();
+  const labels=[0,.25,.5,.75,1].map(f=>Math.round(f*maxY));
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    <defs>${series.map((s,i)=>s.fill?`<linearGradient id="lg${i}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${s.color}" stop-opacity=".3"/><stop offset="100%" stop-color="${s.color}" stop-opacity="0"/></linearGradient>`:''). join('')}</defs>
+    ${labels.map(v=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(v).toFixed(1)}" y2="${ys(v).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${v>0?'stroke-dasharray="2 3"':''}/>
+      <text x="${pad-6}" y="${(ys(v)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(v/1000))}k</text>`).join('')}
+    ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*years)).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${yr+Math.round(f*years)}</text>`).join('')}
+    ${series.map((s,i)=>s.fill?`<path d="${area(s.data)}" fill="url(#lg${i})"/>`:'').join('')}
+    ${series.map((s,i)=>`<path d="${path(s.data)}" stroke="${s.color}" stroke-width="${s.width||2}" fill="none" ${s.dash?`stroke-dasharray="${s.dash}"`:''}/>`).join('')}
+    ${series[0]?`<circle cx="${xs(0)}" cy="${ys(series[0].data[0]).toFixed(1)}" r="5" fill="${series[0].color}"/>`:''}
+  </svg>`;
+}
+
+function barChart(bars, title='') {
+  const max=Math.max(...bars.map(b=>b.val))*1.1;
+  const w=800,h=200,pad=40,bw=Math.floor((w-pad*2)/bars.length*0.6);
+  const xs=i=>pad+(i+0.2)*(w-pad*2)/bars.length;
+  const ys=v=>h-pad-Math.max(0,v/max)*(h-pad*1.5);
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*max).toFixed(1)}" y2="${ys(f*max).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+      <text x="${pad-6}" y="${(ys(f*max)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*max/1000))}k</text>`).join('')}
+    ${bars.map((b,i)=>`
+      <rect x="${xs(i)}" y="${ys(b.val).toFixed(1)}" width="${bw}" height="${(h-pad-ys(b.val)).toFixed(1)}" fill="${b.color}" rx="3"/>
+      <text x="${(xs(i)+bw/2).toFixed(1)}" y="${(ys(b.val)-6).toFixed(1)}" fill="${b.color}" font-size="11" font-family="'Geist Mono',ui-monospace" text-anchor="middle" font-weight="600">${de0.format(Math.round(b.val))}</text>
+      <text x="${(xs(i)+bw/2).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${b.label}</text>`).join('')}
+  </svg>`;
+}
+
+function legend(items){
+  return `<div class="row g24" style="flex-wrap:wrap;font-size:12px;color:var(--fg2);font-family:var(--mono)">${items.map(([c,l,d])=>`<span><span style="display:inline-block;width:14px;height:${d?'0':d===false?'10px':'2px'};${d===false?`background:${c};border-radius:2px`:d?`border-top:2px ${d} ${c};vertical-align:middle`:`background:${c};vertical-align:middle`};margin-right:8px"></span>${l}</span>`).join('')}</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// PENSIONSRECHNER — § 14 BeamtVG
+// ════════════════════════════════════════════════════════════════════════════
+const MINDEST={'Baden-Württemberg':1936,'Bayern':1920,'Berlin':1810,'Brandenburg':1780,'Bremen':1800,'Hamburg':1940,'Hessen':1880,'Mecklenburg-Vorpommern':1730,'Niedersachsen':1800,'Nordrhein-Westfalen':1850,'Rheinland-Pfalz':1790,'Saarland':1760,'Sachsen':1740,'Sachsen-Anhalt':1740,'Schleswig-Holstein':1800,'Thüringen':1740,'Bund (Bundesbeamte)':1870};
+const BESO={'A9':[2720,2820,2930,3050,3150,3250,3350,3450,3550,3630,3700,3700],'A10':[2950,3060,3190,3330,3460,3590,3720,3850,3980,4110,4110,4110],'A11':[3260,3400,3560,3730,3900,4080,4250,4430,4620,4800,4980,4980],'A12':[3580,3730,3920,4110,4310,4510,4710,4920,5130,5340,5550,5750],'A13':[4150,4320,4510,4720,4940,5170,5400,5630,5860,5860,5860,5860],'A14':[4500,4700,4920,5160,5410,5660,5910,6160,6420,6420,6420,6420],'A15':[4980,5210,5460,5720,5990,6260,6540,6810,7090,7360,7360,7360],'A16':[5510,5780,6060,6360,6660,6960,7270,7550,7550,7550,7550,7550],'B3':[6800,6800,6800,6800,6800,6800,6800,6800,6800,6800,6800,6800],'B4':[7200,7200,7200,7200,7200,7200,7200,7200,7200,7200,7200,7200]};
+function getBeso(gr,st){const t=BESO[gr]||BESO['A13'];return t[Math.min(Math.max(parseInt(st)-1,0),11)]||4000;}
+
+let P={},pStep=0;
+const PS=[{label:'Stammdaten',ey:'Stammdaten',title:'Wer bist du — und wann hast du angefangen?',desc:'Geburtsdatum, Diensteintritt, Bundesland und Kirchensteuerpflicht legen das Fundament.'},
+{label:'Akt. Besoldung',ey:'Aktuelle Besoldung',title:'Was verdienst du heute?',desc:'Besoldungsgruppe und Erfahrungsstufe nach Besoldungsordnung A, B oder W (BW-Tabelle 2025).'},
+{label:'Perspektive',ey:'Perspektivische Besoldung',title:'Wo siehst du dich am Ende deiner Laufbahn?',desc:'Pensora rechnet die voraussichtliche Endbesoldung in den Ruhegehaltssatz ein.'},
+{label:'Zeiterfassung',ey:'Zeiterfassung',title:'Hattest du Phasen mit reduzierter Dienstzeit?',desc:'Elternzeit, Beurlaubung und Teilzeit wirken sich unterschiedlich aus (§ 6, § 9, § 12a BeamtVG).'},
+{label:'Annahmen',ey:'Annahmen',title:'Wie stellst du dir deinen Ruhestand vor?',desc:'Pensionseintrittsalter, Lebenserwartung und Besoldungssteigerung.'},
+{label:'KV',ey:'Krankenversicherung',title:'GKV oder PKV im Ruhestand?',desc:'Beamte haben Beihilfeanspruch im Ruhestand — das senkt den KV-Eigenanteil.'},
+{label:'Ziel',ey:'Versorgungsziel',title:'Mit wie viel Geld möchtest du im Ruhestand leben?',desc:'Gib deinen monatlichen Netto-Wunschbetrag an — Pensora berechnet die Versorgungslücke.'}];
+
+function initP(){P={gebdat:'14.08.1986',dienst:'01.09.2012',bund:'Nordrhein-Westfalen',kirche:'Nein',bGr:'A13',bSt:'8',zusatz:0,pGr:'A14',pSt:'10',pZusatz:120,eltern:false,elternJ:2.5,beurl:false,beurlJ:0,tz:false,tzJ:6,tzPct:75,pensAlter:67,lebErw:87,steigerung:1.8,kv:'GKV',kvB:380,beihilfe:70,zielEur:3000,vorsorge:0};}
+
+function calcP(){
+  const yr=new Date().getFullYear();
+  const gb=parseInt((P.gebdat||'').split('.')[2])||1986;
+  const ej=parseInt((P.dienst||'').split('.')[2])||2012;
+  const alter=yr-gb,jbp=Math.max(P.pensAlter-alter,0);
+  let dj=Math.max(yr-ej,0);
+  if(P.beurl)dj=Math.max(dj-P.beurlJ,0);
+  let djK=dj;
+  if(P.tz&&P.tzJ>0){const vz=dj-P.tzJ;djK=Math.max(vz,0)+P.tzJ*(P.tzPct/100);}
+  const gdj=djK+jbp,satz=Math.min(gdj*0.0179375,0.7175);
+  const mindest=MINDEST[P.bund]||1850;
+  const aktB=getBeso(P.bGr,P.bSt)+(P.zusatz||0);
+  const pB=getBeso(P.pGr,P.pSt)+(P.pZusatz||0);
+  const eg=pB*Math.pow(1+P.steigerung/100,jbp);
+  const brutto=Math.max(eg*satz,mindest);
+  const jb=brutto*12,vfb=Math.min(jb*0.144,1080);
+  const zvE=Math.max(jb-vfb-102,0);
+  const tax=taxDE(zvE,P.kirche==='Ja');
+  const stM=tax.tot/12;
+  let kv=P.kv==='PKV'?P.kvB*(1-P.beihilfe/100):brutto*0.083;
+  const pv=brutto*0.034,kvpv=kv+pv;
+  const netto=brutto-stM-kvpv;
+  const nettoR=netto/Math.pow(1.021,jbp);
+  const luecke=Math.max(P.zielEur-netto,0);
+  const jruh=Math.max(P.lebErw-P.pensAlter,0);
+  const kum=netto*12*jruh,kapB=luecke*12*jruh;
+  const r=0.035/12,n=jbp*12;
+  const vwert=n>0?(P.vorsorge||0)*((Math.pow(1+r,n)-1)/r):0;
+  const restK=Math.max(kapB-vwert,0);
+  let spar=0;if(restK>0&&n>0)spar=(r*restK)/(Math.pow(1+r,n)-1);
+  return{alter,jbp,gdj:Math.round(gdj*10)/10,satz,eg,brutto,stM,kvpv,netto,nettoR,luecke,kum,kapB,restK,spar,pensJ:yr+jbp,jruh,aktB,mindest,vfb,zvE,tax};
+}
+
+function pSide(){
+  try{const r=calcP();
+    $('p-sn').textContent=de0.format(Math.round(r.netto));
+    const pct=r.brutto>0?Math.min(r.netto/r.brutto*100,100):0;
+    $('p-sb').style.width=pct.toFixed(1)+'%';
+    $('p-spct').textContent=pct.toFixed(1).replace('.',',')+' % v. Brutto';
+    $('p-sz').textContent=fmtE(P.zielEur);
+    $('p-sl').textContent=r.luecke>0?'−'+fmtE(r.luecke)+'/Mo.':'✓ Gedeckt';
+    $('p-sl').style.color=r.luecke>0?'var(--loss)':'var(--fg)';
+  }catch(e){}
+  const kf=$('p-kvf');if(kf)kf.style.display=P.kv==='PKV'?'grid':'none';
+  const gi=$('p-gkvi');if(gi)gi.style.display=P.kv==='GKV'?'block':'none';
+  const bp=$('p-bprev');if(bp)bp.textContent=de0.format(getBeso(P.bGr,parseInt(P.bSt))+P.zusatz)+' €';
+  const yr=new Date().getFullYear(),gb=parseInt((P.gebdat||'').split('.')[2])||1986;
+  const alter=yr-gb,jbp=Math.max(P.pensAlter-alter,0);
+  const pp=$('p-prev4');if(pp)pp.innerHTML=[['Alter heute',alter+' J'],['Bis Pension',jbp+' J'],['Im Ruhestand',Math.max(P.lebErw-P.pensAlter,0)+' J'],['Pensionsjahr',yr+jbp]].map(([l,v])=>`<div><div class="ey" style="margin-bottom:6px">${l}</div><div class="stat" style="font-size:24px">${v}</div></div>`).join('');
+  const lp=$('p-lp');if(lp){try{const r=calcP();lp.innerHTML=`<div class="ey" style="color:var(--loss);margin-bottom:10px">Vorschau Versorgungslücke</div><div class="stat" style="font-size:52px;color:${r.luecke>0?'var(--loss)':'var(--fg)'}">${r.luecke>0?'−'+de0.format(Math.round(r.luecke))+' €/Mo.':'✓ Gedeckt'}</div><div style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px">Ziel: ${fmtE(P.zielEur)} · Netto: ${fmtE(r.netto)} · Brutto: ${fmtE(r.brutto)}</div>`;}catch(e){}}
+}
+
+const LAENDER=Object.keys(MINDEST);
+function renderP(){
+  stpr('p-st',PS.length,pStep);
+  const s=PS[pStep];
+  $('p-ctr').textContent='Schritt '+String(pStep+1).padStart(2,'0')+' · '+String(PS.length).padStart(2,'0');
+  ['p-ey','p-title','p-desc'].forEach((id,i)=>{const e=$(id);if(e)e.textContent=[s.ey,s.title,s.desc][i];});
+  $('p-pct').textContent=Math.round(pStep/PS.length*100)+' %';
+  $('p-back').style.opacity=pStep===0?'0.3':'1';
+  $('p-back').style.pointerEvents=pStep===0?'none':'auto';
+  $('p-next').textContent=pStep===PS.length-1?'Pension berechnen →':'Weiter zu '+PS[Math.min(pStep+1,PS.length-1)].label+' →';
+  const c=$('p-c');c.innerHTML='';
+  const g2='display:grid;grid-template-columns:1fr 1fr;gap:20px';
+  const g3='display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px';
+  const F=(l,h,ch)=>`<div class="col g8"><label class="lbl">${l}</label>${ch}${h?`<span class="hint">${h}</span>`:''}</div>`;
+  const I=(v,k)=>`<input class="inp" type="text" value="${v}" oninput="P.${k}=this.value;pSide()"/>`;
+  const N=(v,k,mn,mx)=>`<input class="inp" type="number" value="${v}" min="${mn}" max="${mx}" oninput="P.${k}=+this.value;pSide()"/>`;
+  const S=(v,k,opts)=>`<div class="sw"><select class="sel" onchange="P.${k}=this.value;pSide()">${opts.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('')}</select></div>`;
+  const SG=(v,k,opts)=>`<div class="seg segf">${opts.map(o=>`<button class="${o===v?'on':''}" onclick="P.${k}='${o}';segOn(this);pSide()">${o}</button>`).join('')}</div>`;
+  const SFX=(v,k,sfx,st='1')=>`<div class="sfx"><input type="number" step="${st}" value="${v}" oninput="P.${k}=+this.value;pSide()"/><span class="sfxt">${sfx}</span></div>`;
+
+  if(pStep===0)c.innerHTML=`<div style="${g2};margin-bottom:20px">${F('Geburtsdatum','TT.MM.JJJJ',I(P.gebdat,'gebdat'))}${F('Diensteintritt','TT.MM.JJJJ',I(P.dienst,'dienst'))}</div><div style="${g2}">${F('Bundesland',null,S(P.bund,'bund',LAENDER))}${F('Kirchensteuerpflichtig?',null,SG(P.kirche,'kirche',['Ja','Nein']))}</div>`;
+  if(pStep===1)c.innerHTML=`<div style="${g3}"><div>${F('Besoldungsgruppe',null,S(P.bGr,'bGr',Object.keys(BESO)))}</div><div><div class="col g8"><label class="lbl">Erfahrungsstufe</label><div class="sw"><select class="sel" onchange="P.bSt=this.value;pSide()">${[1,2,3,4,5,6,7,8,9,10,11,12].map(s=>`<option ${String(s)===String(P.bSt)?'selected':''}>${s}</option>`).join('')}</select></div></div></div>${F('Zus. Zulagen','z.B. Funktionszulage',SFX(P.zusatz,'zusatz','€/Mo.'))}</div><div class="card mt20" style="background:var(--bg2)"><div class="ey" style="margin-bottom:10px">Bruttogehalt (Schätzung BW 2025)</div><div id="p-bprev" class="stat" style="font-size:40px">–</div></div>`;
+  if(pStep===2)c.innerHTML=`<div style="${g3}"><div>${F('Besoldungsgruppe Ziel',null,S(P.pGr,'pGr',Object.keys(BESO)))}</div><div><div class="col g8"><label class="lbl">Erfahrungsstufe Ziel</label><div class="sw"><select class="sel" onchange="P.pSt=this.value;pSide()">${[1,2,3,4,5,6,7,8,9,10,11,12].map(s=>`<option ${String(s)===String(P.pSt)?'selected':''}>${s}</option>`).join('')}</select></div></div></div>${F('Zus. Zulagen Ziel',null,SFX(P.pZusatz,'pZusatz','€/Mo.'))}</div>`;
+  if(pStep===3){const togRow=(id,ti,desc,on,onL,offL,onch,fields)=>`<div class="card"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:24px"><div><h3 style="font-size:16px;font-weight:600;margin-bottom:6px">${ti}</h3><p style="font-size:13px;color:var(--fg2)">${desc}</p></div><div class="row g12"><div id="${id}" class="tog${on?' on':''}" onclick="${onch}"></div><span style="font-size:14px;color:var(--fg2)">${on?onL:offL}</span></div></div>${fields}</div>`;
+    c.innerHTML=`<div class="col g16">${togRow('p-te','Elternzeit','Teilweise als Dienstzeit anerkannt (§ 12a BeamtVG).',P.eltern,'Erfasst','Nicht relevant','P.eltern=togClick(this,"Erfasst","Nicht relevant");pSide();document.getElementById("p-ef").style.display=P.eltern?"grid":"none"',`<div id="p-ef" style="display:${P.eltern?'grid':'none'};grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">${F('Gesamtdauer',null,SFX(P.elternJ,'elternJ','Jahre','0.5'))}${F('Zeitraum (ca.)',null,'<input class="inp" type="text" placeholder="z.B. 2014–2016"/>')}</div>`)}${togRow('p-tb','Beurlaubung','Zählt nicht als Dienstzeit (§ 9 BeamtVG).',P.beurl,'Erfasst','Nicht relevant','P.beurl=togClick(this,"Erfasst","Nicht relevant");pSide();document.getElementById("p-bf").style.display=P.beurl?"block":"none"',`<div id="p-bf" style="display:${P.beurl?'block':'none'};margin-top:16px">${SFX(P.beurlJ,'beurlJ','Jahre','0.5')}</div>`)}${togRow('p-tt','Teilzeit','Reduziert Ruhegehaltssatz (§ 6 Abs. 1 BeamtVG).',P.tz,'Erfasst','Nicht relevant','P.tz=togClick(this,"Erfasst","Nicht relevant");pSide();document.getElementById("p-tf").style.display=P.tz?"grid":"none"',`<div id="p-tf" style="display:${P.tz?'grid':'none'};grid-template-columns:1fr 2fr;gap:12px;margin-top:16px">${SFX(P.tzJ,'tzJ','Jahre','0.5')}<div class="seg segf">${[50,60,75,85,100].map(p=>`<button class="${p===P.tzPct?'on':''}" onclick="P.tzPct=${p};segOn(this);pSide()">${p} %</button>`).join('')}</div></div>`)}</div>`;}
+  if(pStep===4)c.innerHTML=`<div style="${g3}">${F('Pensionseintrittsalter','Regelgrenze: 67 Jahre',N(P.pensAlter,'pensAlter',55,70))}${F('Lebenserwartung','Statistisch: 84–88 Jahre',N(P.lebErw,'lebErw',70,100))}${F('Besoldungssteigerung p.a.','Ø: 1,5–2,0 %',SFX(P.steigerung,'steigerung','% p.a.','0.1'))}</div><div class="card mt20"><div class="ey" style="margin-bottom:16px">Auf dieser Basis</div><div id="p-prev4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px"></div></div>`;
+  if(pStep===5)c.innerHTML=`<div class="col g20"><div class="col g8"><label class="lbl">Krankenversicherung im Ruhestand</label><div class="seg segf">${['GKV','PKV'].map(o=>`<button class="${o===P.kv?'on':''}" onclick="P.kv='${o}';segOn(this);pSide()">${o==='GKV'?'Gesetzlich (GKV)':'Privat (PKV)'}</button>`).join('')}</div></div><div id="p-kvf" style="display:${P.kv==='PKV'?'grid':'none'};grid-template-columns:1fr 1fr;gap:20px">${F('PKV-Beitrag',null,SFX(P.kvB,'kvB','€/Mo.'))}${F('Beihilfesatz im Ruhestand','Beamte: typisch 70 %',`<div class="seg segf">${[50,60,70,80].map(p=>`<button class="${p===P.beihilfe?'on':''}" onclick="P.beihilfe=${p};segOn(this);pSide()">${p} %</button>`).join('')}</div>`)}</div><div id="p-gkvi" class="card" style="${P.kv==='GKV'?'':'display:none'};background:var(--bg2)"><p style="font-size:14px;color:var(--fg2);line-height:1.6">GKV-Rentner zahlen ~8,3 % der Bruttopension als KV-Beitrag + 3,4 % Pflegeversicherung.</p></div></div>`;
+  if(pStep===6)c.innerHTML=`<div class="col g20"><div class="col g8"><label class="lbl">Mit wie viel Netto-Monatsbetrag kannst du deinen Lebensstil halten?</label><div class="sfx" style="font-size:20px"><input type="number" step="50" value="${P.zielEur}" style="font-size:20px;font-weight:500" oninput="P.zielEur=+this.value;pSide()"/><span class="sfxt" style="font-size:15px">€ / Monat netto</span></div><span class="hint">Tipp: Miete + Essen + Freizeit + Rücklagen monatlich</span></div>${F('Bestehende monatliche Vorsorge','Rürup, Riester, ETF-Sparplan …',SFX(P.vorsorge,'vorsorge','€/Mo.'))}<div class="card" id="p-lp" style="border-color:rgba(255,107,107,.25)"></div></div>`;
+  pSide();
+}
+function pBack(){if(pStep>0){pStep--;renderP();}}
+function pNext(){if(pStep<PS.length-1){pStep++;renderP();}else{renderPResult();showScreen('s-pension-r');}}
+
+function pensionChart(r){
+  const yrs=30;
+  // Pension nominal, Pension real, Klassisches Sparbuch (0.5% p.a.), Versorgungsziel
+  const pension=Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1.018,i));
+  const pensionR=Array.from({length:yrs+1},(_,i)=>r.netto/Math.pow(1.021,i));
+  const sparbuch=Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1.003,i)); // 0.3% real = typical savings
+  const ziel=Array.from({length:yrs+1},(_,i)=>P.zielEur);
+  return lineChart([
+    {data:pension,color:'#fafafa',fill:true,width:2},
+    {data:pensionR,color:'#a3a3a3',dash:'3 3',width:1.5},
+    {data:sparbuch,color:'#FF6B6B',dash:'4 2',width:1.5},
+    {data:ziel,color:'#6b6b6b',dash:'6 3',width:1},
+  ],yrs);
+}
+
+function renderPResult(){
+  const r=calcP();
+  // Reale Versorgungslücke = Ziel minus inflationsbereinigte Nettopension (die echte Zahl)
+  const realLuecke=Math.max(P.zielEur-r.nettoR,0);
+  const lifetimeLoss=Math.round(realLuecke*12*r.jruh/1000)*1000;
+  const sl=[[r.spar,'Heute starten'],[r.spar*Math.pow(1.035,5),'+5 Jahre'],[r.spar*Math.pow(1.035,10),'+10 Jahre'],[r.spar*Math.pow(1.035,15),'+15 Jahre']];
+  const yr=new Date().getFullYear();
+  const realOk=r.nettoR>=P.zielEur;
+  $('pr-c').innerHTML=`
+<div class="ey" style="margin-bottom:20px">Pensionsanalyse · ${P.bGr} · St.${P.bSt} · ${P.bund.split('-')[0]} · ${yr}</div>
+<!-- HERO: Reale Kaufkraft zuerst -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+  <div style="padding:32px;border-radius:var(--rlg);background:${realOk?'rgba(250,250,250,0.04)':'var(--loss-dim)'};border:2px solid ${realOk?'var(--fg)':'var(--loss)'}">
+    <div class="ey" style="color:${realOk?'var(--fg3)':'var(--loss)'};margin-bottom:16px">
+      Deine reale Kaufkraft im Ruhestand · ${r.pensJ}
+    </div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+      <span class="stat" style="font-size:80px;color:${realOk?'var(--fg)':'var(--loss)'}">${de0.format(Math.round(r.nettoR))}</span>
+      <span style="font-size:22px;color:var(--fg2)">€/Mo.</span>
+    </div>
+    <div style="font-size:13px;color:var(--fg3);margin-bottom:16px">= heutige Kaufkraft deiner Pension in ${r.jbp} Jahren (2,1 % Inflation)</div>
+    <div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:12px;color:var(--fg3)">
+      Nominale Pension: <span style="font-family:var(--mono);color:var(--fg)">${fmtE(r.netto)}/Mo.</span> ·
+      Inflationsverlust: <span style="font-family:var(--mono);color:var(--loss)">−${fmtE(r.netto-r.nettoR)}/Mo.</span>
+    </div>
+  </div>
+  <div style="padding:32px;border-radius:var(--rlg);background:var(--loss-dim);border:2px solid var(--loss)">
+    <div class="ey" style="color:var(--loss);margin-bottom:16px">Reale Versorgungslücke (inflationsbereinigt)</div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+      <span class="stat" style="font-size:80px;color:var(--loss)">${realLuecke>0?'−'+de0.format(Math.round(realLuecke)):'✓'}</span>
+      <span style="font-size:22px;color:rgba(255,107,107,.6)">${realLuecke>0?'€/Mo.':''}</span>
+    </div>
+    <div style="font-size:13px;color:rgba(255,107,107,.6);margin-bottom:16px">vs. Versorgungsziel ${fmtE(P.zielEur)}/Mo. netto</div>
+    ${realLuecke>0?`<div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:13px;color:var(--loss);font-weight:600">
+      = ${de0.format(lifetimeLoss)} € weniger über ${r.jruh} Jahre Ruhestand
+    </div>`:'<div style="font-size:13px;color:var(--fg2)">Deine Pension deckt dein Versorgungsziel.</div>'}
+  </div>
+</div>
+<!-- KPI Strip -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--rlg);overflow:hidden;background:var(--bg1);margin-bottom:20px">
+${[['Nominal netto/Mo.',fmtE(r.netto),'ab '+r.pensJ],['Brutto/Mo.',fmtE(r.brutto),'vor Steuer & KV'],['Ruhegehaltssatz',fmtP(r.satz),r.gdj+' Dienstjahre'],['Reale Kaufkraft',fmtE(r.nettoR),'in heutigen €']].map(([l,v,s],i)=>`<div style="padding:20px 24px;border-right:${i<3?'1px solid var(--line)':'0'}"><div class="ey" style="margin-bottom:8px">${l}</div><div class="stat" style="font-size:28px;color:${i===3&&!realOk?'var(--loss)':'var(--fg)'}">${v}</div><div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:4px">${s}</div></div>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<!-- Chart -->
+<div class="cardf" style="padding:28px">
+<div class="row" style="justify-content:space-between;align-items:flex-end;margin-bottom:16px">
+  <div><div class="ey">Entwicklung deiner Pension im Zeitverlauf</div><div style="font-size:13px;color:var(--fg3);margin-top:4px">Nominal vs. real vs. Sparbuch-Vergleich (Negativszenario) vs. Versorgungsziel</div></div>
+</div>
+${pensionChart(r)}
+${legend([['#fafafa','Pension nominal'],['#a3a3a3','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch','4 2'],['#6b6b6b','Versorgungsziel','6 3']])}
+</div>
+<!-- Versorgungsvergleich Bar Chart -->
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:16px">Vergleich Monatsbeträge</div>
+${barChart([
+  {label:'Brutto-\npension',val:r.brutto,color:'#404040'},
+  {label:'Netto-\npension',val:r.netto,color:'#fafafa'},
+  {label:'Real\n(Kaufkraft)',val:r.nettoR,color:'#a3a3a3'},
+  {label:'Versorgungs-\nziel',val:P.zielEur,color:'#6b6b6b'},
+  {label:'Lücke',val:r.luecke,color:'#FF6B6B'},
+],'Monatsbeträge im Vergleich')}
+</div>
+<!-- Details -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="cardf" style="padding:28px"><div class="ey" style="margin-bottom:14px">Abzüge (§ 19 EStG)</div>
+<table>${[['Bruttopension',r.brutto,'var(--fg)',false],['VersorgungsFB',-(r.vfb/12),'var(--fg3)',false],['Einkommensteuer',-r.stM,'var(--loss)',false],['KV + PV',-r.kvpv,'var(--fg3)',false],['Nettopension',r.netto,'var(--fg)',true]].map(([l,v,c,b])=>`<tr><td style="color:${b?'var(--fg)':'var(--fg2)'};font-weight:${b?600:400}"><span style="display:inline-block;width:8px;height:8px;background:${c};border-radius:2px;margin-right:8px"></span>${l}</td><td style="text-align:right;font-family:var(--mono);color:${v<0?'var(--loss)':'var(--fg)'};font-weight:${b?700:500};font-size:${b?15:13}px">${v<0?'−':''}${fmtE(Math.abs(v))}</td></tr>`).join('')}</table></div>
+<div class="cardf" style="padding:28px"><div class="ey" style="margin-bottom:14px">§ 14 BeamtVG Berechnung</div>
+${[['Anrechenb. Dienstj.',r.gdj+' J'],['Ruhegehaltssatz',fmtP(r.satz)],['Max. 71,75 %','40 Dienstjahre'],['Mindestversorgung',fmtE(r.mindest)+'/Mo.']].map(([l,v])=>`<div class="row" style="justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px"><span style="color:var(--fg2)">${l}</span><span style="font-family:var(--mono)">${v}</span></div>`).join('')}
+<div style="margin-top:12px"><div class="bart"><div class="barf" style="width:${(r.satz/0.7175*100).toFixed(1)}%"></div></div><div class="row" style="font-size:10px;color:var(--fg4);margin-top:4px"><span>0%</span><span class="grow" style="text-align:center">${fmtP(r.satz)}</span><span>71,75%</span></div></div>
+</div></div>
+${r.luecke>0?`<div class="card" style="padding:28px"><div class="ey" style="margin-bottom:14px">Sparrate zum Schließen der Lücke (3,5 % p.a.)</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)">${sl.map(([v,k],i)=>`<div style="padding:16px 0;border-right:${i<3?'1px solid var(--line)':'0'};padding-left:${i>0?'16px':'0'}"><div style="font-size:10px;color:${i===0?'var(--fg)':'var(--fg3)'};font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">${k}</div><div style="margin-top:8px;font-family:var(--mono);font-size:22px;color:${i===0?'var(--fg)':'var(--fg2)'};font-weight:500">${fmtE(v)}</div></div>`).join('')}</div></div>`:''}
+</div>
+<!-- CTA Sidebar -->
+<aside style="position:sticky;top:88px">
+<div class="card" style="border-color:var(--fg);position:relative;overflow:hidden">
+<div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div>
+<div class="ey" style="color:var(--loss)">Handlungsbedarf erkannt</div>
+<div style="margin-top:10px;font-family:var(--mono);font-size:28px;font-weight:600;color:var(--loss)" id="cta-loss-num">–</div>
+<div style="font-size:11px;color:rgba(255,107,107,.6);font-family:var(--mono);margin-top:4px;margin-bottom:16px" id="cta-loss-sub">weniger über den Ruhestand</div>
+<h3 style="font-size:20px;font-weight:500;line-height:1.2;color:var(--fg)">Jetzt gegensteuern — bevor die Lücke wächst.</h3>
+<p style="margin-top:10px;color:var(--fg2);font-size:13px;line-height:1.55">30 Min. kostenlos. Unabhängiger Honorarberater. Kein Verkauf.</p>
+<button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly-Link einfügen')">Kostenloses Gespräch buchen →</button>
+<button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('pension')">← Neu berechnen</button>
+<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)"><div class="ey" style="margin-bottom:10px">Weitere Rechner</div>${[['depot','AV-Depot-Rechner'],['ruerup','Rürup-Rechner'],['cashflow','Cashflow-Rechner']].map(([k,l])=>`<button class="btn" style="width:100%;margin-bottom:8px;justify-content:flex-start" onclick="showCalc('${k}')">${l} →</button>`).join('')}</div>
+</div></aside></div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// RENTENRECHNER — § 64 SGB VI — Rentenwert 2025: 40,79 €
+// ════════════════════════════════════════════════════════════════════════════
+const GRV={rv:40.79,rv2026:42.52,de:50493,bbg:96600};
+let R={},rStep=0;
+const RS=[{label:'Person',ey:'Persönliche Daten',title:'Wer bist du?',desc:'Alter und Renteneintrittsalter bestimmen deine Ansparzeit und Entgeltpunkte.'},
+{label:'Einkommen',ey:'Einkommensverlauf',title:'Was verdienst du?',desc:'Dein Bruttogehalt bestimmt die Entgeltpunkte pro Jahr (§ 70 SGB VI). Durchschnittsentgelt 2025: 50.493 €/J.'},
+{label:'Annahmen',ey:'Annahmen',title:'Welche Annahmen sollen gelten?',desc:'Rentenanpassung, Inflation und Lebenserwartung prägen das langfristige Bild. Rentenanpassung 2026: +4,24 %.'},
+{label:'Ziel',ey:'Versorgungsziel',title:'Mit wie viel Geld möchtest du im Ruhestand leben?',desc:'Netto-Wunschbetrag pro Monat — Pensora berechnet die Rentenlücke.'}];
+
+function initR(){R={gebdat:'01.01.1985',rentAlter:67,djBeginn:2010,brutto:60000,wachstum:2.0,kirche:'Nein',ra:1.8,inf:2.1,lebErw:87,vorsorge:0,zielEur:2500};}
+function calcR(){
+  const yr=new Date().getFullYear();
+  const gb=parseInt((R.gebdat||'').split('.')[2])||1985;
+  const alter=yr-gb,jbr=Math.max(R.rentAlter-alter,0);
+  const arbJ=Math.max(yr-R.djBeginn,0),gesJ=arbJ+jbr;
+  const ep=Math.min(R.brutto,GRV.bbg)/GRV.de;
+  const gesEP=Math.min(ep*gesJ,gesJ*1.95);
+  const rvNow=GRV.rv*Math.pow(1+R.ra/100,jbr);
+  const brutto=gesEP*rvNow;
+  const rentJ=yr+jbr;
+  const bestAnt=Math.min(100,83.5+(rentJ-2025)*0.5)/100;
+  const zvE=Math.max(brutto*12*bestAnt-1230,0);
+  const tax=taxDE(zvE,R.kirche==='Ja');
+  const stM=tax.tot/12;
+  const kv=brutto*0.083,pv=brutto*0.034,kvpv=kv+pv;
+  const netto=Math.max(brutto-stM-kvpv,0);
+  const nettoR=netto/Math.pow(1+R.inf/100,jbr);
+  const jruh=Math.max(R.lebErw-R.rentAlter,0);
+  const kum=netto*12*jruh,luecke=Math.max(R.zielEur-netto,0);
+  const kapB=luecke*12*jruh,r35=0.035/12,n=jbr*12;
+  const vwert=n>0?(R.vorsorge||0)*((Math.pow(1+r35,n)-1)/r35):0;
+  const restK=Math.max(kapB-vwert,0);
+  let spar=0;if(restK>0&&n>0)spar=(r35*restK)/(Math.pow(1+r35,n)-1);
+  return{alter,jbr,arbJ,gesJ,ep,gesEP,brutto,stM,kvpv,netto,nettoR,luecke,kum,kapB,restK,spar,rentJ,jruh,bestAnt};
+}
+function rSide(){
+  try{const r=calcR();$('r-sn').textContent=de0.format(Math.round(r.netto));$('r-sep').textContent=r.gesEP.toFixed(1).replace('.',',')+' EP';$('r-sl').textContent=r.luecke>0?'−'+fmtE(r.luecke)+'/Mo.':'✓ Gedeckt';$('r-sl').style.color=r.luecke>0?'var(--loss)':'var(--fg)';}catch(e){}
+  const ep=$('r-ep');if(ep)ep.textContent=(Math.min(R.brutto,GRV.bbg)/GRV.de).toFixed(3).replace('.',',')+' EP/Jahr';
+  try{const r=calcR();const ln=$('r-ln'),lh=$('r-lh');if(ln){ln.textContent=r.luecke>0?'−'+de0.format(Math.round(r.luecke))+' €/Mo.':'✓ Gedeckt';ln.style.color=r.luecke>0?'var(--loss)':'var(--fg)';}if(lh)lh.textContent=`Brutto: ${fmtE(r.brutto)} · Netto: ${fmtE(r.netto)} · Ziel: ${fmtE(R.zielEur)}`;}catch(e){}
+}
+function renderR(){
+  stpr('r-st',RS.length,rStep);const s=RS[rStep];
+  $('r-ctr').textContent='Schritt '+String(rStep+1).padStart(2,'0')+' · '+String(RS.length).padStart(2,'0');
+  ['r-ey','r-title','r-desc'].forEach((id,i)=>{const e=$(id);if(e)e.textContent=[s.ey,s.title,s.desc][i];});
+  $('r-pct').textContent=Math.round(rStep/RS.length*100)+' %';
+  $('r-back').style.opacity=rStep===0?'0.3':'1';$('r-back').style.pointerEvents=rStep===0?'none':'auto';
+  $('r-next').textContent=rStep===RS.length-1?'Rente berechnen →':'Weiter →';
+  const c=$('r-c');c.innerHTML='';
+  const g2='display:grid;grid-template-columns:1fr 1fr;gap:20px';
+  const F=(l,h,ch)=>`<div class="col g8"><label class="lbl">${l}</label>${ch}${h?`<span class="hint">${h}</span>`:''}</div>`;
+  const N=(v,k,mn,mx)=>`<input class="inp" type="number" value="${v}" min="${mn}" max="${mx}" oninput="R.${k}=+this.value;rSide()"/>`;
+  const SFX=(v,k,sfx,st='1')=>`<div class="sfx"><input type="number" step="${st}" value="${v}" oninput="R.${k}=+this.value;rSide()"/><span class="sfxt">${sfx}</span></div>`;
+  const SG=(v,k,opts)=>`<div class="seg segf">${opts.map(o=>`<button class="${o===v?'on':''}" onclick="R.${k}='${o}';segOn(this);rSide()">${o}</button>`).join('')}</div>`;
+  const I=(v,k)=>`<input class="inp" type="text" value="${v}" oninput="R.${k}=this.value;rSide()"/>`;
+  if(rStep===0)c.innerHTML=`<div style="${g2};margin-bottom:20px">${F('Geburtsdatum','TT.MM.JJJJ',I(R.gebdat,'gebdat'))}${F('Renteneintrittsalter','Regelaltersgrenze: 67 J.',N(R.rentAlter,'rentAlter',60,70))}</div><div style="${g2}">${F('Erwerbsbeginn (Jahr)','Ab wann GRV-Beiträge?',N(R.djBeginn,'djBeginn',1970,2025))}${F('Kirchensteuerpflichtig?',null,SG(R.kirche,'kirche',['Ja','Nein']))}</div>`;
+  if(rStep===1)c.innerHTML=`<div class="col g20">${F('Bruttojahresgehalt','Basis für Entgeltpunkte (§ 70 SGB VI) · BBG 2025: 96.600 €/J.',SFX(R.brutto,'brutto','€/Jahr'))}${F('Jährl. Gehaltswachstum','Vereinfachung: konstante Rate',SFX(R.wachstum,'wachstum','% p.a.','0.1'))}<div class="card" style="background:var(--bg2)"><div class="ey" style="margin-bottom:10px">Entgeltpunkte / Jahr (aktuell)</div><div id="r-ep" class="stat" style="font-size:40px">–</div><div style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px">Rentenwert 2025: 40,79 € · DE 2025: 50.493 €/J.</div></div></div>`;
+  if(rStep===2)c.innerHTML=`<div style="${g2};margin-bottom:16px">${F('Rentenanpassung p.a.','Ø: ~1,8 % · 2026: +4,24 %',SFX(R.ra,'ra','% p.a.','0.1'))}${F('Inflation p.a.','Aktuell: ~2,1 %',SFX(R.inf,'inf','% p.a.','0.1'))}</div>${F('Lebenserwartung','Statistisch: 84–88 Jahre',N(R.lebErw,'lebErw',70,100))}`;
+  if(rStep===3)c.innerHTML=`<div class="col g20"><div class="col g8"><label class="lbl">Gewünschtes Netto-Monatseinkommen im Ruhestand</label><div class="sfx" style="font-size:20px"><input type="number" step="50" value="${R.zielEur}" style="font-size:20px;font-weight:500" oninput="R.zielEur=+this.value;rSide()"/><span class="sfxt" style="font-size:15px">€ / Monat netto</span></div></div>${F('Bestehende Vorsorge (monatlich)','Riester, bAV, ETF …',SFX(R.vorsorge,'vorsorge','€/Mo.'))}<div class="card" style="border-color:rgba(255,107,107,.25)"><div class="ey" style="color:var(--loss);margin-bottom:10px">Rentenlücke Vorschau</div><div id="r-ln" class="stat" style="font-size:48px">–</div><div id="r-lh" style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px"></div></div></div>`;
+  rSide();
+}
+function rBack(){if(rStep>0){rStep--;renderR();}}
+function rNext(){if(rStep<RS.length-1){rStep++;renderR();}else{renderRResult();showScreen('s-rente-r');}}
+
+function renteChart(r){
+  const yrs=30;
+  const rente=Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1+R.ra/100,i));
+  const renteR=Array.from({length:yrs+1},(_,i)=>r.netto/Math.pow(1+R.inf/100,i));
+  const sparbuch=Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1.003,i));
+  const ziel=Array.from({length:yrs+1},()=>R.zielEur);
+  return lineChart([{data:rente,color:'#fafafa',fill:true,width:2},{data:renteR,color:'#a3a3a3',dash:'3 3',width:1.5},{data:sparbuch,color:'#FF6B6B',dash:'4 2',width:1.5},{data:ziel,color:'#6b6b6b',dash:'6 3',width:1}],yrs);
+}
+function renderRResult(){
+  const r=calcR();const yr=new Date().getFullYear();
+  const realLuecke=Math.max(R.zielEur-r.nettoR,0);
+  const lifetimeLoss=Math.round(realLuecke*12*r.jruh/1000)*1000;
+  const sl=[[r.spar,'Heute'],[r.spar*Math.pow(1.035,5),'+5 J.'],[r.spar*Math.pow(1.035,10),'+10 J.'],[r.spar*Math.pow(1.035,15),'+15 J.']];
+  const realOk=r.nettoR>=R.zielEur;
+  $('rr-c').innerHTML=`
+<div class="ey" style="margin-bottom:20px">Rentenprognose · ${R.rentAlter} J. · Rentenwert 40,79 € (DRV 2025)</div>
+<!-- HERO: Reale Kaufkraft zuerst -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+  <div style="padding:32px;border-radius:var(--rlg);background:${realOk?'rgba(250,250,250,0.04)':'var(--loss-dim)'};border:2px solid ${realOk?'var(--fg)':'var(--loss)'}">
+    <div class="ey" style="color:${realOk?'var(--fg3)':'var(--loss)'};margin-bottom:16px">
+      Deine reale Kaufkraft im Ruhestand · ${r.rentJ}
+    </div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+      <span class="stat" style="font-size:80px;color:${realOk?'var(--fg)':'var(--loss)'}">${de0.format(Math.round(r.nettoR))}</span>
+      <span style="font-size:22px;color:var(--fg2)">€/Mo.</span>
+    </div>
+    <div style="font-size:13px;color:var(--fg3);margin-bottom:16px">= heutige Kaufkraft deiner Rente in ${r.jbr} Jahren (${R.inf} % Inflation)</div>
+    <div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:12px;color:var(--fg3)">
+      Nominale Rente: <span style="font-family:var(--mono);color:var(--fg)">${fmtE(r.netto)}/Mo.</span> ·
+      Inflationsverlust: <span style="font-family:var(--mono);color:var(--loss)">−${fmtE(r.netto-r.nettoR)}/Mo.</span>
+    </div>
+  </div>
+  <div style="padding:32px;border-radius:var(--rlg);background:var(--loss-dim);border:2px solid var(--loss)">
+    <div class="ey" style="color:var(--loss);margin-bottom:16px">Reale Rentenlücke (inflationsbereinigt)</div>
+    <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+      <span class="stat" style="font-size:80px;color:var(--loss)">${realLuecke>0?'−'+de0.format(Math.round(realLuecke)):'✓'}</span>
+      <span style="font-size:22px;color:rgba(255,107,107,.6)">${realLuecke>0?'€/Mo.':''}</span>
+    </div>
+    <div style="font-size:13px;color:rgba(255,107,107,.6);margin-bottom:16px">vs. Versorgungsziel ${fmtE(R.zielEur)}/Mo. netto</div>
+    ${realLuecke>0?`<div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:13px;color:var(--loss);font-weight:600">
+      = ${de0.format(lifetimeLoss)} € weniger über ${r.jruh} Jahre Ruhestand
+    </div>`:'<div style="font-size:13px;color:var(--fg2)">Deine Rente deckt dein Versorgungsziel.</div>'}
+  </div>
+</div>
+<!-- KPI Strip -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--rlg);overflow:hidden;background:var(--bg1);margin-bottom:20px">
+${[['Nominal netto/Mo.',fmtE(r.netto),'ab '+r.rentJ],['Brutto/Mo.',fmtE(r.brutto),'vor Steuer & KV'],['Entgeltpunkte',r.gesEP.toFixed(1).replace('.',',')+ ' EP',r.gesJ+' Arbeitsjahre'],['Reale Kaufkraft',fmtE(r.nettoR),'in heutigen €']].map(([l,v,s],i)=>`<div style="padding:20px 24px;border-right:${i<3?'1px solid var(--line)':'0'}"><div class="ey" style="margin-bottom:8px">${l}</div><div class="stat" style="font-size:28px;color:${i===3&&!realOk?'var(--loss)':'var(--fg)'}">${v}</div><div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:4px">${s}</div></div>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">Rentenentwicklung im Zeitverlauf · inkl. Sparbuch-Vergleich (Negativszenario)</div>
+${renteChart(r)}
+${legend([['#fafafa','Rente nominal'],['#a3a3a3','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,3 % real)','4 2'],['#6b6b6b','Versorgungsziel','6 3']])}
+</div>
+${r.luecke>0?`<div class="card" style="padding:28px"><div class="ey" style="margin-bottom:14px">Sparrate (3,5 % p.a.)</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)">${sl.map(([v,k],i)=>`<div style="padding:14px 0;border-right:${i<3?'1px solid var(--line)':'0'};padding-left:${i>0?'14px':'0'}"><div style="font-size:10px;color:${i===0?'var(--fg)':'var(--fg3)'};font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em">${k}</div><div style="margin-top:6px;font-family:var(--mono);font-size:20px;color:${i===0?'var(--fg)':'var(--fg2)'};font-weight:500">${fmtE(v)}</div></div>`).join('')}</div></div>`:''}
+<div class="cardf" style="padding:28px"><div class="ey" style="margin-bottom:14px">Abzüge (§ 22 Nr.1 EStG + SGB V)</div>
+<table>${[['Bruttorente',r.brutto,'var(--fg)',false],['Einkommensteuer ('+Math.round(r.bestAnt*100)+' %)',-r.stM,'var(--loss)',false],['KV+PV Rentner',-r.kvpv,'var(--fg3)',false],['Nettorente',r.netto,'var(--fg)',true]].map(([l,v,c,b])=>`<tr><td style="color:${b?'var(--fg)':'var(--fg2)'};font-weight:${b?600:400}"><span style="display:inline-block;width:8px;height:8px;background:${c};border-radius:2px;margin-right:8px"></span>${l}</td><td style="text-align:right;font-family:var(--mono);color:${v<0?'var(--loss)':'var(--fg)'};font-weight:${b?700:500};font-size:${b?15:13}px">${v<0?'−':''}${fmtE(Math.abs(v))}</td></tr>`).join('')}</table>
+</div>
+</div>
+<aside style="position:sticky;top:88px"><div class="card" style="border-color:var(--fg);position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div><h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Plane gegen die Rentenlücke.</h3><button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly')">Beratung buchen →</button><button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('rente')">← Neu berechnen</button><div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)"><div class="ey" style="margin-bottom:10px">Passende Rechner</div>${[['depot','AV-Depot-Rechner'],['ruerup','Rürup-Rechner']].map(([k,l])=>`<button class="btn" style="width:100%;margin-bottom:8px;justify-content:flex-start" onclick="showCalc('${k}')">${l} →</button>`).join('')}</div></div></aside>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ALTERSVORSORGE-DEPOT-RECHNER (ETF vs. Sparbuch)
+// ════════════════════════════════════════════════════════════════════════════
+let D={},dStep=0;
+const DS=[{label:'Sparplan',ey:'Sparplan',title:'Wie viel sparst du monatlich?',desc:'Regelmäßiges Investieren mit dem Zinseszinseffekt ist der Kern des Altersvorsorge-Depots.'},
+{label:'Rendite',ey:'Rendite & Laufzeit',title:'Welche Rendite erwartest du?',desc:'Ein breit gestreutes ETF-Portfolio (MSCI World) erzielte historisch 7–9 % p.a. nominal. Vergleich mit Sparbuch (0,5–1 %) wird automatisch eingeblendet.'},
+{label:'Entnahme',ey:'Entnahmephase',title:'Wie lange willst du entnehmen?',desc:'Die 4%-Regel gilt als nachhaltige Entnahmerate: jährlich 4 % des Depotwertes über 30 Jahre.'},
+{label:'Ziel',ey:'Monatliches Altersvorsorge-Ziel',title:'Wie viel AV-Depot-Rente möchtest du?',desc:'Dein monatlicher Wunschbetrag aus dem Altersvorsorge-Depot — Pensora zeigt, ob deine Sparrate ausreicht.'}];
+function initD(){D={startK:0,spar:300,lz:30,rendite:7.0,inf:2.1,entDauer:20,zielEur:1000};}
+function calcD(){
+  const r=D.rendite/100/12,n=D.lz*12;
+  const fvS=n>0?D.spar*((Math.pow(1+r,n)-1)/r)*(1+r):0;
+  const fvK=D.startK*Math.pow(1+r,n);
+  const fvG=fvS+fvK;
+  const eingez=D.startK+D.spar*n;
+  const gewinn=fvG-eingez;
+  const fvR=fvG/Math.pow(1+D.inf/100,D.lz);
+  const e4=fvG*0.04/12;
+  const rE=r,nE=D.entDauer*12;
+  const eEx=nE>0?fvG*rE/(1-Math.pow(1+rE,-nE)):0;
+  // Sparbuch Vergleich: 0.5% p.a.
+  const rs=0.005/12;
+  const fvSparB=n>0?D.spar*((Math.pow(1+rs,n)-1)/rs)*(1+rs)+D.startK*Math.pow(1+rs,n):D.startK;
+  const e4Spar=fvSparB*0.04/12;
+  const kapZ=D.zielEur*12/0.04;
+  let sparZ=0;if(n>0){const fvKonly=D.startK*Math.pow(1+r,n);const restF=Math.max(kapZ-fvKonly,0);if(restF>0)sparZ=restF*r/((Math.pow(1+r,n)-1)*(1+r));}
+  return{fvG,fvR,eingez,gewinn,e4,eEx,kapZ,sparZ,fvSparB,e4Spar,luecke:Math.max(D.zielEur-e4,0),vorteilGgSparbuch:fvG-fvSparB};
+}
+function dSide(){
+  try{const r=calcD();$('d-sn').textContent=de0.format(Math.round(r.fvG/1000))+'k €';$('d-se').textContent=fmtE(r.e4)+'/Mo.';
+    const fv=$('d-fprev');if(fv)fv.textContent=de0.format(Math.round(r.fvG))+' €';
+    const ep=$('d-eprev'),eh=$('d-eprevh'),es=$('d-eprevs');
+    if(ep){ep.textContent=fmtE(r.e4)+'/Mo.';ep.style.color=r.e4>=D.zielEur?'var(--fg)':'var(--loss)';}
+    if(eh)eh.textContent='ETF-Depot: '+de0.format(Math.round(r.fvG))+'€ · Sparbuch: '+de0.format(Math.round(r.fvSparB))+'€';
+    if(es)es.textContent=r.luecke>0?'Sparrate für Ziel: '+fmtE(r.sparZ)+'/Mo.':'✓ Ziel erreichbar';
+  }catch(e){}
+}
+function renderD(){
+  stpr('d-st',DS.length,dStep);const s=DS[dStep];
+  $('d-ctr').textContent='Schritt '+String(dStep+1).padStart(2,'0')+' · '+String(DS.length).padStart(2,'0');
+  ['d-ey','d-title','d-desc'].forEach((id,i)=>{const e=$(id);if(e)e.textContent=[s.ey,s.title,s.desc][i];});
+  $('d-pct').textContent=Math.round(dStep/DS.length*100)+' %';
+  $('d-back').style.opacity=dStep===0?'0.3':'1';$('d-back').style.pointerEvents=dStep===0?'none':'auto';
+  $('d-next').textContent=dStep===DS.length-1?'Ergebnis berechnen →':'Weiter →';
+  const c=$('d-c');c.innerHTML='';
+  const g2='display:grid;grid-template-columns:1fr 1fr;gap:20px';
+  const F=(l,h,ch)=>`<div class="col g8"><label class="lbl">${l}</label>${ch}${h?`<span class="hint">${h}</span>`:''}</div>`;
+  const SFX=(v,k,sfx,st='1')=>`<div class="sfx"><input type="number" step="${st}" value="${v}" oninput="D.${k}=+this.value;dSide()"/><span class="sfxt">${sfx}</span></div>`;
+  const N=(v,k,mn,mx)=>`<input class="inp" type="number" value="${v}" min="${mn}" max="${mx}" oninput="D.${k}=+this.value;dSide()"/>`;
+  if(dStep===0)c.innerHTML=`<div style="${g2};margin-bottom:16px">${F('Monatliche Sparrate',null,SFX(D.spar,'spar','€/Mo.'))}${F('Startkapital (optional)',null,SFX(D.startK,'startK','€'))}</div>${F('Anspardauer',null,N(D.lz,'lz',1,50))}`;
+  if(dStep===1)c.innerHTML=`<div style="${g2};margin-bottom:16px">${F('Erwartete Rendite p.a. (ETF)','MSCI World Ø: 7–9 % nominal',SFX(D.rendite,'rendite','% p.a.','0.1'))}${F('Inflation p.a.','Aktuell: ~2,1 %',SFX(D.inf,'inf','% p.a.','0.1'))}</div><div class="card" style="background:var(--bg2)"><div class="ey" style="margin-bottom:10px">AV-Depot-Hochrechnung</div><div id="d-fprev" class="stat" style="font-size:48px">–</div><div style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px">ETF-Depot nach Ansparphase</div></div>`;
+  if(dStep===2)c.innerHTML=`${F('Gewünschte Entnahmedauer',null,N(D.entDauer,'entDauer',5,40))}<div class="card mt20"><div class="ey" style="margin-bottom:10px">4-%-Regel (William Bengen, 1994)</div><p style="font-size:14px;color:var(--fg2);line-height:1.6">Jährlich 4 % des Depotwertes entnehmen — das Depot sollte dabei 30+ Jahre halten. Empirisch getestet an US-Aktienmarktdaten 1926–1994.</p></div>`;
+  if(dStep===3)c.innerHTML=`<div class="col g20"><div class="col g8"><label class="lbl">Monatliche Wunsch-Entnahme aus dem AV-Depot</label><div class="sfx" style="font-size:20px"><input type="number" step="50" value="${D.zielEur}" style="font-size:20px;font-weight:500" oninput="D.zielEur=+this.value;dSide()"/><span class="sfxt" style="font-size:15px">€ / Monat</span></div></div><div class="card" style="border-color:rgba(255,107,107,.25)"><div class="ey" style="color:var(--loss);margin-bottom:10px">Vorschau</div><div id="d-eprev" class="stat" style="font-size:48px">–</div><div id="d-eprevh" style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px"></div><div id="d-eprevs" style="font-size:12px;margin-top:6px"></div></div></div>`;
+  dSide();
+}
+function dBack(){if(dStep>0){dStep--;renderD();}}
+function dNext(){if(dStep<DS.length-1){dStep++;renderD();}else{renderDResult();showScreen('s-depot-r');}}
+
+function depotChartSVG(r){
+  const lz=D.lz,w=800,h=280,pad=40,rate=D.rendite/100/12,rs=0.005/12,inf=D.inf/100;
+  const etf=[],sparbuch=[],inputs=[],etfR=[];
+  let accE=D.startK,accS=D.startK;
+  for(let i=0;i<=lz*12;i++){
+    etf.push(accE);etfR.push(accE/Math.pow(1+inf,i/12));
+    sparbuch.push(accS);inputs.push(D.startK+D.spar*i);
+    if(i<lz*12){accE=accE*(1+rate)+D.spar;accS=accS*(1+rs)+D.spar;}
+  }
+  const maxY=Math.max(...etf)*1.05,pts=etf.length;
+  const xs=i=>pad+(i/(pts-1))*(w-pad*2),ys=v=>h-pad-Math.max(0,Math.min(v/maxY,1))*(h-pad*2);
+  const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    <defs><linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#fafafa" stop-opacity=".25"/><stop offset="100%" stop-color="#fafafa" stop-opacity="0"/></linearGradient></defs>
+    ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+      <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
+    ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Jahr ${Math.round(f*lz)}</text>`).join('')}
+    <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#dg)"/>
+    <path d="${path(etf)}" stroke="#fafafa" stroke-width="2" fill="none"/>
+    <path d="${path(etfR)}" stroke="#a3a3a3" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+    <path d="${path(sparbuch)}" stroke="#FF6B6B" stroke-width="2" fill="none"/>
+    <path d="${path(inputs)}" stroke="#404040" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
+  </svg>`;
+}
+
+function renderDResult(){
+  const r=calcD();const yr=new Date().getFullYear();
+  $('dr-c').innerHTML=`
+<div class="ey" style="margin-bottom:12px">AV-Depot-Analyse · ${D.lz} J. Anspar + ${D.entDauer} J. Entnahme · ETF vs. Sparbuch</div>
+<h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">ETF-Vorteil gegenüber Sparbuch: <span>${de0.format(Math.round(r.vorteilGgSparbuch))} €</span></h1>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--rlg);overflow:hidden;background:var(--bg1);margin-bottom:20px">
+${[['ETF-Depotgröße',de0.format(Math.round(r.fvG))+' €','nach '+D.lz+' Jahren'],['Sparbuch-Vergleich',de0.format(Math.round(r.fvSparB))+' €','0,5 % p.a. Negativszenario'],['4%-ETF-Entnahme',fmtE(r.e4)+'/Mo.','4%-Regel'],['Eingezahlt',de0.format(Math.round(r.eingez))+' €','Rendite: '+de0.format(Math.round(r.gewinn))+' €']].map(([l,v,s],i)=>`<div style="padding:24px;border-right:${i<3?'1px solid var(--line)':'0'}"><div class="ey" style="margin-bottom:10px">${l}</div><div class="stat" style="font-size:28px">${v}</div><div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:6px">${s}</div></div>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">ETF-Depot vs. Sparbuch · Wachstumskurve mit Negativszenario</div>
+${depotChartSVG(r)}
+${legend([['#fafafa','ETF-AV-Depot (nominale Rendite)'],['#a3a3a3','ETF real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,5 % p.a.)'],['#404040','Eingezahltes Kapital','4 2']])}
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+${[['ETF-Depot',r.e4,r.fvG,'var(--fg)'],['Sparbuch (0,5 %)',r.e4Spar,r.fvSparB,'var(--loss)'],['Ziel',D.zielEur,r.kapZ,'var(--fg3)']].map(([l,ent,dep,c])=>`<div class="cardf" style="padding:20px"><div class="ey" style="margin-bottom:8px">${l}</div><div class="stat" style="font-size:28px;color:${c}">${fmtE(ent)}/Mo.</div><div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:6px">Depot: ${de0.format(Math.round(dep))} €</div></div>`).join('')}
+</div>
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">ETF vs. Sparbuch: direkter Vergleich nach ${D.lz} Jahren</div>
+${barChart([{label:'ETF-Depot',val:r.fvG,color:'#fafafa'},{label:'ETF real',val:r.fvR,color:'#a3a3a3'},{label:'Sparbuch',val:r.fvSparB,color:'#FF6B6B'},{label:'Eingezahlt',val:r.eingez,color:'#404040'}])}
+</div>
+</div>
+<aside style="position:sticky;top:88px"><div class="card" style="border-color:var(--fg);position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div><h3 style="font-size:22px;font-weight:500;margin-bottom:10px">AV-Depot-Strategie besprechen.</h3><p style="font-size:13px;color:var(--fg2);line-height:1.55">Welche ETFs, welcher Broker, welche steuerliche Optimierung — gemeinsam im Gespräch.</p><button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly')">Beratung buchen →</button><button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('depot')">← Neu berechnen</button><div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)"><div class="ey" style="margin-bottom:10px">Weitere Rechner</div>${[['ruerup','Rürup-Rechner'],['cashflow','Cashflow-Rechner']].map(([k,l])=>`<button class="btn" style="width:100%;margin-bottom:8px;justify-content:flex-start" onclick="showCalc('${k}')">${l} →</button>`).join('')}</div></div></aside>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// RÜRUP-RECHNER — § 10 EStG
+// ════════════════════════════════════════════════════════════════════════════
+const RMAX=29344,RMAX26=30826;
+let Ru={},ruStep=0;
+const RUS=[{label:'Situation',ey:'Persönliche Situation',title:'Wer bist du?',desc:'Selbstständige profitieren oft am stärksten — kein AG-Anteil zur GRV bedeutet mehr Rürup-Spielraum.'},
+{label:'Beitrag',ey:'Beitrag & Steuervorteil',title:'Wie viel möchtest du einzahlen?',desc:'Seit 2023: 100 % der Rürup-Beiträge absetzbar (§ 10 EStG). Max 2025: 29.344 € (Single), 2026: 30.826 €.'},
+{label:'Rendite',ey:'Rendite & Laufzeit',title:'Welche Rendite erwartest du?',desc:'ETF-Rürup ermöglicht marktnahe Renditen bei vollem Steuervorteil. Ø nach Kosten: 5–7 %.'},
+{label:'Rente',ey:'Rentenphase',title:'Ab wann willst du Rürup-Rente beziehen?',desc:'Frühestens ab 62 Jahren (Verträge ab 2012). Lebenslange Auszahlung, nicht kapitalisierbar.'}];
+function initRu(){Ru={selbst:'Nein',brutto:60000,grenzSt:30,kirche:'Nein',mb:300,grvAN:9430,rendite:5.0,inf:2.1,lz:25,rentAlter:67,lebErw:87};}
+function calcRu(){
+  const jB=Ru.mb*12;
+  const grvGes=Ru.selbst==='Ja'?0:Ru.grvAN*2;
+  const sp=Math.max(RMAX-grvGes,0);
+  const absB=Math.min(jB,sp);
+  const steJ=absB*(Ru.grenzSt/100),steM=steJ/12,nettoK=Ru.mb-steM;
+  const r=Ru.rendite/100/12,n=Ru.lz*12;
+  const fv=n>0?Ru.mb*((Math.pow(1+r,n)-1)/r)*(1+r):0;
+  // Sparbuch Vergleich
+  const rs=0.005/12;
+  const fvSparB=n>0?Ru.mb*((Math.pow(1+rs,n)-1)/rs)*(1+rs):0;
+  // Netto-Beitrag Sparbuch (keine Steuerersparnis)
+  const verrF=0.035/12,mRente=fv*verrF;
+  const rentJ=new Date().getFullYear()+Ru.lz;
+  const bestAnt=Math.min(100,83.5+(rentJ-2025)*0.5)/100;
+  const zvE=Math.max(mRente*12*bestAnt-1230,0);
+  const tax=taxDE(zvE,Ru.kirche==='Ja');
+  const nettoR=mRente-tax.tot/12;
+  const gesSte=steJ*Ru.lz;
+  return{jB,sp,absB,steJ,steM,nettoK,fv,fvSparB,mRente,nettoR,bestAnt,gesSte,rentJ,jruh:Math.max(Ru.lebErw-Ru.rentAlter,0)};
+}
+function ruSide(){
+  try{const r=calcRu();$('ru-sv').textContent=fmtE(r.steM)+'/Mo.';$('ru-sr').textContent=fmtE(r.nettoR)+'/Mo.';
+    const sv=$('ru-svprev'),sh=$('ru-sh');
+    if(sv)sv.textContent=fmtE(r.steJ)+' / Jahr';
+    if(sh)sh.textContent='Spielraum 2025: '+de0.format(Math.round(r.sp))+'€ · Absetzbar: '+de0.format(Math.round(r.absB))+'€';
+  }catch(e){}
+}
+function renderRu(){
+  stpr('ru-st',RUS.length,ruStep);const s=RUS[ruStep];
+  $('ru-ctr').textContent='Schritt '+String(ruStep+1).padStart(2,'0')+' · '+String(RUS.length).padStart(2,'0');
+  ['ru-ey','ru-title','ru-desc'].forEach((id,i)=>{const e=$(id);if(e)e.textContent=[s.ey,s.title,s.desc][i];});
+  $('ru-pct').textContent=Math.round(ruStep/RUS.length*100)+' %';
+  $('ru-back').style.opacity=ruStep===0?'0.3':'1';$('ru-back').style.pointerEvents=ruStep===0?'none':'auto';
+  $('ru-next').textContent=ruStep===RUS.length-1?'Rürup berechnen →':'Weiter →';
+  const c=$('ru-c');c.innerHTML='';
+  const g2='display:grid;grid-template-columns:1fr 1fr;gap:20px';
+  const F=(l,h,ch)=>`<div class="col g8"><label class="lbl">${l}</label>${ch}${h?`<span class="hint">${h}</span>`:''}</div>`;
+  const N=(v,k,mn,mx)=>`<input class="inp" type="number" value="${v}" min="${mn}" max="${mx}" oninput="Ru.${k}=+this.value;ruSide()"/>`;
+  const SFX=(v,k,sfx,st='1')=>`<div class="sfx"><input type="number" step="${st}" value="${v}" oninput="Ru.${k}=+this.value;ruSide()"/><span class="sfxt">${sfx}</span></div>`;
+  const SG=(v,k,opts)=>`<div class="seg segf">${opts.map(o=>`<button class="${o===v?'on':''}" onclick="Ru.${k}='${o}';segOn(this);ruSide()">${o}</button>`).join('')}</div>`;
+  if(ruStep===0)c.innerHTML=`<div class="col g20">${F('Selbstständig?','Selbstständige: voller Rürup-Spielraum',SG(Ru.selbst,'selbst',['Ja','Nein']))}${F('Bruttojahresgehalt',null,SFX(Ru.brutto,'brutto','€/Jahr'))}${F('Grenzsteuersatz','~30% bei 60k € · ~42% ab 68k €',SFX(Ru.grenzSt,'grenzSt','%'))}${F('Kirchensteuerpflichtig?',null,SG(Ru.kirche,'kirche',['Ja','Nein']))}</div>`;
+  if(ruStep===1)c.innerHTML=`<div class="col g20"><div class="col g8"><label class="lbl">Monatlicher Rürup-Beitrag</label><div class="sfx" style="font-size:20px"><input type="number" step="25" value="${Ru.mb}" style="font-size:20px;font-weight:500" oninput="Ru.mb=+this.value;ruSide()"/><span class="sfxt" style="font-size:15px">€ / Monat</span></div></div><div class="card" style="background:var(--bg2)"><div class="ey" style="margin-bottom:10px">Steuerersparnis 2025</div><div id="ru-svprev" class="stat" style="font-size:40px">–</div><div id="ru-sh" style="font-size:12px;color:var(--fg3);font-family:var(--mono);margin-top:8px"></div></div>${Ru.selbst==='Nein'?F('GRV-Arbeitnehmeranteil','AN-Anteil wird vom Rürup-Spielraum abgezogen',SFX(Ru.grvAN,'grvAN','€/Jahr')):''}</div>`;
+  if(ruStep===2)c.innerHTML=`<div style="${g2};margin-bottom:16px">${F('Rendite p.a. (nach Kosten)','ETF-Rürup Ø: 5–7 %',SFX(Ru.rendite,'rendite','% p.a.','0.1'))}${F('Inflation p.a.',null,SFX(Ru.inf,'inf','% p.a.','0.1'))}</div>${F('Ansparzeit (Jahre bis Rente)',null,N(Ru.lz,'lz',5,40))}`;
+  if(ruStep===3)c.innerHTML=`<div style="${g2}">${F('Renteneintrittsalter','Frühestens: 62 J. (Verträge ab 2012)',N(Ru.rentAlter,'rentAlter',62,70))}${F('Lebenserwartung',null,N(Ru.lebErw,'lebErw',70,100))}</div>`;
+  ruSide();
+}
+function ruBack(){if(ruStep>0){ruStep--;renderRu();}}
+function ruNext(){if(ruStep<RUS.length-1){ruStep++;renderRu();}else{renderRuResult();showScreen('s-ruerup-r');}}
+
+function ruerupChartSVG(r){
+  const lz=Ru.lz,w=800,h=260,pad=40,rate=Ru.rendite/100/12,rs=0.005/12,inf=Ru.inf/100;
+  const etf=[],sparbuch=[],netEtf=[],netSparbuch=[];
+  let accE=0,accS=0,netE=0,netS=0;
+  const steM_mo=r.steM; // monatliche Steuerersparnis
+  for(let i=0;i<=lz*12;i++){
+    etf.push(accE);sparbuch.push(accS);netEtf.push(netE);netSparbuch.push(netS);
+    if(i<lz*12){
+      accE=accE*(1+rate)+Ru.mb;
+      accS=accS*(1+rs)+Ru.mb;
+      netE=netE*(1+rate)+(Ru.mb-steM_mo); // netto nach Steuerersparnis
+      netS=netS*(1+rs)+Ru.mb; // ohne Steuerersparnis
+    }
+  }
+  const maxY=Math.max(...etf)*1.05,pts=etf.length;
+  const xs=i=>pad+(i/(pts-1))*(w-pad*2),ys=v=>h-pad-Math.max(0,Math.min(v/maxY,1))*(h-pad*2);
+  const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    <defs><linearGradient id="rg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#fafafa" stop-opacity=".25"/><stop offset="100%" stop-color="#fafafa" stop-opacity="0"/></linearGradient></defs>
+    ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+      <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
+    ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Jahr ${Math.round(f*lz)}</text>`).join('')}
+    <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#rg)"/>
+    <path d="${path(etf)}" stroke="#fafafa" stroke-width="2" fill="none"/>
+    <path d="${path(netEtf)}" stroke="#a3a3a3" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+    <path d="${path(sparbuch)}" stroke="#FF6B6B" stroke-width="2" fill="none"/>
+  </svg>`;
+}
+
+function renderRuResult(){
+  const r=calcRu();const yr=new Date().getFullYear();
+  $('rur-c').innerHTML=`
+<div class="ey" style="margin-bottom:12px">Rürup-Analyse · ${Ru.lz} J. · § 10 EStG · 2025</div>
+<h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">Monatlicher Steuervorteil: <span>${fmtE(r.steM)}</span></h1>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--rlg);overflow:hidden;background:var(--bg1);margin-bottom:20px">
+${[['Steuerersparnis/Jahr',fmtE(r.steJ),'Grenzst. '+Ru.grenzSt+' %'],['Nettokosten/Monat',fmtE(r.nettoK),'statt '+fmtE(Ru.mb)+' brutto'],['Depot bei Rente',de0.format(Math.round(r.fv))+' €','nach '+Ru.lz+' Jahren'],['Monatsrente (netto)',fmtE(r.nettoR),'ab '+r.rentJ]].map(([l,v,s],i)=>`<div style="padding:24px;border-right:${i<3?'1px solid var(--line)':'0'}"><div class="ey" style="margin-bottom:10px">${l}</div><div class="stat" style="font-size:28px">${v}</div><div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:6px">${s}</div></div>`).join('')}
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">Rürup-ETF vs. Sparbuch · Aufbaukurve mit Negativvergleich</div>
+${ruerupChartSVG(r)}
+${legend([['#fafafa','Rürup-ETF (brutto)'],['#a3a3a3','Rürup-ETF (netto nach Steuervorteil)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,5 % p.a.)']])}
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<div class="cardf" style="padding:24px"><div class="ey" style="margin-bottom:12px">Steuerliche Förderung § 10 EStG</div>
+${[['Höchstbetrag 2025','29.344 €'],['Höchstbetrag 2026',de0.format(RMAX26)+' €'],['GRV-Abzug',Ru.selbst==='Ja'?'0 € (Selbst.)':'−'+fmtE(Ru.grvAN*2)],['Spielraum',fmtE(r.sp)],['Jahresbeitrag',fmtE(r.jB)],['Absetzbar (100%)',fmtE(r.absB)],['Steuer-Vorteil/J.',fmtE(r.steJ)],['Gesamt '+Ru.lz+' J.',fmtE(r.gesSte)]].map(([l,v])=>`<div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px"><span style="color:var(--fg2)">${l}</span><span style="font-family:var(--mono)">${v}</span></div>`).join('')}
+</div>
+<div class="cardf" style="padding:24px"><div class="ey" style="margin-bottom:12px">Rentenphase</div>
+${[['Depot bei Rente',de0.format(Math.round(r.fv))+' €'],['Sparbuch-Vergl.',de0.format(Math.round(r.fvSparB))+' €'],['Brutto-Monatsrente',fmtE(r.mRente)],['Besteuerungsanteil',Math.round(r.bestAnt*100)+' % (§ 22)'],['Netto-Monatsrente',fmtE(r.nettoR)],['Bezugsdauer',r.jruh+' Jahre'],['Kumuliert netto',de0.format(Math.round(r.nettoR*12*r.jruh))+' €']].map(([l,v])=>`<div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px"><span style="color:var(--fg2)">${l}</span><span style="font-family:var(--mono)">${v}</span></div>`).join('')}
+</div>
+</div>
+</div>
+<aside style="position:sticky;top:88px"><div class="card" style="border-color:var(--fg);position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div><h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Rürup-Strategie optimieren.</h3><button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly')">Beratung buchen →</button><button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('ruerup')">← Neu berechnen</button></div></aside>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CASHFLOW-RECHNER
+// ════════════════════════════════════════════════════════════════════════════
+let C={},cStep=0;
+const CS=[{label:'Einkommen',ey:'Monatliches Nettoeinkommen',title:'Was kommt rein?',desc:'Dein monatliches Nettoeinkommen ist die Basis aller Empfehlungen.'},
+{label:'Ausgaben',ey:'Monatliche Ausgaben',title:'Was geht raus?',desc:'Je genauer deine Angaben, desto präziser die Optimierungsempfehlung.'}];
+function initC(){C={netto:3500,miete:900,nk:200,lm:400,transport:200,komm:60,versich:150,av:0,frei:300,sonst:200};}
+function calcC(){
+  const fix=C.miete+C.nk+C.lm+C.transport+C.komm;
+  const vers=C.versich,av=C.av,leb=C.frei+C.sonst;
+  const out=fix+vers+av+leb,frei=Math.max(C.netto-out,0);
+  return{fix,vers,av,leb,out,frei,emp_fix:C.netto*0.50,emp_vers:C.netto*0.10,emp_av:C.netto*0.15,emp_vm:C.netto*0.10,emp_frei:C.netto*0.15,notg:C.netto*3};
+}
+function cSide(){try{const r=calcC();$('c-sf').textContent=fmtE(r.frei)+'/Mo.';$('c-sav').textContent=fmtE(C.av)+'/Mo.';}catch(e){}}
+function renderC(){
+  stpr('c-st',CS.length,cStep);const s=CS[cStep];
+  $('c-ctr').textContent='Schritt '+String(cStep+1).padStart(2,'0')+' · '+String(CS.length).padStart(2,'0');
+  ['c-ey','c-title','c-desc'].forEach((id,i)=>{const e=$(id);if(e)e.textContent=[s.ey,s.title,s.desc][i];});
+  $('c-pct').textContent=Math.round(cStep/CS.length*100)+' %';
+  $('c-back').style.opacity=cStep===0?'0.3':'1';$('c-back').style.pointerEvents=cStep===0?'none':'auto';
+  $('c-next').textContent=cStep===CS.length-1?'Cashflow analysieren →':'Weiter →';
+  const c=$('c-c');c.innerHTML='';
+  const g2='display:grid;grid-template-columns:1fr 1fr;gap:16px';
+  const F=(l,h,ch)=>`<div class="col g8"><label class="lbl">${l}</label>${ch}${h?`<span class="hint">${h}</span>`:''}</div>`;
+  const SFX=(v,k,sfx)=>`<div class="sfx"><input type="number" step="10" value="${v}" oninput="C.${k}=+this.value;cSide()"/><span class="sfxt">${sfx}</span></div>`;
+  if(cStep===0)c.innerHTML=`<div class="col g8"><label class="lbl">Monatliches Nettoeinkommen</label><div class="sfx" style="font-size:20px"><input type="number" step="100" value="${C.netto}" style="font-size:20px;font-weight:500" oninput="C.netto=+this.value;cSide()"/><span class="sfxt" style="font-size:15px">€ / Monat netto</span></div></div><div class="card mt20"><div class="ey" style="margin-bottom:14px">Empfohlene Aufteilung (50/15/15/10/10)</div>${[['Fixkosten','50 %'],['Versicherungen','10 %'],['Altersvorsorge','15 %'],['Vermögensaufbau','10 %'],['Freizeit','15 %']].map(([l,p])=>`<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line);font-size:13px"><span style="color:var(--fg2)">${l}</span><span class="grow"></span><span style="font-family:var(--mono)">${p}</span></div>`).join('')}</div>`;
+  if(cStep===1)c.innerHTML=`<div style="${g2}">${F('Miete (warm)',null,SFX(C.miete,'miete','€/Mo.'))}${F('Nebenkosten & Strom',null,SFX(C.nk,'nk','€/Mo.'))}${F('Lebensmittel',null,SFX(C.lm,'lm','€/Mo.'))}${F('Transport',null,SFX(C.transport,'transport','€/Mo.'))}${F('Telefon & Internet',null,SFX(C.komm,'komm','€/Mo.'))}${F('Versicherungen gesamt',null,SFX(C.versich,'versich','€/Mo.'))}${F('Altersvorsorge (laufend)',null,SFX(C.av,'av','€/Mo.'))}${F('Freizeit & Essen',null,SFX(C.frei,'frei','€/Mo.'))}${F('Sonstiges',null,SFX(C.sonst,'sonst','€/Mo.'))}</div>`;
+  cSide();
+}
+function cBack(){if(cStep>0){cStep--;renderC();}}
+function cNext(){if(cStep<CS.length-1){cStep++;renderC();}else{renderCResult();showScreen('s-cashflow-r');}}
+
+function cashflowChart(r){
+  const cats=[{l:'Fixkosten',ist:r.fix,soll:r.emp_fix},{l:'Versicherungen',ist:r.vers,soll:r.emp_vers},{l:'Altersvorsorge',ist:r.av,soll:r.emp_av},{l:'Vermögensaufbau',ist:0,soll:r.emp_vm},{l:'Freizeit',ist:r.leb,soll:r.emp_frei}];
+  const max=Math.max(...cats.map(c=>Math.max(c.ist,c.soll)))*1.1;
+  const w=800,h=220,pad=40,bw=40,bsp=20;
+  const n=cats.length,grpW=(w-pad*2)/n;
+  const ys=v=>h-pad-Math.max(0,v/max)*(h-pad*1.5);
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*max).toFixed(1)}" y2="${ys(f*max).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+    <text x="${pad-6}" y="${(ys(f*max)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*max))}</text>`).join('')}
+    ${cats.map((cat,i)=>{const cx=pad+i*grpW+grpW/2;const over=cat.ist>cat.soll*1.1;
+      return `<rect x="${cx-bw-bsp/2}" y="${ys(cat.ist).toFixed(1)}" width="${bw}" height="${(h-pad-ys(cat.ist)).toFixed(1)}" fill="${over?'var(--loss)':'var(--fg)'}" rx="3"/>
+        <rect x="${cx+bsp/2}" y="${ys(cat.soll).toFixed(1)}" width="${bw}" height="${(h-pad-ys(cat.soll)).toFixed(1)}" fill="#404040" rx="3"/>
+        <text x="${cx}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${cat.l}</text>`;
+    }).join('')}
+  </svg>`;
+}
+
+function renderCResult(){
+  const r=calcC();
+  $('cr-c').innerHTML=`
+<div class="ey" style="margin-bottom:12px">Cashflow-Analyse · Nettoeinkommen: ${fmtE(C.netto)}/Mo.</div>
+<h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">Freier Cashflow: <span style="${r.frei>0?'':'color:var(--loss)'}">${fmtE(r.frei)} / Monat</span></h1>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">Ist vs. Empfehlung (50/15/15/10/10) · Weiß=Ist · Dunkel=Empfehlung</div>
+${cashflowChart(r)}
+${legend([['#fafafa','Ist-Ausgaben'],['#404040','Empfohlene Aufteilung'],['#FF6B6B','Überschreitung']])}
+</div>
+<div class="cardf" style="padding:28px"><div class="ey" style="margin-bottom:16px">Detailvergleich</div>
+${[{l:'Fixkosten',ist:r.fix,soll:r.emp_fix,hint:'Miete, NK, LM, Transport, Komm.'},{l:'Versicherungen',ist:r.vers,soll:r.emp_vers,hint:'Haftpflicht, BU, KFZ …'},{l:'Altersvorsorge',ist:r.av,soll:r.emp_av,hint:'Rürup, Riester, ETF, bAV'},{l:'Vermögensaufbau',ist:0,soll:r.emp_vm,hint:'ETF, Tagesgeld-Reserve'},{l:'Freizeit & Leben',ist:r.leb,soll:r.emp_frei,hint:'Freizeit, Urlaub, Essen'}].map(it=>{const ok=it.ist<=it.soll*1.1,pI=Math.min(it.ist/C.netto*100,100),pS=Math.min(it.soll/C.netto*100,100);return `<div style="margin-bottom:16px"><div class="row" style="margin-bottom:6px;font-size:13px"><span style="color:var(--fg2)">${it.l}</span><span class="grow"></span><span style="font-family:var(--mono);color:${ok?'var(--fg)':'var(--loss)'}">Ist: ${fmtE(it.ist)}</span><span style="font-family:var(--mono);color:var(--fg3);margin-left:12px">Soll: ${fmtE(it.soll)}</span></div>
+<div style="height:6px;background:var(--bg3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${pI.toFixed(1)}%;background:${ok?'var(--fg)':'var(--loss)'};border-radius:999px"></div></div>
+<div style="font-size:11px;color:var(--fg4);font-family:var(--mono);margin-top:3px">${it.hint}</div></div>`;}).join('')}
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+${r.frei>0?`<div class="card"><div class="ey" style="margin-bottom:8px">✓ Freier Cashflow</div><div class="stat" style="font-size:36px">${fmtE(r.frei)}</div><p style="font-size:12px;color:var(--fg2);margin-top:8px">Empf.: ${fmtE(r.frei*0.7)}/Mo. in AV, ${fmtE(r.frei*0.3)}/Mo. Liquidität</p></div>`:
+`<div class="card" style="border-color:rgba(255,107,107,.3)"><div class="ey" style="color:var(--loss);margin-bottom:8px">⚠ Defizit</div><div class="stat" style="font-size:36px;color:var(--loss)">−${fmtE(Math.abs(r.frei))}</div></div>`}
+<div class="card"><div class="ey" style="margin-bottom:8px">Notgroschen-Ziel</div><div class="stat" style="font-size:36px">${fmtE(r.notg)}</div><p style="font-size:12px;color:var(--fg3);margin-top:8px">3 Monatsgehälter auf Tagesgeld</p></div>
+</div>
+<div class="card"><div class="ey" style="margin-bottom:12px">Direkt zu den Vorsorge-Rechnern</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${[['pension','Pensionsrechner'],['rente','Rentenrechner'],['depot','AV-Depot-Rechner'],['ruerup','Rürup-Rechner']].map(([k,l])=>`<button class="btn" style="justify-content:flex-start" onclick="showCalc('${k}')">${l} →</button>`).join('')}</div></div>
+</div>
+<aside style="position:sticky;top:88px"><div class="card" style="border-color:var(--fg);position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div><h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Cashflow optimieren.</h3><button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly')">Beratung buchen →</button><button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('cashflow')">← Neu berechnen</button></div></aside>
+</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// VERSICHERUNGSCHECK — Marktdurchschnitte 2025 (GDV, Check24, Verivox)
+// ════════════════════════════════════════════════════════════════════════════
+const VBENCH={'Privathaftpflicht':{avg:7,hint:'GDV Ø 2025: ~85 €/Jahr'},'Hausratversicherung':{avg:11,hint:'GDV Ø: ~130 €/Jahr'},'KFZ-Versicherung':{avg:40,hint:'Ø Haftpflicht: ~350–500 €/Jahr'},'Berufsunfähigkeit (BU)':{avg:90,hint:'Ø 30–45 J.: 60–130 €/Mo. (sehr individuell)'},'Rechtsschutz':{avg:22,hint:'Ø: ~250 €/Jahr'},'Unfallversicherung':{avg:8,hint:'Ø: ~100 €/Jahr'},'Zahnzusatz':{avg:25,hint:'Ø: 20–35 €/Mo.'},'Risikoleben':{avg:25,hint:'Ø 40 J., 200k €: ~20–35 €/Mo.'}};
+let V={};
+function initV(){V=Object.fromEntries(Object.entries(VBENCH).map(([k,b])=>[k,b.avg]));}
+function vSide(){
+  const tot=Object.values(V).reduce((a,b)=>a+b,0);
+  const avgTot=Object.values(VBENCH).reduce((a,b)=>a+b.avg,0);
+  const diff=tot-avgTot;
+  const vst=$('v-st'),vsd=$('v-sd');
+  if(vst)vst.textContent=fmtE(tot)+'/Mo.';
+  if(vsd){vsd.textContent=(diff>0?'+':'')+de0.format(Math.round(diff))+'€/Mo. vs. Ø';vsd.style.color=diff>0?'var(--loss)':'var(--fg)';}
+  // update live total in form
+  const vlt=$('v-live-total');if(vlt)vlt.textContent=fmtE(tot)+'/Mo. gesamt · '+(diff>0?'+':'−')+fmtE(Math.abs(diff))+' vs. Ø';
+}
+function renderVForm(){
+  const c=$('v-form');c.innerHTML='';
+  Object.entries(VBENCH).forEach(([name,bench])=>{
+    const d=document.createElement('div');d.className='col g8';
+    d.innerHTML=`<div class="row" style="justify-content:space-between;align-items:baseline"><label class="lbl">${name}</label><span style="font-size:11px;color:var(--fg4);font-family:var(--mono)">Ø: ${bench.avg} €/Mo.</span></div><div class="sfx"><input type="number" step="1" value="${V[name]}" oninput="V['${name}']=+this.value;vSide()"/><span class="sfxt">€/Mo.</span></div><span class="hint">${bench.hint}</span>`;
+    c.appendChild(d);
+  });
+  vSide();
+}
+function vCalc(){renderVResult();showScreen('s-versicherung-r');}
+
+function versicherungChart(items,totIst,totAvg){
+  const max=Math.max(...items.map(i=>Math.max(i.ist,i.avg)))*1.1;
+  const w=800,h=240,pad=50,bw=30,bsp=10;
+  const n=items.length,grpW=(w-pad*2)/n;
+  const ys=v=>h-pad-Math.max(0,v/max)*(h-pad*1.5);
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
+    ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*max).toFixed(1)}" y2="${ys(f*max).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+      <text x="${pad-6}" y="${(ys(f*max)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*max))}</text>`).join('')}
+    ${items.map((it,i)=>{const cx=pad+i*grpW+grpW/2;const over=it.ist>it.avg*1.2;
+      return `<rect x="${cx-bw-bsp/2}" y="${ys(it.ist).toFixed(1)}" width="${bw}" height="${(h-pad-ys(it.ist)).toFixed(1)}" fill="${over?'var(--loss)':'var(--fg)'}" rx="3"/>
+        <rect x="${cx+bsp/2}" y="${ys(it.avg).toFixed(1)}" width="${bw}" height="${(h-pad-ys(it.avg)).toFixed(1)}" fill="#404040" rx="3"/>
+        <text x="${cx}" y="${h-pad+16}" fill="#6b6b6b" font-size="9" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${it.n.length>10?it.n.slice(0,8)+'…':it.n}</text>`;
+    }).join('')}
+  </svg>`;
+}
+
+function renderVResult(){
+  const items=Object.entries(VBENCH).map(([n,b])=>({n,ist:V[n],avg:b.avg,hint:b.hint}));
+  const totIst=items.reduce((a,b)=>a+b.ist,0),totAvg=items.reduce((a,b)=>a+b.avg,0);
+  const diff=totIst-totAvg,pct=totAvg>0?diff/totAvg*100:0;
+  $('vr-c').innerHTML=`
+<div class="ey" style="margin-bottom:12px">Versicherungscheck · GDV/Check24/Verivox Marktdaten 2025</div>
+<h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">${diff>0?`Du zahlst <span style="color:var(--loss)">${de0.format(Math.round(diff))} €/Mo. mehr</span> als der Marktdurchschnitt`:'Du liegst im Marktdurchschnitt ✓'}</h1>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
+<div class="col g16">
+<div class="cardf" style="padding:28px">
+<div class="ey" style="margin-bottom:12px">Dein Beitrag vs. Marktdurchschnitt · Weiß=Du · Dunkel=Ø Markt</div>
+${versicherungChart(items,totIst,totAvg)}
+${legend([['#fafafa','Dein Beitrag'],['#404040','Marktdurchschnitt 2025'],['#FF6B6B','Überschreitung (>20% über Ø)']])}
+</div>
+<div class="cardf" style="padding:28px"><div class="ey" style="margin-bottom:16px">Detailvergleich</div>
+${items.map(it=>{const over=it.ist>it.avg*1.2,mx=Math.max(it.ist,it.avg)*1.1;return `<div style="margin-bottom:16px">
+<div class="row" style="margin-bottom:6px;font-size:13px"><span style="color:var(--fg2)">${it.n}</span><span class="grow"></span><span style="font-family:var(--mono);color:${over?'var(--loss)':'var(--fg)'}">Du: ${it.ist} €</span><span style="font-family:var(--mono);color:var(--fg3);margin-left:12px">Ø: ${it.avg} €</span></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:3px"><div><div style="height:5px;background:var(--bg3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${mx>0?(it.ist/mx*100).toFixed(1):0}%;background:${over?'var(--loss)':'var(--fg)'};border-radius:999px"></div></div></div><div><div style="height:5px;background:var(--bg3);border-radius:999px;overflow:hidden"><div style="height:100%;width:${mx>0?(it.avg/mx*100).toFixed(1):0}%;background:var(--fg3);border-radius:999px"></div></div></div></div>
+${over?`<div style="margin-top:3px;font-size:11px;color:var(--loss);font-family:var(--mono)">⚠ ${de0.format(Math.round((it.ist-it.avg)*12))} € über Markt/Jahr</div>`:''}
+<div style="font-size:11px;color:var(--fg4);margin-top:2px">${it.hint}</div></div>`;}).join('')}
+<div class="row" style="padding-top:16px;border-top:1px solid var(--line);font-size:14px;font-weight:600"><span style="color:var(--fg2)">Gesamt / Monat</span><span class="grow"></span><span style="font-family:var(--mono)">${fmtE(totIst)}</span><span style="font-family:var(--mono);color:${diff>0?'var(--loss)':'var(--fg3)'};margin-left:16px">${diff>0?'+':''}${de0.format(Math.round(diff))} € vs. Ø</span></div>
+</div>
+${diff>totAvg*0.15?`<div class="card" style="border-color:rgba(255,107,107,.3);background:var(--loss-dim)"><div class="ey" style="color:var(--loss);margin-bottom:10px">⚠ ${de0.format(Math.round(pct))} % über Marktdurchschnitt</div><p style="font-size:14px;color:var(--fg2);line-height:1.6">Du zahlst <strong style="color:var(--loss)">${de0.format(Math.round(diff*12))} €/Jahr</strong> mehr als notwendig. Ein Vertragscheck kann das konkret beziffern.</p><button class="btn btnp btnlg" style="margin-top:16px;width:100%" onclick="alert('Calendly')">Kostenlosen Vertragscheck anfordern →</button></div>`:''}
+</div>
+<aside style="position:sticky;top:88px"><div class="card" style="border-color:var(--fg);position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div><h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Kostenloser Vertragscheck.</h3><p style="font-size:13px;color:var(--fg2);line-height:1.55">Jeder Vertrag einzeln: zu teuer, falsche Deckung oder unnötig?</p><button class="btn btnp btnlg" style="width:100%;margin-top:16px" onclick="alert('Calendly')">Vertragscheck buchen →</button><button class="btn btng" style="width:100%;margin-top:8px" onclick="showCalc('versicherung')">← Neu eingeben</button></div></aside>
+</div>`;
+}
+
+// ── Init ────────────────────────────────────────────────────────────────────
+function initAll(){initP();initR();initD();initRu();initC();initV();}
+initAll();
+</script></body></html>
