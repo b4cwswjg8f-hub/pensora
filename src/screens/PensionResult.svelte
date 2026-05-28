@@ -23,22 +23,22 @@
     const sparbuch = Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1.003,i));
     const ziel = Array.from({length:yrs+1},()=>P.zielEur);
     return lineChart([
-      {data:pension,color:'#fafafa',fill:true,width:2},
-      {data:pensionR,color:'#a3a3a3',dash:'3 3',width:1.5},
+      {data:pension,color:'#60a5fa',fill:true,width:2},
+      {data:pensionR,color:'#4ade80',dash:'3 3',width:1.5},
       {data:sparbuch,color:'#FF6B6B',dash:'4 2',width:1.5},
-      {data:ziel,color:'#6b6b6b',dash:'6 3',width:1},
+      {data:ziel,color:'#fbbf24',dash:'6 3',width:1},
     ], yrs);
   })();
 
   $: barSvg = barChart([
-    {label:'Brutto-\npension',val:r.brutto,color:'#404040'},
-    {label:'Netto-\npension',val:r.netto,color:'#fafafa'},
-    {label:'Real\n(Kaufkraft)',val:r.nettoR,color:'#a3a3a3'},
-    {label:'Versorgungs-\nziel',val:P.zielEur,color:'#6b6b6b'},
+    {label:'Brutto-\npension',val:r.brutto,color:'#3b82f6'},
+    {label:'Netto-\npension',val:r.netto,color:'#60a5fa'},
+    {label:'Real\n(Kaufkraft)',val:r.nettoR,color:'#4ade80'},
+    {label:'Versorgungs-\nziel',val:P.zielEur,color:'#fbbf24'},
     {label:'Lücke',val:r.luecke,color:'#FF6B6B'},
   ]);
 
-  $: legendHtml = legend([['#fafafa','Pension nominal'],['#a3a3a3','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch','4 2'],['#6b6b6b','Versorgungsziel','6 3']]);
+  $: legendHtml = legend([['#60a5fa','Pension nominal'],['#4ade80','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch','4 2'],['#fbbf24','Versorgungsziel','6 3']]);
 </script>
 
 <nav class="nav">
@@ -48,9 +48,10 @@
     <span style="color:var(--fg2);font-size:14px">Ergebnis · Pension</span>
   </div>
   <div class="row g8">
-    <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
-    <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
+    <button class="btn btng print-hide" on:click={() => window.print()} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 

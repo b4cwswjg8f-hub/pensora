@@ -24,12 +24,25 @@
 </script>
 
 <div>
+  <!-- Update banner -->
+  <div class="update-bar">
+    <span class="update-dot"></span>
+    <span class="update-label">Neu</span>
+    <span class="update-entries">
+      <span class="update-entry">AV-Depot 2027 — Grundzulage bestätigt: 540 €/Jahr · Stand 29.05.2026</span>
+      <span class="update-sep">·</span>
+      <span class="update-entry">Rentenwert 2026: 42,52 € · DRV · ab 1. Juli 2026</span>
+      <span class="update-sep">·</span>
+      <span class="update-entry">Rürup-Höchstbetrag 2026: 30.826 € · § 10 EStG</span>
+    </span>
+  </div>
+
   <!-- Nav -->
   <nav class="nav">
     <button class="brand"><Logo /> Pensora</button>
     <div class="row g32">
-      <a class="nav-link">Über uns</a>
-      <a class="nav-link">Kontakt</a>
+      <a class="nav-link" href="ueber-uns/">Über uns</a>
+      <a class="nav-link" href="kontakt/">Kontakt</a>
       <div class="ddwrap">
         <button class="ddtrig">
           FAQ
@@ -122,27 +135,63 @@
       <div>
         <button class="brand" style="margin-bottom:14px"><Logo /> Pensora</button>
         <p>Unabhängige Finanzplanung.<br/>Keine Provisionen. Nur Klarheit.</p>
-        <div style="margin-top:16px;font-size:11px;color:var(--fg4);font-family:var(--mono)">© 2025 Pensora</div>
+        <p style="font-size:13px;margin-top:8px">Niall Bradfield<br/>unabhängiger Finanzberater, Stuttgart</p>
+        <div style="margin-top:12px;font-size:11px;color:var(--fg4);font-family:var(--mono)">© 2026 Pensora</div>
       </div>
       <div>
         <h5>Rechner</h5>
-        {#each cards.slice(0,4) as c}<a on:click={() => go(c.id)}>{c.title}</a>{/each}
+        {#each cards as c}<a on:click={() => go(c.id)}>{c.title}</a>{/each}
       </div>
       <div>
-        <h5>Tools</h5>
-        {#each cards.slice(4) as c}<a on:click={() => go(c.id)}>{c.title}</a>{/each}
+        <h5>Ratgeber</h5>
+        <a href="lehrerpension-nrw/">Lehrerpension NRW</a>
+        <a href="lehrerpension-bw/">Lehrerpension BW</a>
+        <a href="lehrerpension-bayern/">Lehrerpension Bayern</a>
+        <a href="a13-gehalt-pension/">Pension A13</a>
+        <a href="teilzeit-pension-lehrer/">Teilzeit & Pension</a>
+        <a href="referendariat-pension/">Referendariat</a>
+        <a href="altersvorsorgedepot-2027/">AV-Depot 2027</a>
+        <a href="ruerup-lehrer/">Rürup für Lehrer</a>
+        <a href="pkv-beamte-ruhestand/">PKV im Ruhestand</a>
       </div>
       <div>
-        <h5>Rechtliches</h5>
+        <h5>Vergleiche</h5>
+        <a href="pension-vs-rente/">Pension vs. Rente</a>
+        <a href="pension-vs-rente-lehrer/">Pension vs. Rente Lehrer</a>
+        <a href="ruerup-vs-altersvorsorgedepot/">Rürup vs. AV-Depot</a>
+        <a href="pkv-vs-gkv-beamte-ruhestand/">PKV vs. GKV Beamte</a>
+        <a href="teilzeit-vs-vollzeit-pension/">Teilzeit vs. Vollzeit</a>
+        <a href="wie-wird-berechnet/">Wie wird berechnet?</a>
+        <a href="ueber-uns/">Über uns</a>
+        <a href="kontakt/">Kontakt</a>
         <a>Impressum</a>
         <a>Datenschutz</a>
-        <a>BaFin-Hinweis</a>
       </div>
     </footer>
   </div>
 </div>
 
 <style>
+  /* ── Update banner ── */
+  .update-bar {
+    display:flex; align-items:center; gap:10px;
+    padding:9px 52px;
+    background:rgba(251,191,36,.06); border-bottom:1px solid rgba(251,191,36,.15);
+    font-size:12px; overflow:hidden; white-space:nowrap;
+  }
+  .update-dot {
+    width:6px; height:6px; border-radius:50%; background:var(--amber);
+    flex-shrink:0; animation:pulse 2s ease-in-out infinite;
+  }
+  .update-label {
+    font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--amber); flex-shrink:0;
+  }
+  .update-entries { color:var(--fg3); overflow:hidden; text-overflow:ellipsis; }
+  .update-entry { color:var(--fg2); }
+  .update-sep { margin:0 8px; color:var(--fg4); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
   .nav-link { font-size:13px; color:var(--fg3); cursor:pointer; transition:color .15s; text-decoration:none; }
   .nav-link:hover { color:var(--fg); }
 
@@ -207,6 +256,7 @@
   }
 
   @media (max-width:760px) {
+    .update-bar { padding:8px 20px; }
     .hero-section { padding:56px 24px 44px; }
     .cards-grid { grid-template-columns:1fr; }
     :global(.cards-grid) section { padding:40px 24px 60px; }

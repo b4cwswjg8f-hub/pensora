@@ -23,13 +23,13 @@
     const sparbuch = Array.from({length:yrs+1},(_,i)=>r.netto*Math.pow(1.003,i));
     const ziel = Array.from({length:yrs+1},()=>R.zielEur);
     return lineChart([
-      {data:rente,color:'#fafafa',fill:true,width:2},
-      {data:renteR,color:'#a3a3a3',dash:'3 3',width:1.5},
+      {data:rente,color:'#60a5fa',fill:true,width:2},
+      {data:renteR,color:'#4ade80',dash:'3 3',width:1.5},
       {data:sparbuch,color:'#FF6B6B',dash:'4 2',width:1.5},
-      {data:ziel,color:'#6b6b6b',dash:'6 3',width:1},
+      {data:ziel,color:'#fbbf24',dash:'6 3',width:1},
     ], yrs);
   })();
-  $: legendHtml = legend([['#fafafa','Rente nominal'],['#a3a3a3','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,3 % real)','4 2'],['#6b6b6b','Versorgungsziel','6 3']]);
+  $: legendHtml = legend([['#60a5fa','Rente nominal'],['#4ade80','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,3 % real)','4 2'],['#fbbf24','Versorgungsziel','6 3']]);
 </script>
 
 <nav class="nav">
@@ -39,9 +39,10 @@
     <span style="color:var(--fg2);font-size:14px">Ergebnis · Rente</span>
   </div>
   <div class="row g8">
-    <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
-    <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
+    <button class="btn btng print-hide" on:click={() => window.print()} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 

@@ -24,26 +24,26 @@
     const xs=i=>pad+(i/(pts-1))*(w-pad*2), ys=v=>h-pad-Math.max(0,Math.min(v/maxY,1))*(h-pad*2);
     const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
     return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
-      <defs><linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#fafafa" stop-opacity=".25"/><stop offset="100%" stop-color="#fafafa" stop-opacity="0"/></linearGradient></defs>
+      <defs><linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#60a5fa" stop-opacity=".3"/><stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/></linearGradient></defs>
       ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
         <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
       ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Jahr ${Math.round(f*lz)}</text>`).join('')}
       <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#dg)"/>
-      <path d="${path(etf)}" stroke="#fafafa" stroke-width="2" fill="none"/>
-      <path d="${path(etfR)}" stroke="#a3a3a3" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+      <path d="${path(etf)}" stroke="#60a5fa" stroke-width="2" fill="none"/>
+      <path d="${path(etfR)}" stroke="#4ade80" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
       <path d="${path(sparbuch)}" stroke="#FF6B6B" stroke-width="2" fill="none"/>
-      <path d="${path(inputs)}" stroke="#404040" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
+      <path d="${path(inputs)}" stroke="#fbbf24" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
     </svg>`;
   })();
 
   $: barSvg = barChart([
-    {label:'ETF-Depot',val:r.fvG,color:'#fafafa'},
-    {label:'ETF real',val:r.fvR,color:'#a3a3a3'},
+    {label:'ETF-Depot',val:r.fvG,color:'#60a5fa'},
+    {label:'ETF real',val:r.fvR,color:'#4ade80'},
     {label:'Sparbuch',val:r.fvSparB,color:'#FF6B6B'},
-    {label:'Eingezahlt',val:r.eingez,color:'#404040'},
+    {label:'Eingezahlt',val:r.eingez,color:'#fbbf24'},
   ]);
 
-  $: legendHtml = legend([['#fafafa','ETF-AV-Depot (nominale Rendite)'],['#a3a3a3','ETF real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,5 % p.a.)'],['#404040','Eingezahltes Kapital','4 2']]);
+  $: legendHtml = legend([['#60a5fa','ETF-AV-Depot (nominale Rendite)'],['#4ade80','ETF real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,5 % p.a.)'],['#fbbf24','Eingezahltes Kapital','4 2']]);
 </script>
 
 <nav class="nav">
@@ -53,9 +53,10 @@
     <span style="color:var(--fg2);font-size:14px">Ergebnis · Depot</span>
   </div>
   <div class="row g8">
-    <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
-    <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
+    <button class="btn btng print-hide" on:click={() => window.print()} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 

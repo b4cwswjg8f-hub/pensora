@@ -54,9 +54,10 @@
     <span style="color:var(--fg2);font-size:14px">Ergebnis · Cashflow</span>
   </div>
   <div class="row g8">
-    <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
-    <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
+    <button class="btn btng print-hide" on:click={() => window.print()} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
