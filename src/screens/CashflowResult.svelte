@@ -61,7 +61,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:12px">Cashflow-Analyse · Monatliches Budget · Ist vs. Empfehlung</div>
     <h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">
       Frei verfügbar: <span style="color:{r.frei > 0 ? 'var(--fg)' : 'var(--loss)'}">{fmtE(r.frei)}/Mo.</span>

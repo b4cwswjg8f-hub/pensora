@@ -60,7 +60,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:12px">AV-Depot-Analyse · {D.lz} J. Anspar + {D.entDauer} J. Entnahme · ETF vs. Sparbuch</div>
     <h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">
       ETF-Vorteil gegenüber Sparbuch: <span>{de0.format(Math.round(r.vorteilGgSparbuch))} €</span>

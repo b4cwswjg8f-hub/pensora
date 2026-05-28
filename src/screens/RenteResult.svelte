@@ -46,7 +46,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:20px">Rentenprognose · {R.rentAlter} J. · Rentenwert 40,79 € (DRV 2025)</div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">

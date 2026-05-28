@@ -51,7 +51,7 @@
   </nav>
 
   <!-- Progress bar -->
-  <div style="padding:16px 56px 10px;border-bottom:1px solid var(--line)">
+  <div class="calc-stepper">
     <div class="row" style="justify-content:space-between;margin-bottom:10px">
       <div class="row g12">
         <span style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">
@@ -66,9 +66,9 @@
 
   <!-- Body -->
   <div class="fbody">
-    <div style="display:grid;grid-template-columns:1fr 320px">
+    <div class="calc-layout">
       <!-- Main form -->
-      <div style="padding:36px 56px">
+      <div class="calc-form">
         <div class="ey">{s.ey}</div>
         <h2 style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1">{s.title}</h2>
         <p style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px">{s.desc}</p>

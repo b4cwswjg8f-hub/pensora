@@ -205,4 +205,12 @@
     padding:52px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
     background:var(--bg1);
   }
+
+  @media (max-width:760px) {
+    .hero-section { padding:56px 24px 44px; }
+    .cards-grid { grid-template-columns:1fr; }
+    :global(.cards-grid) section { padding:40px 24px 60px; }
+    .cta-strip { flex-direction:column; align-items:flex-start; padding:36px 24px; gap:24px; }
+    :global(.foot) { grid-template-columns:1fr 1fr; padding:36px 24px; gap:24px; }
+  }
 </style>

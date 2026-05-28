@@ -55,7 +55,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:20px">Pensionsanalyse · {P.bGr} · St.{P.bSt} · {P.bund.split('-')[0]} · {yr}</div>
 
     <!-- Hero grid -->

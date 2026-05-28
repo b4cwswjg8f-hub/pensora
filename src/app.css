@@ -30,7 +30,7 @@
 
 /* ─── RESET ────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { min-height: 100%; background: var(--bg); color: var(--fg); }
+html, body { min-height: 100%; background: var(--bg); color: var(--fg); color-scheme: dark; }
 body {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
@@ -41,8 +41,23 @@ body {
 }
 #app { min-height: 100vh; }
 button { font-family: inherit; cursor: pointer; }
-input, select, textarea { font-family: inherit; color: var(--fg); }
+input, select, textarea {
+  font-family: inherit; color: var(--fg);
+  -webkit-text-fill-color: var(--fg);
+  background-color: var(--bg1);
+}
 a { color: inherit; text-decoration: none; }
+
+/* Safari autofill override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--fg);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg1) inset;
+  box-shadow: 0 0 0 1000px var(--bg1) inset;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: var(--fg);
+}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -146,17 +161,17 @@ a { color: inherit; text-decoration: none; }
 .inp {
   height: 46px; padding: 0 14px;
   background: var(--bg1); border: 1px solid var(--line2); border-radius: var(--rmd);
-  color: var(--fg); font-size: 15px; width: 100%;
+  color: var(--fg); -webkit-text-fill-color: var(--fg); font-size: 15px; width: 100%;
   transition: border-color .15s, box-shadow .15s, background .15s;
   -webkit-appearance: none; appearance: none;
 }
 .inp:hover  { border-color: var(--line3); }
-.inp:focus  { outline: none; border-color: var(--fg4); background: var(--bg2); box-shadow: var(--glow-p); }
+.inp:focus  { outline: none; border-color: var(--fg4); background: var(--bg2); -webkit-box-shadow: 0 0 0 1000px var(--bg2) inset; box-shadow: var(--glow-p); }
 
 .sel {
   height: 46px; padding: 0 14px;
   background: var(--bg1); border: 1px solid var(--line2); border-radius: var(--rmd);
-  color: var(--fg); font-size: 15px; width: 100%;
+  color: var(--fg); -webkit-text-fill-color: var(--fg); font-size: 15px; width: 100%;
   appearance: none; -webkit-appearance: none;
   transition: border-color .15s, box-shadow .15s;
 }
@@ -181,7 +196,7 @@ a { color: inherit; text-decoration: none; }
 }
 .sfx input {
   flex: 1; height: 46px; padding: 0 14px;
-  border: 0; color: var(--fg); font-size: 15px;
+  border: 0; color: var(--fg); -webkit-text-fill-color: var(--fg); font-size: 15px;
   background: transparent; -webkit-appearance: none; appearance: none;
 }
 .sfx input:focus { outline: none; }
@@ -353,3 +368,49 @@ input[type=range] { width: 100%; height: 3px; accent-color: var(--fg); cursor: p
 /* KPI grid cell hover */
 .kpi-cell { transition: background .2s; }
 .kpi-cell:hover { background: var(--bg2); }
+
+/* ─── CALC LAYOUT HELPERS (responsive) ─────────────────────────── */
+.calc-layout {
+  display: grid; grid-template-columns: 1fr 320px;
+}
+.calc-stepper {
+  padding: 16px 56px 10px; border-bottom: 1px solid var(--line);
+}
+.calc-form    { padding: 36px 56px; }
+.calc-result-pad { padding: 36px 56px 80px; }
+
+/* ─── MOBILE ────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  /* Nav */
+  .nav { padding: 14px 20px; }
+  .nav .row.g32 { display: none; }
+
+  /* Typography */
+  .h1 { font-size: 44px; }
+  .h2 { font-size: 32px; }
+  .lead { font-size: 15px; }
+
+  /* Scrollable containers: let them be natural height on mobile */
+  .vscr, .fbody { height: auto; overflow-y: visible; }
+
+  /* Calc layout: stack sidebar below form, hide it on small screens */
+  .calc-layout { grid-template-columns: 1fr; }
+  .calc-layout aside { display: none; }
+
+  /* Calc padding */
+  .calc-stepper { padding: 12px 20px 10px; }
+  .calc-form    { padding: 24px 20px; }
+  .calc-result-pad { padding: 24px 20px 60px; }
+
+  /* Ticker: wrap into 2×2 */
+  .ticker { flex-wrap: wrap; }
+  .ti { min-width: 50%; border-bottom: 1px solid var(--line); }
+  .ti:nth-child(odd) { border-right: 1px solid var(--line); }
+
+  /* Footer */
+  .foot { grid-template-columns: 1fr 1fr; gap: 28px; padding: 36px 24px; }
+
+  /* Misc */
+  .btnxl { font-size: 14px; }
+  .sfxt { display: none; }
+}

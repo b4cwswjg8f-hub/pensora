@@ -56,7 +56,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:12px">Rürup-Analyse · {Ru.lz} J. · § 10 EStG · 2025</div>
     <h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">
       Monatlicher Steuervorteil: <span>{fmtE(r.steM)}</span>

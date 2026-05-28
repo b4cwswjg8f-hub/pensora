@@ -57,7 +57,7 @@
 </nav>
 
 <div class="vscr">
-  <div style="padding:36px 56px 80px">
+  <div class="calc-result-pad">
     <div class="ey" style="margin-bottom:12px">Versicherungsanalyse · Ist vs. GDV-Marktdurchschnitt 2025</div>
     <h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">
       Gesamtkosten: <span style="color:{diff > 20 ? 'var(--loss)' : diff < -20 ? '#6fcf97' : 'var(--fg)'}">{fmtE(total)}/Mo.</span>

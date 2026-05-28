@@ -32,8 +32,8 @@
   </nav>
 
   <div class="fbody">
-    <div style="display:grid;grid-template-columns:1fr 320px">
-      <div style="padding:36px 56px">
+    <div class="calc-layout">
+      <div class="calc-form">
         <div class="ey">Versicherungsanalyse</div>
         <h2 style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1">
           Was zahlst du für deine Versicherungen?
