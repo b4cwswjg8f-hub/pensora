@@ -7,12 +7,12 @@
   const book = () => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank');
 
   const cards = [
-    { id: 'pension',      num: '01', badge: 'Beamte',             title: 'Pensionsrechner',    desc: 'Nettopension nach § 14 BeamtVG — mit Ruhegehaltssatz, Mindestversorgung, Steuer und KV-Beihilfe.', tags: ['§ 14 BeamtVG', '17 Bundesländer', 'PKV/GKV'] },
-    { id: 'rente',        num: '02', badge: 'Angestellte',         title: 'Rentenrechner',      desc: 'Gesetzliche Rente nach § 64 SGB VI. Entgeltpunkte, Rentenwert 2025 · 40,79 €, Besteuerungsanteil.', tags: ['§ 64 SGB VI', 'Rentenwert 40,79 €', 'Rentenlücke'] },
-    { id: 'depot',        num: '03', badge: 'ETF · Altersvorsorge', title: 'AV-Depot-Rechner',  desc: 'Zinseszins-Depot, reale Rendite nach Inflation, 4 %-Entnahmerate und Sparrate zum Ziel.', tags: ['Zinseszins', '4 %-Regel', 'Realrendite'] },
-    { id: 'ruerup',       num: '04', badge: 'Steueroptimierung',   title: 'Rürup-Rechner',      desc: 'Steuervorteil der Basisrente nach § 10 EStG. 100 % absetzbar 2025. Netto-Kosten & Rentenprognose.', tags: ['§ 10 EStG', '100 % absetzbar', 'ETF-Rürup'] },
-    { id: 'cashflow',     num: '05', badge: 'Finanzplanung',       title: 'Cashflow-Rechner',   desc: 'Monatlichen Cashflow analysieren: Ist vs. 50/15/15-Empfehlung, Notgroschen und AV-Sparquote.', tags: ['50/15/15-Regel', 'Notgroschen', 'Sparquote'] },
-    { id: 'versicherung', num: '06', badge: 'Marktvergleich',      title: 'Versicherungscheck', desc: 'Deine Versicherungskosten vs. GDV-Marktdurchschnitt 2025. Über- und Unterversicherung auf einen Blick.', tags: ['GDV-Daten 2025', '8 Kategorien', 'Einsparpotenzial'] },
+    { id: 'pension',      faq: 'pensionsrechner30.html',  num: '01', badge: 'Beamte',             title: 'Pensionsrechner',    desc: 'Nettopension nach § 14 BeamtVG — mit Ruhegehaltssatz, Mindestversorgung, Steuer und KV-Beihilfe.', tags: ['§ 14 BeamtVG', '17 Bundesländer', 'PKV/GKV'] },
+    { id: 'rente',        faq: 'rentenrechner.html',       num: '02', badge: 'Angestellte',         title: 'Rentenrechner',      desc: 'Gesetzliche Rente nach § 64 SGB VI. Entgeltpunkte, Rentenwert 2025 · 40,79 €, Besteuerungsanteil.', tags: ['§ 64 SGB VI', 'Rentenwert 40,79 €', 'Rentenlücke'] },
+    { id: 'depot',        faq: 'av-depot-rechner30.html',  num: '03', badge: 'ETF · Altersvorsorge', title: 'AV-Depot-Rechner',  desc: 'Zinseszins-Depot, reale Rendite nach Inflation, 4 %-Entnahmerate und Sparrate zum Ziel.', tags: ['Zinseszins', '4 %-Regel', 'Realrendite'] },
+    { id: 'ruerup',       faq: 'ruerup-rechner.html',      num: '04', badge: 'Steueroptimierung',   title: 'Rürup-Rechner',      desc: 'Steuervorteil der Basisrente nach § 10 EStG. 100 % absetzbar 2025. Netto-Kosten & Rentenprognose.', tags: ['§ 10 EStG', '100 % absetzbar', 'ETF-Rürup'] },
+    { id: 'cashflow',     faq: 'cashflow-rechner.html',    num: '05', badge: 'Finanzplanung',       title: 'Cashflow-Rechner',   desc: 'Monatlichen Cashflow analysieren: Ist vs. 50/15/15-Empfehlung, Notgroschen und AV-Sparquote.', tags: ['50/15/15-Regel', 'Notgroschen', 'Sparquote'] },
+    { id: 'versicherung', faq: 'versicherungscheck.html',  num: '06', badge: 'Marktvergleich',      title: 'Versicherungscheck', desc: 'Deine Versicherungskosten vs. GDV-Marktdurchschnitt 2025. Über- und Unterversicherung auf einen Blick.', tags: ['GDV-Daten 2025', '8 Kategorien', 'Einsparpotenzial'] },
   ];
 
   const tickers = [
@@ -37,10 +37,10 @@
         </button>
         <div class="ddmenu">
           {#each cards as c}
-            <button class="dditem" on:click={() => go(c.id)}>
+            <a class="dditem" href={c.faq}>
               <span style="font-family:var(--mono);color:var(--fg4);font-size:10px;margin-right:8px">{c.num}</span>
               {c.title}
-            </button>
+            </a>
           {/each}
         </div>
       </div>

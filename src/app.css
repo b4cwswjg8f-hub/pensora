@@ -234,7 +234,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg3); border-radius: 999px; overflow: hidden;
 }
 .step.done { background: var(--fg); }
-.step.active { background: var(--fg3); }
+.step.active { background: var(--fg); }
 
 /* ─── LAYOUT ────────────────────────────────────────────────────── */
 .row  { display: flex; align-items: center; }
