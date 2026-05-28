@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wie wird berechnet? — Alle Formeln transparent erklärt — Pensora</title>
+<meta name="description" content="Pensora legt alle Berechnungsformeln offen: Beamtenpension § 14 BeamtVG, gesetzliche Rente § 64 SGB VI, ETF-Depot Zinseszins, Rürup-Steuervorteil. Vollständig transparent.">
+<meta property="og:title" content="Wie wird berechnet? — Pensora Formeln">
+<meta property="og:description" content="Alle Berechnungsformeln von Pensora offen und nachvollziehbar erklärt — Pension, Rente, Depot, Rürup, Cashflow, Versicherungen.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://pensora.de/wie-wird-berechnet/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect x='3' y='2' width='3.2' height='20' rx='0.4' fill='%23fafafa'/%3E%3Ccircle cx='15' cy='8' r='5' fill='%23fafafa'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;--bg:#000;--bg1:#0a0a0a;--bg2:#111;--line:#1c1c1c;--fg:#fafafa;--fg2:#a3a3a3;--fg3:#6b6b6b;--loss:#FF6B6B;--green:#4ade80;--blue:#60a5fa;--amber:#fbbf24;--mono:'Geist Mono',ui-monospace,monospace;--rmd:12px;--rlg:18px;}
+html,body{min-height:100%;background:var(--bg);color:var(--fg);font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px;letter-spacing:-.035em;color:var(--fg)}
+.btnp{height:44px;padding:0 22px;border-radius:999px;border:none;background:var(--fg);color:var(--bg);font-size:14px;font-weight:600;cursor:pointer}
+.btn{height:44px;padding:0 22px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg2);font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.wrap{max-width:900px;margin:0 auto;padding:72px 56px}
+h1{font-size:52px;line-height:.98;letter-spacing:-.045em;font-weight:600;margin-bottom:20px}
+.lead{font-size:18px;color:var(--fg2);line-height:1.6;margin-bottom:56px}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg3);font-weight:500;margin-bottom:16px}
+/* Section cards */
+.section-card{background:var(--bg1);border:1px solid var(--line);border-radius:var(--rlg);padding:36px;margin-bottom:24px}
+.section-card h2{font-size:22px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px}
+.section-ref{font-size:12px;font-family:var(--mono);color:var(--fg3);margin-bottom:20px}
+/* Formula block */
+.formula-block{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--rmd);padding:20px 24px;margin:16px 0;font-family:var(--mono);font-size:14px;line-height:1.8;overflow-x:auto}
+.formula-block .var{color:var(--amber)}
+.formula-block .const{color:var(--green)}
+.formula-block .comment{color:var(--fg3);font-size:12px}
+/* Param table */
+.param-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.param-table th{text-align:left;padding:9px 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3);font-weight:500;border-bottom:1px solid var(--line)}
+.param-table td{padding:10px 0;border-bottom:1px solid var(--line);color:var(--fg2)}
+.param-table td:first-child{font-family:var(--mono);font-size:12px;color:var(--amber);white-space:nowrap;padding-right:20px}
+.param-table td:last-child{color:var(--fg)}
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:var(--rmd);padding:16px}
+.kpi-val{font-size:24px;font-weight:600;letter-spacing:-.03em;font-family:var(--mono);color:var(--fg)}
+.kpi-lbl{font-size:11px;color:var(--fg3);margin-top:4px}
+.highlight{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:var(--rmd);padding:14px 18px;font-size:14px;color:var(--fg2);margin:16px 0}
+.highlight strong{color:var(--blue)}
+.anchor-nav{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px}
+.anchor-chip{background:var(--bg1);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:12px;color:var(--fg2);text-decoration:none;transition:border-color .15s,color .15s}
+.anchor-chip:hover{border-color:var(--fg3);color:var(--fg)}
+footer{border-top:1px solid var(--line);padding:40px 56px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--fg3);margin-top:80px}
+footer a{color:var(--fg3);margin-left:24px}
+@media(max-width:700px){.wrap{padding:40px 24px}h1{font-size:34px}.kpi-row{grid-template-columns:1fr}.nav{padding:14px 24px}footer{flex-direction:column;gap:16px;padding:32px 24px}}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Article",
+  "headline":"Wie wird berechnet? — Alle Formeln transparent erklärt",
+  "description":"Pensora legt alle Berechnungsformeln offen: Beamtenpension §14 BeamtVG, gesetzliche Rente §64 SGB VI, ETF-Depot, Rürup, Cashflow.",
+  "author":{"@type":"Person","name":"Niall Bradfield","jobTitle":"unabhängiger Finanzberater","address":{"@type":"PostalAddress","addressLocality":"Stuttgart","addressCountry":"DE"}},
+  "publisher":{"@type":"Organization","name":"Pensora","url":"https://pensora.de"},
+  "datePublished":"2025-05-25",
+  "dateModified":"2025-05-25",
+  "url":"https://pensora.de/wie-wird-berechnet/"
+}
+</script>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</a>
+  <div style="display:flex;gap:12px;align-items:center">
+    <a class="btn" href="../">← Alle Rechner</a>
+    <button class="btnp" onclick="window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach','_blank')">Beratung buchen</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow">Transparenz · Formeln · Quellen</div>
+  <h1>Wie wird berechnet?</h1>
+  <p class="lead">Pensora zeigt alle Formeln offen — keine Blackbox, kein Marketing-Optimismus. Jede Zahl ist auf geprüfte gesetzliche Grundlagen und öffentlich zugängliche Daten zurückführbar. Autor: Niall Bradfield, unabhängiger Finanzberater, Stuttgart.</p>
+
+  <nav class="anchor-nav" aria-label="Springe zu">
+    <a class="anchor-chip" href="#pension">01 · Beamtenpension</a>
+    <a class="anchor-chip" href="#rente">02 · Gesetzliche Rente</a>
+    <a class="anchor-chip" href="#depot">03 · ETF-Depot / AV-Depot</a>
+    <a class="anchor-chip" href="#ruerup">04 · Rürup/Basisrente</a>
+    <a class="anchor-chip" href="#cashflow">05 · Cashflow</a>
+    <a class="anchor-chip" href="#versicherung">06 · Versicherungscheck</a>
+    <a class="anchor-chip" href="#steuer">07 · Einkommensteuer</a>
+  </nav>
+
+  <!-- ── 01 PENSION ── -->
+  <div class="section-card" id="pension">
+    <div class="eyebrow" style="margin-bottom:8px">01</div>
+    <h2>Beamtenpension</h2>
+    <div class="section-ref">Rechtsgrundlage: § 14 BeamtVG (Bund) · § 6, § 9, § 12a BeamtVG · Landesbeamtenversorgungsgesetze</div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">1,79375 %</div><div class="kpi-lbl">Ruhegehaltssatz pro Jahr</div></div>
+      <div class="kpi"><div class="kpi-val">71,75 %</div><div class="kpi-lbl">Maximaler Ruhegehaltssatz</div></div>
+      <div class="kpi"><div class="kpi-val">35 %</div><div class="kpi-lbl">Mindestversorgung</div></div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Schritt 1 — Ruhegehaltfähige Dienstjahre</h3>
+    <div class="formula-block">
+<span class="comment">// Effektive ruhegehaltfähige Dienstjahre (gdj)</span>
+<span class="var">Reguläre Dienstjahre</span> = aktuelles Jahr − Diensteintritt − Beurlaubungszeit
+<span class="var">Zukünftige Jahre</span>  = Pensionsalter − aktuelles Alter
+
+Ohne Teilzeit:
+  <span class="var">gdj</span> = <span class="var">Reguläre Dienstjahre</span> + <span class="var">Zukünftige Jahre</span>
+
+Mit Teilzeit (<span class="var">tzPct</span> % über <span class="var">tzJ</span> Jahre):
+  <span class="var">Vollzeitjahre</span> = Reguläre Dienstjahre − <span class="var">tzJ</span>
+  <span class="var">gdj</span> = <span class="var">Vollzeitjahre</span> + <span class="var">tzJ</span> × (<span class="var">tzPct</span> / 100) + <span class="var">Zukünftige Jahre</span>
+    </div>
+
+    <div class="highlight">
+      <strong>Hinweis Elternzeit:</strong> Elternzeit bis 3 Jahre wird vollständig als ruhegehaltfähige Dienstzeit angerechnet (§ 6 Abs. 1 Satz 2 BeamtVG). Beurlaubung ohne Dienstbezüge wird dagegen abgezogen.
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Schritt 2 — Ruhegehaltssatz und Bruttopension</h3>
+    <div class="formula-block">
+<span class="comment">// Ruhegehaltssatz (§ 14 Abs. 1 BeamtVG)</span>
+<span class="var">satz</span> = min(<span class="var">gdj</span> × <span class="const">0.0179375</span>, <span class="const">0.7175</span>)
+<span class="comment">         = min(gdj × 1,79375 %, 71,75 %)</span>
+
+<span class="comment">// Endbesoldung (inflationiert bis Pensionseintritt)</span>
+<span class="var">eg</span> = Pensionsbesoldung × (1 + <span class="var">Steigerung</span>/100)^<span class="var">Restjahre</span>
+
+<span class="comment">// Bruttopension</span>
+<span class="var">brutto</span> = max(<span class="var">eg</span> × <span class="var">satz</span>, <span class="var">Mindestversorgung</span>)
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Schritt 3 — Steuer</h3>
+    <div class="formula-block">
+<span class="comment">// Versorgungsfreibetrag 2025: 14,4 % des Jahresbetrags, max. 1.080 €/Jahr</span>
+<span class="comment">// Sinkt jährlich bis 2040 auf 0 %</span>
+<span class="var">vfb</span> = min(<span class="var">brutto</span> × 12 × <span class="const">0.144</span>, <span class="const">1080</span>)
+
+<span class="comment">// Werbungskostenpauschale: 102 €/Jahr</span>
+<span class="var">zvE</span> = max(<span class="var">brutto</span> × 12 − <span class="var">vfb</span> − <span class="const">102</span>, 0)
+
+<span class="comment">// Einkommensteuer → progressiver Tarif (§ 32a EStG, siehe Abschnitt 07)</span>
+<span class="var">Steuer/Monat</span> = taxDE(<span class="var">zvE</span>, Kirchensteuerpflicht) / 12
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Schritt 4 — KV/PV und Nettopension</h3>
+    <div class="formula-block">
+<span class="comment">// GKV-Versorgungsbezüge: 8,3 % der Bruttopension</span>
+<span class="var">kv_GKV</span> = <span class="var">brutto</span> × <span class="const">0.083</span>
+
+<span class="comment">// PKV mit Beihilfe: eigener Beitrag × (1 − Beihilfesatz/100)</span>
+<span class="var">kv_PKV</span> = <span class="var">PKV-Monatsbeitrag</span> × (1 − <span class="var">beihilfe</span>/100)
+
+<span class="comment">// Pflegeversicherung: 3,4 % der Bruttopension</span>
+<span class="var">pv</span> = <span class="var">brutto</span> × <span class="const">0.034</span>
+
+<span class="var">Nettopension</span> = <span class="var">brutto</span> − <span class="var">Steuer/Monat</span> − <span class="var">kv</span> − <span class="var">pv</span>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Mindestversorgung nach Bundesland (2025)</h3>
+    <table class="param-table">
+      <thead><tr><th>Bundesland</th><th>Mindestversorgung/Monat (brutto)</th></tr></thead>
+      <tbody>
+        <tr><td>Baden-Württemberg</td><td>1.936 €</td></tr>
+        <tr><td>Bayern</td><td>1.920 €</td></tr>
+        <tr><td>Nordrhein-Westfalen</td><td>1.850 €</td></tr>
+        <tr><td>Hessen</td><td>1.880 €</td></tr>
+        <tr><td>Hamburg</td><td>1.940 €</td></tr>
+        <tr><td>Berlin</td><td>1.810 €</td></tr>
+        <tr><td>Bund (Bundesbeamte)</td><td>1.870 €</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 02 RENTE ── -->
+  <div class="section-card" id="rente">
+    <div class="eyebrow" style="margin-bottom:8px">02</div>
+    <h2>Gesetzliche Rente</h2>
+    <div class="section-ref">Rechtsgrundlage: § 64 SGB VI · § 70 SGB VI · DRV Rentenwert 2025</div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">40,79 €</div><div class="kpi-lbl">Rentenwert 2025 (ab Juli)</div></div>
+      <div class="kpi"><div class="kpi-val">50.493 €</div><div class="kpi-lbl">Durchschnittsentgelt 2025</div></div>
+      <div class="kpi"><div class="kpi-val">96.600 €</div><div class="kpi-lbl">Beitragsbemessungsgrenze 2025</div></div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Entgeltpunkte und Bruttorente</h3>
+    <div class="formula-block">
+<span class="comment">// Entgeltpunkte pro Jahr (§ 70 SGB VI)</span>
+<span class="var">ep</span> = min(<span class="var">Bruttolohn</span>, <span class="const">96.600</span>) / <span class="const">50.493</span>
+
+<span class="comment">// Gesamtentgeltpunkte (Vergangenheit + Zukunft), max. 1,95 EP/Jahr</span>
+<span class="var">gesEP</span> = min(<span class="var">ep</span> × (<span class="var">ArbeitsjahreVerg</span> + <span class="var">RestjahreBisRente</span>), <span class="var">Gesamtjahre</span> × 1.95)
+
+<span class="comment">// Rentenwert inflationiert bis Renteneintritt (Rentenanpassungsrate)</span>
+<span class="var">rvJetzt</span> = <span class="const">40.79</span> × (1 + <span class="var">Rentenanpassung</span>/100)^<span class="var">Restjahre</span>
+
+<span class="comment">// Bruttorente (§ 64 SGB VI: EP × Zugangsfaktor × Rentenartfaktor × Rentenwert)</span>
+<span class="comment">// Zugangsfaktor = 1.0 bei Regelalter, Rentenartfaktor = 1.0 bei Altersrente</span>
+<span class="var">brutto</span> = <span class="var">gesEP</span> × 1.0 × 1.0 × <span class="var">rvJetzt</span>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Besteuerung und Nettorente</h3>
+    <div class="formula-block">
+<span class="comment">// Besteuerungsanteil 2025: 83,5 % — steigt bis 2040 auf 100 %</span>
+<span class="var">bestAnt</span> = min(100, 83.5 + (Rentenjahr − 2025) × 0.5) / 100
+
+<span class="comment">// Werbungskostenpauschale Rente: 102 €/Jahr</span>
+<span class="var">zvE</span> = max(<span class="var">brutto</span> × 12 × <span class="var">bestAnt</span> − <span class="const">102</span>, 0)
+
+<span class="comment">// KV: 8,3 %, PV: 3,4 % der Bruttorente</span>
+<span class="var">Nettorente</span> = <span class="var">brutto</span> − taxDE(<span class="var">zvE</span>)/12 − <span class="var">brutto</span> × <span class="const">0.117</span>
+
+<span class="comment">// Kaufkraft (reale Nettorente nach Inflation)</span>
+<span class="var">nettoReal</span> = <span class="var">Nettorente</span> / (1 + <span class="var">Inflation</span>/100)^<span class="var">Restjahre</span>
+    </div>
+  </div>
+
+  <!-- ── 03 DEPOT ── -->
+  <div class="section-card" id="depot">
+    <div class="eyebrow" style="margin-bottom:8px">03</div>
+    <h2>ETF-Depot / Altersvorsorgedepot</h2>
+    <div class="section-ref">Berechnungsbasis: Zinseszinsformel · 4 %-Regel (Bengen 1994) · Endkapital-Rente</div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">7 % p.a.</div><div class="kpi-lbl">Annahme ETF-Rendite (nominal)</div></div>
+      <div class="kpi"><div class="kpi-val">4 %</div><div class="kpi-lbl">Nachhaltige Entnahmerate</div></div>
+      <div class="kpi"><div class="kpi-val">0,5 % p.a.</div><div class="kpi-lbl">Sparbuch-Vergleich</div></div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Zinseszins-Endkapital</h3>
+    <div class="formula-block">
+<span class="comment">// Monatliche Rendite</span>
+<span class="var">r</span> = Jahresrendite / 12
+
+<span class="comment">// Laufzeit in Monaten</span>
+<span class="var">n</span> = Laufzeit_Jahre × 12
+
+<span class="comment">// Endwert aus monatlichen Einzahlungen (Annuität fällig)</span>
+<span class="var">fvSparplan</span> = <span class="var">Monatsbetrag</span> × ((1+<span class="var">r</span>)^<span class="var">n</span> − 1) / <span class="var">r</span> × (1+<span class="var">r</span>)
+
+<span class="comment">// Endwert des Startkapitals</span>
+<span class="var">fvStartkapital</span> = <span class="var">Startkapital</span> × (1+<span class="var">r</span>)^<span class="var">n</span>
+
+<span class="comment">// Gesamtendkapital</span>
+<span class="var">fvGesamt</span> = <span class="var">fvSparplan</span> + <span class="var">fvStartkapital</span>
+
+<span class="comment">// Reales Endkapital nach Inflation</span>
+<span class="var">fvReal</span> = <span class="var">fvGesamt</span> / (1 + Inflation/100)^Laufzeit_Jahre
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--fg2)">Entnahme nach der 4 %-Regel</h3>
+    <div class="formula-block">
+<span class="comment">// Nachhaltige Jahresentnahme (4 %-Regel, Bengen 1994)</span>
+<span class="var">Entnahme_Jahr</span> = <span class="var">fvGesamt</span> × <span class="const">0.04</span>
+<span class="var">Entnahme_Monat</span> = <span class="var">Entnahme_Jahr</span> / 12
+
+<span class="comment">// Zeitlich begrenzte Entnahme (exakte Rentenformel)</span>
+<span class="var">eExakt</span> = <span class="var">fvGesamt</span> × <span class="var">r</span> / (1 − (1+<span class="var">r</span>)^−<span class="var">nEntnahme</span>)
+<span class="comment">// wobei nEntnahme = Entnahmedauer in Monaten</span>
+
+<span class="comment">// Benötigtes Kapital für Ziel-Entnahme (25er-Multiplikator)</span>
+<span class="var">kapitalZiel</span> = <span class="var">ZielEntnahme_Monat</span> × 12 / <span class="const">0.04</span>
+    </div>
+
+    <div class="highlight">
+      <strong>Sparbuch-Vergleich:</strong> Pensora berechnet denselben Sparplan mit 0,5 % p.a. (Sparbuch/Tagesgeld), um den Zinseszins-Vorteil des ETF-Depots zu quantifizieren.
+    </div>
+  </div>
+
+  <!-- ── 04 RÜRUP ── -->
+  <div class="section-card" id="ruerup">
+    <div class="eyebrow" style="margin-bottom:8px">04</div>
+    <h2>Rürup / Basisrente</h2>
+    <div class="section-ref">Rechtsgrundlage: § 10 Abs. 1 Nr. 2 EStG · Höchstbetrag 2025: 29.344 € (Single)</div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-val">29.344 €</div><div class="kpi-lbl">Rürup-Höchstbetrag 2025 (Single)</div></div>
+      <div class="kpi"><div class="kpi-val">100 %</div><div class="kpi-lbl">Absetzbar seit 2023</div></div>
+      <div class="kpi"><div class="kpi-val">3,5 % p.a.</div><div class="kpi-lbl">Verrentungsfaktor (Pensora-Annahme)</div></div>
+    </div>
+
+    <div class="formula-block">
+<span class="comment">// Absetzbarer Betrag (GRV-Beitrag wird angerechnet)</span>
+<span class="comment">// Für Arbeitnehmer: GRV-Gesamtbeitrag (AN + AG) zuerst anrechnen</span>
+<span class="var">Spielraum</span>  = max(<span class="const">29.344</span> − <span class="var">GRV_Gesamtbeitrag</span>, 0)
+<span class="var">absetzbar</span>  = min(Jahresbeitrag, <span class="var">Spielraum</span>)
+
+<span class="comment">// Jährliche Steuerersparnis</span>
+<span class="var">Steuerersparnis_Jahr</span> = <span class="var">absetzbar</span> × (<span class="var">Grenzsteuersatz</span>/100)
+<span class="var">Nettokosten_Monat</span>   = Monatsbeitrag − <span class="var">Steuerersparnis_Jahr</span>/12
+
+<span class="comment">// Endkapital (Zinseszins, wie Depot)</span>
+<span class="var">fv</span> = Monatsbeitrag × ((1+<span class="var">r</span>)^<span class="var">n</span> − 1) / <span class="var">r</span> × (1+<span class="var">r</span>)
+
+<span class="comment">// Monatliche Rürup-Rente (Verrentung mit 3,5 % p.a. Annuität)</span>
+<span class="var">verrF</span>  = <span class="const">0.035</span> / 12
+<span class="var">mRente</span> = <span class="var">fv</span> × <span class="var">verrF</span>
+
+<span class="comment">// Besteuerung der Rürup-Rente (Kohortenprinzip)</span>
+<span class="var">bestAnt</span>  = min(100, 83.5 + (Rentenjahr − 2025) × 0.5) / 100
+<span class="var">zvE</span>      = max(<span class="var">mRente</span> × 12 × <span class="var">bestAnt</span> − 102, 0)
+<span class="var">nettoR</span>   = <span class="var">mRente</span> − taxDE(<span class="var">zvE</span>)/12
+    </div>
+  </div>
+
+  <!-- ── 05 CASHFLOW ── -->
+  <div class="section-card" id="cashflow">
+    <div class="eyebrow" style="margin-bottom:8px">05</div>
+    <h2>Cashflow-Analyse</h2>
+    <div class="section-ref">Berechnungsbasis: 50/15/15-Regel · Notgroschen-Empfehlung</div>
+
+    <div class="formula-block">
+<span class="comment">// Kategorisierung der Ausgaben</span>
+<span class="var">Fixkosten</span> = Miete + Nebenkosten + Lebensmittel + Transport + Kommunikation
+
+<span class="comment">// Gesamtausgaben</span>
+<span class="var">out</span> = <span class="var">Fixkosten</span> + Versicherungen + Altersvorsorge + Lifestyle + Sonstiges
+
+<span class="comment">// Freier Cashflow</span>
+<span class="var">frei</span> = max(Nettoeinkommen − <span class="var">out</span>, 0)
+
+<span class="comment">// 50/15/15-Empfehlung (adaptiert nach Nettoeinkommen)</span>
+<span class="var">emp_fix</span>  = Nettoeinkommen × <span class="const">0.50</span>   <span class="comment">// max. 50 % für Fixkosten</span>
+<span class="var">emp_vers</span> = Nettoeinkommen × <span class="const">0.10</span>   <span class="comment">// 10 % für Versicherungen</span>
+<span class="var">emp_av</span>   = Nettoeinkommen × <span class="const">0.15</span>   <span class="comment">// 15 % für Altersvorsorge</span>
+<span class="var">emp_frei</span> = Nettoeinkommen × <span class="const">0.15</span>   <span class="comment">// 15 % für freie Verwendung</span>
+
+<span class="comment">// Notgroschen-Empfehlung: 3 Monatsnettogehälter</span>
+<span class="var">notgroschen</span> = Nettoeinkommen × <span class="const">3</span>
+    </div>
+  </div>
+
+  <!-- ── 06 VERSICHERUNG ── -->
+  <div class="section-card" id="versicherung">
+    <div class="eyebrow" style="margin-bottom:8px">06</div>
+    <h2>Versicherungscheck</h2>
+    <div class="section-ref">Datenquelle: GDV-Marktdaten 2025 (Gesamtverband der Deutschen Versicherungswirtschaft)</div>
+
+    <p style="font-size:15px;color:var(--fg2);margin-bottom:20px">Pensora vergleicht die eingegebenen Monatsbeiträge mit den GDV-Marktdurchschnittswerten 2025. Die Farbkodierung:</p>
+
+    <table class="param-table">
+      <thead><tr><th>Versicherung</th><th>GDV Ø/Monat</th><th>Jahresbasis</th></tr></thead>
+      <tbody>
+        <tr><td>Privathaftpflicht</td><td>7 €</td><td>~85 €/Jahr</td></tr>
+        <tr><td>Hausratversicherung</td><td>11 €</td><td>~130 €/Jahr</td></tr>
+        <tr><td>KFZ-Versicherung</td><td>40 €</td><td>~350–500 €/Jahr</td></tr>
+        <tr><td>Berufsunfähigkeit (BU)</td><td>90 €</td><td>sehr individuell</td></tr>
+        <tr><td>Rechtsschutz</td><td>22 €</td><td>~250 €/Jahr</td></tr>
+        <tr><td>Unfallversicherung</td><td>8 €</td><td>~100 €/Jahr</td></tr>
+        <tr><td>Zahnzusatz</td><td>25 €</td><td>20–35 €/Monat</td></tr>
+        <tr><td>Risikolebensversicherung</td><td>25 €</td><td>Ø 40 J., 200k €</td></tr>
+      </tbody>
+    </table>
+
+    <div class="formula-block">
+<span class="comment">// Über-/Unterversicherungs-Schwellen</span>
+Überversicherung:  eigener Beitrag &gt; GDV-Ø × <span class="const">1.30</span>  <span class="comment">// rot markiert</span>
+Unterversicherung: eigener Beitrag &lt; GDV-Ø × <span class="const">0.70</span>  <span class="comment">// grün markiert</span>
+Im Rahmen:         GDV-Ø × 0.70 ≤ eigener Beitrag ≤ GDV-Ø × 1.30
+
+<span class="comment">// Einsparpotenzial pro Jahr (wenn Überversicherung)</span>
+<span class="var">Einsparpotenzial</span> = max(Gesamtbeitrag − GDV-Ø-Gesamt, 0) × 12
+    </div>
+  </div>
+
+  <!-- ── 07 STEUER ── -->
+  <div class="section-card" id="steuer">
+    <div class="eyebrow" style="margin-bottom:8px">07</div>
+    <h2>Einkommensteuer (§ 32a EStG)</h2>
+    <div class="section-ref">Rechtsgrundlage: § 32a EStG · Solidaritätszuschlag § 3 SolZG · Kirchensteuer 8–9 % je Bundesland</div>
+
+    <p style="font-size:15px;color:var(--fg2);margin-bottom:20px">Pensora berechnet die Einkommensteuer nach dem progressiven Tarif 2025. Alle Rechnungen verwenden das zu versteuernde Einkommen (zvE) nach Abzug aller spezifischen Freibeträge des jeweiligen Produkts.</p>
+
+    <div class="formula-block">
+<span class="comment">// § 32a EStG — Einkommensteuertarif 2025 (Single)</span>
+<span class="comment">// Zonen (gerundet):</span>
+zvE ≤ <span class="const">11.784 €</span>:            Steuer = <span class="const">0</span>          <span class="comment">// Grundfreibetrag</span>
+<span class="const">11.785</span> ≤ zvE ≤ <span class="const">17.005 €</span>:  Progressionszone 1  <span class="comment">// 14–24 %</span>
+<span class="const">17.006</span> ≤ zvE ≤ <span class="const">66.760 €</span>:  Progressionszone 2  <span class="comment">// 24–42 %</span>
+<span class="const">66.761</span> ≤ zvE ≤ <span class="const">277.825 €</span>: Spitzensteuersatz   <span class="comment">// 42 %</span>
+zvE &gt; <span class="const">277.825 €</span>:           Reichensteuersatz   <span class="comment">// 45 %</span>
+
+<span class="comment">// Solidaritätszuschlag (seit 2021 nur für höhere Einkommen)</span>
+<span class="var">SolZ</span> = max(0, min(ESt × <span class="const">0.055</span>, (ESt − <span class="const">17.543</span>) × <span class="const">0.119</span>))
+
+<span class="comment">// Kirchensteuer (falls anwendbar)</span>
+<span class="var">KiSt</span> = ESt × <span class="const">0.09</span>   <span class="comment">// Bayern/BW: 8 %, sonst 9 %</span>
+    </div>
+
+    <div class="highlight">
+      <strong>Splitting-Vorteil:</strong> Verheiratete Paare können das Ehegattensplitting (§ 26b EStG) nutzen — das halbiert rechnerisch das zvE und reduziert die effektive Steuerlast erheblich. Pensora berechnet aktuell für Singles; für Paare empfehlen wir ein persönliches Beratungsgespräch.
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="background:var(--bg1);border:1px solid var(--line);border-radius:var(--rlg);padding:40px;margin-top:48px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap">
+    <div>
+      <div class="eyebrow" style="margin-bottom:10px">Alle Formeln live ausprobieren</div>
+      <h2 style="font-size:26px;font-weight:600;letter-spacing:-.025em;margin-bottom:8px">Zur eigenen Berechnung</h2>
+      <p style="font-size:15px;color:var(--fg2);max-width:52ch">Die Formeln sind in den Rechnern direkt erlebbar. Zahlen eingeben — sofort sehen, was sich ändert.</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0">
+      <a class="btnp" href="../" style="display:inline-flex;align-items:center;height:52px;padding:0 32px;font-size:16px;border-radius:999px;border:none;background:var(--fg);color:var(--bg);font-weight:600;text-decoration:none">Zu den Rechnern →</a>
+      <button class="btn" style="height:52px;padding:0 28px;font-size:15px" onclick="window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach','_blank')">Beratung buchen</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a class="brand" href="../" style="font-size:15px"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Pensora</a>
+  <div>
+    <a href="../">Alle Rechner</a>
+    <a href="../ueber-uns/">Über uns</a>
+    <a href="../kontakt/">Kontakt</a>
+    <a href="#">Impressum</a>
+    <a href="#">Datenschutz</a>
+  </div>
+</footer>
+</body>
+</html>

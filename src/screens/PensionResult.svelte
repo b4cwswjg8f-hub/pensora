@@ -180,7 +180,7 @@
           </div>
           <div style="font-size:11px;color:rgba(255,107,107,.6);font-family:var(--mono);margin-top:4px;margin-bottom:16px">weniger über den Ruhestand</div>
           <h3 style="font-size:20px;font-weight:500;line-height:1.2;color:var(--fg)">Jetzt gegensteuern — bevor die Lücke wächst.</h3>
-          <p style="margin-top:10px;color:var(--fg2);font-size:13px;line-height:1.55">30 Min. kostenlos. Unabhängiger Honorarberater. Kein Verkauf.</p>
+          <p style="margin-top:10px;color:var(--fg2);font-size:13px;line-height:1.55">30 Min. kostenlos. Unabhängiger Finanzberater. Kein Verkauf.</p>
           <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Kostenloses Gespräch buchen →</button>
           <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
           <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)">
