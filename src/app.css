@@ -234,17 +234,7 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg3); border-radius: 999px; overflow: hidden;
 }
 .step.done { background: var(--fg); }
-.step.active { position: relative; }
-@keyframes stepPulse {
-  0%   { width: 30%; }
-  50%  { width: 70%; }
-  100% { width: 30%; }
-}
-.step.active::after {
-  content: ""; position: absolute; inset: 0;
-  width: 50%; background: var(--fg); border-radius: 999px;
-  animation: stepPulse 2s ease-in-out infinite;
-}
+.step.active { background: var(--fg3); }
 
 /* ─── LAYOUT ────────────────────────────────────────────────────── */
 .row  { display: flex; align-items: center; }

@@ -32,7 +32,7 @@
       <a class="nav-link">Kontakt</a>
       <div class="ddwrap">
         <button class="ddtrig">
-          Rechner
+          FAQ
           <svg width="9" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
         </button>
         <div class="ddmenu">
