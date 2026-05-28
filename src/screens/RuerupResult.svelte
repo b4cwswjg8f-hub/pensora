@@ -51,7 +51,7 @@
   <div class="row g8">
     <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => alert('Calendly')}>Beratung buchen →</button>
+    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
@@ -104,7 +104,7 @@
         <div class="card" style="border-color:var(--fg);position:relative;overflow:hidden">
           <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div>
           <h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Rürup-Strategie optimieren.</h3>
-          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => alert('Calendly')}>Beratung buchen →</button>
+          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
           <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
         </div>
       </aside>

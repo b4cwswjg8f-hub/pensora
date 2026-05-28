@@ -56,7 +56,7 @@
   <div class="row g8">
     <button class="btn btng" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btnp" on:click={() => alert('Calendly')}>Beratung buchen →</button>
+    <button class="btn btnp" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
@@ -131,7 +131,7 @@
           <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div>
           <h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Cashflow optimieren.</h3>
           <p style="font-size:13px;color:var(--fg2);line-height:1.55">Budget strukturieren, Sparpotenziale aufdecken, Vorsorge aufbauen.</p>
-          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => alert('Calendly')}>Beratung buchen →</button>
+          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
           <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
           <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)">
             <div class="ey" style="margin-bottom:10px">Passende Rechner</div>

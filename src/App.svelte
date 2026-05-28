@@ -7,7 +7,6 @@
   import CashflowCalc from './screens/CashflowCalc.svelte';
   import VersicherungCalc from './screens/VersicherungCalc.svelte';
 
-  // Valid screen names
   const SCREENS = ['hub', 'pension', 'rente', 'depot', 'ruerup', 'cashflow', 'versicherung'];
 
   function readHash() {
@@ -16,29 +15,37 @@
   }
 
   let screen = readHash();
+  let key = 0; // increment to trigger re-animation on navigation
 
   function navigate(name) {
     screen = name;
+    key++;
     window.location.hash = name === 'hub' ? '' : name;
     window.scrollTo(0, 0);
   }
 
-  // Keep screen in sync when user presses back/forward
-  window.addEventListener('hashchange', () => { screen = readHash(); });
+  window.addEventListener('hashchange', () => {
+    const next = readHash();
+    if (next !== screen) { screen = next; key++; }
+  });
 </script>
 
-{#if screen === 'hub'}
-  <Hub on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'pension'}
-  <PensionCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'rente'}
-  <RenteCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'depot'}
-  <DepotCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'ruerup'}
-  <RuerupCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'cashflow'}
-  <CashflowCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{:else if screen === 'versicherung'}
-  <VersicherungCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
-{/if}
+{#key key}
+  <div class="screen-enter">
+    {#if screen === 'hub'}
+      <Hub on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'pension'}
+      <PensionCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'rente'}
+      <RenteCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'depot'}
+      <DepotCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'ruerup'}
+      <RuerupCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'cashflow'}
+      <CashflowCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {:else if screen === 'versicherung'}
+      <VersicherungCalc on:back={() => navigate('hub')} on:navigate={e => navigate(e.detail)} />
+    {/if}
+  </div>
+{/key}
