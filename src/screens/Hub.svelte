@@ -25,6 +25,20 @@
     { href: 'altersvorsorgedepot-2027/', label: 'AV-Depot 2027' },
     { href: 'ruerup-lehrer/',         label: 'Rürup für Lehrer' },
     { href: 'pkv-beamte-ruhestand/',  label: 'PKV im Ruhestand' },
+    { href: 'riester-nachfolger/',        label: 'Riester Nachfolger' },
+    { href: 'fruehstartrente-kinder/',    label: 'Frühstartrente Kinder' },
+    { href: 'altersvorsorgedepot-beamte/', label: 'AV-Depot Beamte' },
+    { href: 'altersvorsorgedepot-foerderung/', label: 'AV-Depot Förderung' },
+    { href: 'rentenluecke-2026/',         label: 'Rentenlücke 2026' },
+    { href: 'gesetzliche-rente-reicht-nicht/', label: 'GRV reicht nicht' },
+    { href: 'rente-mit-63-lehrer/',       label: 'Rente mit 63 Lehrer' },
+    { href: 'aktivrente-2026/',           label: 'Aktivrente 2026' },
+    { href: 'muetterrente-2027/',         label: 'Mütterrente 2027' },
+    { href: 'versorgungsluecke-beamte-berechnen/', label: 'Versorgungslücke Beamte' },
+    { href: 'pensionsluecke-lehrer/',     label: 'Pensionslücke Lehrer' },
+    { href: 'pension-lehrer-prozent/',    label: 'Pension Lehrer Prozent' },
+    { href: 'beamtenversorgung-teilzeit-elternzeit/', label: 'Teilzeit Elternzeit Pension' },
+    { href: 'private-altersvorsorge-beamte/', label: 'Private AV Beamte' },
   ];
 
   const vergleiche = [

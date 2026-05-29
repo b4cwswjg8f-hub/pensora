@@ -421,6 +421,46 @@ input[type=range] { width: 100%; height: 3px; accent-color: var(--fg); cursor: p
   /* Misc */
   .btnxl { font-size: 14px; }
   .sfxt { display: none; }
+
+  /* Nav: hide secondary result-page action buttons and breadcrumb separators */
+  .nav .btng.print-hide { display: none; }
+  .nav .row.g16 > span  { display: none; }
+
+  /* ── Calc form: collapse inline-style grids to 1 column ─────── */
+  .calc-form [style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  .calc-form [style*="grid-template-columns: 1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+  .calc-form [style*="grid-template-columns:1fr 1fr;"]    { grid-template-columns: 1fr !important; }
+  .calc-form [style*="grid-template-columns: 1fr 1fr"]    { grid-template-columns: 1fr !important; }
+
+  /* ── Result pages: collapse inline-style grids ──────────────── */
+  /* 2-col panels (hero / diagram etc.) */
+  .calc-result-pad [style*="grid-template-columns:1fr 1fr;"]      { grid-template-columns: 1fr !important; }
+  .calc-result-pad [style*="grid-template-columns: 1fr 1fr"]      { grid-template-columns: 1fr !important; }
+  /* 3-col panels */
+  .calc-result-pad [style*="grid-template-columns:1fr 1fr 1fr"]   { grid-template-columns: 1fr !important; }
+  .calc-result-pad [style*="grid-template-columns: 1fr 1fr 1fr"]  { grid-template-columns: 1fr !important; }
+  /* 4-col KPI strips → 2×2 */
+  .calc-result-pad [style*="grid-template-columns:repeat(4,1fr)"] { grid-template-columns: 1fr 1fr !important; }
+  .calc-result-pad [style*="grid-template-columns: repeat(4"]     { grid-template-columns: 1fr 1fr !important; }
+  /* Main + fixed sidebar */
+  [style*="grid-template-columns:minmax(0,1fr) 340px"]            { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: minmax(0,1fr)"]                 { grid-template-columns: 1fr !important; }
+
+  /* Aside: unstick so it flows below content rather than overlapping */
+  .calc-result-pad aside { position: static !important; width: 100% !important; }
+
+  /* Large inline stat numbers */
+  [style*="font-size:80px"]  { font-size: 40px !important; line-height: 1.1 !important; }
+  [style*="font-size: 80px"] { font-size: 40px !important; line-height: 1.1 !important; }
+  [style*="font-size:64px"]  { font-size: 36px !important; }
+  [style*="font-size: 64px"] { font-size: 36px !important; }
+
+  /* Gap diagram SVG: full width */
+  .calc-result-pad svg { width: 100% !important; height: auto !important; }
+
+  /* Living-costs grid (uses inline repeat) */
+  [style*="grid-template-columns:repeat(2,1fr)"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: repeat(2"]     { grid-template-columns: 1fr !important; }
 }
 
 /* ─── PRINT / PDF ────────────────────────────────────────────── */
