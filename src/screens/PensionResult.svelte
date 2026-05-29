@@ -42,76 +42,87 @@
 
   $: legendHtml = legend([['#60a5fa','Pension nominal'],['#4ade80','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch','4 2'],['#fbbf24','Versorgungsziel','6 3']]);
 
-  // Gap diagram: Wunschrente vs. real pension vs. Lücke
+  // Gap diagram: 2 bars — Ziel | Pension(blue)+Lücke(red) stacked
   $: gapSvg = (() => {
-    const w = 800, h = 320, padL = 64, padB = 52, padT = 48, padR = 40;
+    const w = 600, h = 320, padL = 64, padB = 52, padT = 48, padR = 60;
     const plotH = h - padT - padB;
     const goal = P.zielEur;
     const actual = r.nettoR;
     const luecke = Math.max(goal - actual, 0);
-    const maxVal = Math.max(goal, actual) * 1.06;
-    const sc = v => (Math.max(0, Math.min(v / maxVal, 1))) * plotH;
+    const maxVal = Math.max(goal, actual) * 1.08;
+    const sc = v => Math.max(0, Math.min(v / maxVal, 1)) * plotH;
     const baseY = h - padB;
-
-    // Bar positions: 3 bars with generous spacing
-    const bw = 110;
-    const spacing = (w - padL - padR - bw * 3) / 2;
-    const xs = [padL, padL + bw + spacing, padL + (bw + spacing) * 2];
+    const bw = 120;
+    const innerW = w - padL - padR;
+    const gapBetween = innerW - bw * 2;
+    const x1 = padL + gapBetween * 0.3;
+    const x2 = x1 + bw + gapBetween * 0.4;
 
     let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">`;
-
-    // Grid lines
-    [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+    // Grid
+    [0,.25,.5,.75,1].forEach(f => {
       const yg = baseY - sc(f * maxVal);
-      s += `<line x1="${padL}" x2="${w - padR}" y1="${yg.toFixed(1)}" y2="${yg.toFixed(1)}" stroke="#1c1c1c" stroke-width="1" ${f > 0 ? 'stroke-dasharray="3 3"' : ''}/>`;
-      s += `<text x="${padL - 8}" y="${(yg + 3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',monospace" text-anchor="end">${de0.format(Math.round(f * maxVal))}€</text>`;
+      s += `<line x1="${padL}" x2="${w-padR}" y1="${yg.toFixed(1)}" y2="${yg.toFixed(1)}" stroke="#1c1c1c" stroke-width="1" ${f>0?'stroke-dasharray="3 3"':''}/>`;
+      s += `<text x="${padL-8}" y="${(yg+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',monospace" text-anchor="end">${de0.format(Math.round(f*maxVal))}€</text>`;
     });
-
-    // Dashed goal line
-    const goalLineY = baseY - sc(goal);
-    s += `<line x1="${padL}" x2="${w - padR}" y1="${goalLineY.toFixed(1)}" y2="${goalLineY.toFixed(1)}" stroke="rgba(251,191,36,.4)" stroke-width="1" stroke-dasharray="6 4"/>`;
+    // Goal dashed line
+    const glY = baseY - sc(goal);
+    s += `<line x1="${padL}" x2="${w-padR}" y1="${glY.toFixed(1)}" y2="${glY.toFixed(1)}" stroke="rgba(251,191,36,.4)" stroke-width="1" stroke-dasharray="6 4"/>`;
 
     // Bar 1: Versorgungsziel (amber)
-    const goalBarH = sc(goal);
-    const goalBarY = baseY - goalBarH;
-    s += `<rect x="${xs[0]}" y="${goalBarY.toFixed(1)}" width="${bw}" height="${goalBarH.toFixed(1)}" fill="rgba(251,191,36,.18)" stroke="rgba(251,191,36,.55)" stroke-width="1.5" rx="5"/>`;
+    const gbH = sc(goal), gbY = baseY - gbH;
+    s += `<rect x="${x1}" y="${gbY.toFixed(1)}" width="${bw}" height="${gbH.toFixed(1)}" fill="rgba(251,191,36,.18)" stroke="rgba(251,191,36,.6)" stroke-width="1.5" rx="5"/>`;
+    s += `<text x="${(x1+bw/2).toFixed(1)}" y="${(gbY+gbH/2+5).toFixed(1)}" fill="rgba(251,191,36,.95)" font-size="14" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(goal)}</text>`;
 
-    // Bar 2: Pension-Anteil (blue) — bottom part of stacked bar
-    const pensionH = sc(actual);
-    const pensionY = baseY - pensionH;
-    s += `<rect x="${xs[1]}" y="${pensionY.toFixed(1)}" width="${bw}" height="${pensionH.toFixed(1)}" fill="rgba(96,165,250,.25)" stroke="rgba(96,165,250,.7)" stroke-width="1.5" rx="5"/>`;
-
-    // Bar 3: Lücke (red) on top — stacked on pension bar
+    // Bar 2: Stacked — pension (blue, bottom) + Lücke (red, top)
+    const ph = sc(actual), py = baseY - ph;
     if (luecke > 0) {
-      const lueckeH = sc(luecke);
-      const lueckeY = pensionY - lueckeH;
-      s += `<rect x="${xs[2]}" y="${lueckeY.toFixed(1)}" width="${bw}" height="${lueckeH.toFixed(1)}" fill="rgba(255,107,107,.22)" stroke="rgba(255,107,107,.65)" stroke-width="1.5" rx="5"/>`;
-      // Value label inside lücke bar
-      if (lueckeH > 28) {
-        s += `<text x="${(xs[2] + bw / 2).toFixed(1)}" y="${(lueckeY + lueckeH / 2 + 4).toFixed(1)}" fill="#FF6B6B" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">−${fmtE(luecke)}</text>`;
-      }
+      const lh = sc(luecke), ly = py - lh;
+      // Red gap on top
+      s += `<rect x="${x2}" y="${ly.toFixed(1)}" width="${bw}" height="${lh.toFixed(1)}" fill="rgba(255,107,107,.22)" stroke="rgba(255,107,107,.65)" stroke-width="1.5" rx="5"/>`;
+      if (lh > 28) s += `<text x="${(x2+bw/2).toFixed(1)}" y="${(ly+lh/2+5).toFixed(1)}" fill="#FF6B6B" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">−${fmtE(luecke)}</text>`;
+      // Blue pension on bottom
+      s += `<rect x="${x2}" y="${py.toFixed(1)}" width="${bw}" height="${ph.toFixed(1)}" fill="rgba(96,165,250,.25)" stroke="rgba(96,165,250,.7)" stroke-width="1.5" rx="5"/>`;
+      if (ph > 28) s += `<text x="${(x2+bw/2).toFixed(1)}" y="${(py+ph/2+5).toFixed(1)}" fill="rgba(96,165,250,.95)" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(actual)}</text>`;
     } else {
-      // No gap — full green indicator
-      const fullH = sc(actual);
-      s += `<rect x="${xs[2]}" y="${(baseY - fullH).toFixed(1)}" width="${bw}" height="${fullH.toFixed(1)}" fill="rgba(74,222,128,.22)" stroke="rgba(74,222,128,.65)" stroke-width="1.5" rx="5"/>`;
+      s += `<rect x="${x2}" y="${py.toFixed(1)}" width="${bw}" height="${ph.toFixed(1)}" fill="rgba(74,222,128,.25)" stroke="rgba(74,222,128,.65)" stroke-width="1.5" rx="5"/>`;
+      if (ph > 28) s += `<text x="${(x2+bw/2).toFixed(1)}" y="${(py+ph/2+5).toFixed(1)}" fill="rgba(74,222,128,.95)" font-size="14" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">✓ ${fmtE(actual)}</text>`;
     }
-
-    // Value labels inside bars (centered vertically)
-    const goalMidY = goalBarY + goalBarH / 2 + 4;
-    s += `<text x="${(xs[0] + bw / 2).toFixed(1)}" y="${goalMidY.toFixed(1)}" fill="rgba(251,191,36,.9)" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(goal)}</text>`;
-    const pensionMidY = pensionY + pensionH / 2 + 4;
-    if (pensionH > 28) {
-      s += `<text x="${(xs[1] + bw / 2).toFixed(1)}" y="${pensionMidY.toFixed(1)}" fill="rgba(96,165,250,.9)" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(actual)}</text>`;
-    }
-
-    // X-axis labels
     const lblY = baseY + 18;
-    s += `<text x="${(xs[0] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Versorgungsziel</text>`;
-    s += `<text x="${(xs[1] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Pension real</text>`;
-    s += `<text x="${(xs[2] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">${luecke > 0 ? 'Versorgungslücke' : 'Gedeckt ✓'}</text>`;
-
+    s += `<text x="${(x1+bw/2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Versorgungsziel</text>`;
+    s += `<text x="${(x2+bw/2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Pension real${luecke>0?' + Lücke':' ✓'}</text>`;
     s += `</svg>`;
     return s;
+  })();
+
+  // Living-costs story section
+  const KOSTEN = [
+    { label: 'Warmmiete', val: 960, color: '#60a5fa' },
+    { label: 'Lebensmittel', val: 440, color: '#4ade80' },
+    { label: 'Transport', val: 210, color: '#fbbf24' },
+    { label: 'Energie', val: 160, color: '#a78bfa' },
+    { label: 'Kommunikation', val: 65, color: '#f97316' },
+    { label: 'Bekleidung', val: 80, color: '#ec4899' },
+    { label: 'Gesundheit', val: 110, color: '#14b8a6' },
+  ];
+  const KOSTEN_TOT = KOSTEN.reduce((s, k) => s + k.val, 0); // 2.025 €
+  $: spielraum = r.nettoR - KOSTEN_TOT;
+
+  // Recommendation engine
+  $: recos = (() => {
+    const list = [];
+    if (P.kv === 'GKV') {
+      list.push({ icon: '💊', title: 'PKV-Wechsel prüfen', text: 'Beamte mit 70 % Beihilfe zahlen in der GKV oft 200–300 €/Mo. mehr als nötig. Ein gezielter PKV-Tarif-Vergleich zeigt das Potenzial — ohne Lückenrisiko.', nav: 'versicherung', cta: 'Versicherungscheck →' });
+    }
+    if (realLuecke > 500) {
+      list.push({ icon: '📈', title: 'Rürup + AV-Depot kombinieren', text: `Bei einer realen Lücke von ${fmtE(realLuecke)}/Mo. kombinieren viele Beamte den Rürup-ETF (Steuervorteil bis 42 %) mit dem AV-Depot-Sparkonto (540 €/Jahr Grundzulage ab 2027).`, nav: 'ruerup', cta: 'Rürup-Rechner →' });
+    } else if (realLuecke > 150) {
+      list.push({ icon: '🏦', title: 'AV-Depot-Sparkonto aufbauen', text: `Ab 2027: 540 €/Jahr Grundzulage + steuerfreie Anlage bis 3.000 €. Für eine Lücke von ${fmtE(realLuecke)}/Mo. kann das den Unterschied machen.`, nav: 'depot', cta: 'AV-Depot-Rechner →' });
+    }
+    if (P.eltern && realLuecke > 0) {
+      list.push({ icon: '👨‍👩‍👧', title: 'Kinderzulage: 300 €/Jahr je Kind', text: 'Das neue AV-Depot-Sparkonto bringt ab 2027 zusätzlich 300 €/Jahr je kindergeldberechtigtem Kind — kombinierbar mit der Grundzulage.', nav: 'depot', cta: 'Mehr erfahren →' });
+    }
+    return list;
   })();
 </script>
 
@@ -246,21 +257,77 @@
           </div>
         {/if}
 
-        <!-- Gap diagram -->
+        <!-- Gap diagram: stacked -->
         <div class="cardf" style="padding:28px">
           <div class="ey" style="margin-bottom:6px">Versorgungsanalyse auf einen Blick</div>
-          <div style="font-size:13px;color:var(--fg3);margin-bottom:20px">
-            Wunschrente · Pension real (heutige Kaufkraft) · {realLuecke > 0 ? 'Versorgungslücke' : 'Versorgungsziel gedeckt ✓'}
-          </div>
+          <div style="font-size:13px;color:var(--fg3);margin-bottom:20px">Wunschrente · Pension real · {realLuecke > 0 ? 'Versorgungslücke auf Pension gestapelt' : 'Versorgungsziel gedeckt ✓'}</div>
           {@html gapSvg}
           <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:11px;font-family:var(--mono);color:var(--fg3)">
-            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(251,191,36,.5);border:1px solid rgba(251,191,36,.7);border-radius:2px;display:inline-block"></span>Versorgungsziel ({fmtE(P.zielEur)})</span>
-            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(96,165,250,.4);border:1px solid rgba(96,165,250,.7);border-radius:2px;display:inline-block"></span>Pension real ({fmtE(r.nettoR)})</span>
-            {#if realLuecke > 0}
-              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(255,107,107,.35);border:1px solid rgba(255,107,107,.65);border-radius:2px;display:inline-block"></span>Lücke (−{fmtE(realLuecke)})</span>
-            {/if}
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(251,191,36,.5);border:1px solid rgba(251,191,36,.7);border-radius:2px;display:inline-block"></span>Versorgungsziel</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(96,165,250,.4);border:1px solid rgba(96,165,250,.7);border-radius:2px;display:inline-block"></span>Pension real</span>
+            {#if realLuecke > 0}<span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(255,107,107,.35);border:1px solid rgba(255,107,107,.65);border-radius:2px;display:inline-block"></span>Lücke (gestapelt)</span>{/if}
           </div>
         </div>
+
+        <!-- Story: Reicht es für die Basics? -->
+        <div class="cardf" style="padding:28px">
+          <div class="ey" style="margin-bottom:6px">Reicht es für den Alltag?</div>
+          <div style="font-size:13px;color:var(--fg3);margin-bottom:20px">Ø 2-Personen-Haushalt Deutschland 2025 · Destatis-Referenzwerte</div>
+          <!-- Horizontal bar: pension vs. costs -->
+          <div style="position:relative;height:48px;background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden;margin-bottom:16px">
+            {#each (() => { let x=0; return KOSTEN.map(k => { const pct = k.val / Math.max(r.nettoR, KOSTEN_TOT) * 100; const left = x; x+=pct; return {...k, pct, left}; }); })() as k}
+              <div style="position:absolute;top:0;left:{k.left.toFixed(1)}%;width:{k.pct.toFixed(1)}%;height:100%;background:{k.color};opacity:.55"></div>
+            {/each}
+            {#if r.nettoR >= KOSTEN_TOT}
+              <div style="position:absolute;top:0;left:{(KOSTEN_TOT/Math.max(r.nettoR,KOSTEN_TOT)*100).toFixed(1)}%;width:{((r.nettoR-KOSTEN_TOT)/Math.max(r.nettoR,KOSTEN_TOT)*100).toFixed(1)}%;height:100%;background:rgba(74,222,128,.3);border-left:2px solid rgba(74,222,128,.7)"></div>
+            {/if}
+            <!-- Pension marker line -->
+            {#if r.nettoR < KOSTEN_TOT}
+              <div style="position:absolute;top:0;left:{(r.nettoR/KOSTEN_TOT*100).toFixed(1)}%;width:2px;height:100%;background:rgba(255,107,107,.9)"></div>
+            {/if}
+          </div>
+          <!-- Category table -->
+          <div style="display:grid;grid-template-columns:1fr auto auto;gap:0;border-top:1px solid var(--line);margin-bottom:12px">
+            {#each KOSTEN as k}
+              <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--fg2)">
+                <span style="width:8px;height:8px;background:{k.color};opacity:.8;border-radius:2px;flex-shrink:0;display:inline-block"></span>
+                {k.label}
+              </div>
+              <div style="padding:7px 12px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;text-align:right;color:var(--fg3)">Ø</div>
+              <div style="padding:7px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;text-align:right">{fmtE(k.val)}</div>
+            {/each}
+            <div style="padding:10px 0;font-size:13px;font-weight:600">Grundbedarf gesamt</div>
+            <div style="padding:10px 12px;font-family:var(--mono);font-size:13px;text-align:right;color:var(--fg3)">Ø</div>
+            <div style="padding:10px 0;font-family:var(--mono);font-size:13px;text-align:right;font-weight:600">{fmtE(KOSTEN_TOT)}</div>
+          </div>
+          <div style="padding:14px 16px;border-radius:8px;background:{spielraum >= 0 ? 'rgba(74,222,128,.06)' : 'rgba(255,107,107,.06)'};border:1px solid {spielraum >= 0 ? 'rgba(74,222,128,.2)' : 'rgba(255,107,107,.2)'}">
+            {#if spielraum >= 0}
+              <div style="font-size:14px;font-weight:600;color:#4ade80">✓ Grundbedarf gedeckt — {fmtE(spielraum)}/Mo. Spielraum</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:4px">Nach Ø-Ausgaben verbleiben {fmtE(spielraum)}/Mo. für Freizeit, Urlaub und Rücklagen.</div>
+            {:else}
+              <div style="font-size:14px;font-weight:600;color:var(--loss)">⚠ Für Ø-Grundbedarf fehlen {fmtE(Math.abs(spielraum))}/Mo.</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:4px">Die reale Pension deckt die durchschnittlichen Grundausgaben nicht vollständig ab.</div>
+            {/if}
+          </div>
+          <div style="font-size:10px;color:var(--fg4);margin-top:10px;font-family:var(--mono)">Referenz: Destatis 2025 · 2-Personen-Haushalt Deutschland · Warmmiete regional variiert stark</div>
+        </div>
+
+        <!-- Recommendations -->
+        {#if recos.length > 0}
+          <div class="card" style="padding:28px">
+            <div class="ey" style="margin-bottom:14px">Was andere in Ihrer Situation gewählt haben</div>
+            {#each recos as rec}
+              <div style="padding:16px;background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:10px;margin-bottom:10px">
+                <div style="font-size:14px;font-weight:600;margin-bottom:6px">{rec.icon} {rec.title}</div>
+                <div style="font-size:13px;color:var(--fg2);line-height:1.6;margin-bottom:10px">{rec.text}</div>
+                <button class="btn btng" style="height:34px;font-size:12px" on:click={() => dispatch('navigate', rec.nav)}>{rec.cta}</button>
+              </div>
+            {/each}
+            <div style="font-size:10px;color:var(--fg4);margin-top:12px;line-height:1.5;font-family:var(--mono)">
+              ⚠ Kein Anlagehinweis. Diese Hinweise basieren auf Beobachtungen aus der Praxis — keine individuelle Empfehlung. Bitte prüfe mit einem unabhängigen Berater.
+            </div>
+          </div>
+        {/if}
       </div>
 
       <!-- CTA sidebar -->
