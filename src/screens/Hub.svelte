@@ -157,7 +157,7 @@
       </div>
       <div class="hero-visual">
         <img
-          src="{import.meta.env.BASE_URL}assets/hero-person.jpg"
+          src="{import.meta.env.BASE_URL}assets/hero-person.png"
           alt="Pensora Nutzer plant Altersvorsorge"
           class="hero-person"
         />
