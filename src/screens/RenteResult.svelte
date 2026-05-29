@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
+  import PdfGate from '../components/PdfGate.svelte';
   import { fmtE, fmtP, de0 } from '../lib/utils.js';
   import { lineChart, legend } from '../lib/charts.js';
 
@@ -8,6 +9,7 @@
   export let result;
 
   const dispatch = createEventDispatcher();
+  let showPdfGate = false;
 
   $: r = result;
   $: realLuecke = Math.max(R.zielEur - r.nettoR, 0);
@@ -41,10 +43,12 @@
   <div class="row g8">
     <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => window.print()} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btng print-hide" on:click={() => showPdfGate = true} title="Als PDF speichern">⬇ PDF</button>
     <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
+
+<PdfGate bind:show={showPdfGate} />
 
 <div class="vscr">
   <div class="calc-result-pad">
@@ -128,10 +132,18 @@
         </div>
       </div>
       <aside style="position:sticky;top:88px">
+        <div class="card" style="margin-bottom:12px;padding:20px">
+          <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
+          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showPdfGate = true}>
+            ⬇ Als PDF speichern
+          </button>
+          <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>
+        </div>
         <div class="card" style="border-color:var(--fg);position:relative;overflow:hidden">
           <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div>
           <h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Plane gegen die Rentenlücke.</h3>
-          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+          <p style="font-size:13px;color:var(--fg2);line-height:1.55;margin-bottom:0">30 Min. kostenlos. Unabhängiger Finanzberater. Kein Verkauf.</p>
+          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Kostenloses Gespräch buchen →</button>
           <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
           <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)">
             <div class="ey" style="margin-bottom:10px">Passende Rechner</div>

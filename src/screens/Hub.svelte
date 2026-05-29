@@ -7,19 +7,39 @@
   const book = () => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank');
 
   const cards = [
-    { id: 'pension',      faq: 'pensionsrechner30.html',  num: '01', badge: 'Beamte',             title: 'Pensionsrechner',    desc: 'Nettopension nach § 14 BeamtVG — mit Ruhegehaltssatz, Mindestversorgung, Steuer und KV-Beihilfe.', tags: ['§ 14 BeamtVG', '17 Bundesländer', 'PKV/GKV'] },
+    { id: 'pension',      faq: 'pensionsrechner30.html',  num: '01', badge: 'Beamte',             title: 'Pensionsrechner',    desc: 'Nettopension nach § 14 BeamtVG — Ruhegehaltssatz, Mindestversorgung, Steuer und KV-Beihilfe.', tags: ['§ 14 BeamtVG', '17 Bundesländer', 'PKV/GKV'] },
     { id: 'rente',        faq: 'rentenrechner.html',       num: '02', badge: 'Angestellte',         title: 'Rentenrechner',      desc: 'Gesetzliche Rente nach § 64 SGB VI. Entgeltpunkte, Rentenwert 2025 · 40,79 €, Besteuerungsanteil.', tags: ['§ 64 SGB VI', 'Rentenwert 40,79 €', 'Rentenlücke'] },
     { id: 'depot',        faq: 'av-depot-rechner30.html',  num: '03', badge: 'ETF · Altersvorsorge', title: 'AV-Depot-Rechner',  desc: 'Zinseszins-Depot, reale Rendite nach Inflation, 4 %-Entnahmerate und Sparrate zum Ziel.', tags: ['Zinseszins', '4 %-Regel', 'Realrendite'] },
     { id: 'ruerup',       faq: 'ruerup-rechner.html',      num: '04', badge: 'Steueroptimierung',   title: 'Rürup-Rechner',      desc: 'Steuervorteil der Basisrente nach § 10 EStG. 100 % absetzbar 2025. Netto-Kosten & Rentenprognose.', tags: ['§ 10 EStG', '100 % absetzbar', 'ETF-Rürup'] },
     { id: 'cashflow',     faq: 'cashflow-rechner.html',    num: '05', badge: 'Finanzplanung',       title: 'Cashflow-Rechner',   desc: 'Monatlichen Cashflow analysieren: Ist vs. 50/15/15-Empfehlung, Notgroschen und AV-Sparquote.', tags: ['50/15/15-Regel', 'Notgroschen', 'Sparquote'] },
-    { id: 'versicherung', faq: 'versicherungscheck.html',  num: '06', badge: 'Marktvergleich',      title: 'Versicherungscheck', desc: 'Deine Versicherungskosten vs. GDV-Marktdurchschnitt 2025. Über- und Unterversicherung auf einen Blick.', tags: ['GDV-Daten 2025', '8 Kategorien', 'Einsparpotenzial'] },
+    { id: 'versicherung', faq: 'versicherungscheck.html',  num: '06', badge: 'Marktvergleich',      title: 'Versicherungscheck', desc: 'Deine Versicherungskosten vs. GDV-Marktdurchschnitt 2025. Über- und Unterversicherung.', tags: ['GDV-Daten 2025', '8 Kategorien', 'Einsparpotenzial'] },
   ];
 
-  const tickers = [
-    { label: 'Rentenwert 2025 · DRV', value: '40,79 €',  sub: 'pro Entgeltpunkt · ab Juli' },
-    { label: 'Rürup-Höchstbetrag',    value: '29.344 €', sub: '§ 10 EStG · Single · 100 % absetzbar' },
-    { label: 'Ruhegehaltssatz-Max',   value: '71,75 %',  sub: '§ 14 BeamtVG · 40 Dienstjahre' },
-    { label: 'Ø Versorgungslücke',    value: '938 €/Mo.', sub: 'Lehrkräfte · inflationsbereinigt' },
+  const ratgeber = [
+    { href: 'lehrerpension-nrw/',     label: 'Lehrerpension NRW' },
+    { href: 'lehrerpension-bw/',      label: 'Lehrerpension BW' },
+    { href: 'lehrerpension-bayern/',  label: 'Lehrerpension Bayern' },
+    { href: 'a13-gehalt-pension/',    label: 'Pension A13' },
+    { href: 'teilzeit-pension-lehrer/', label: 'Teilzeit & Pension' },
+    { href: 'referendariat-pension/', label: 'Referendariat' },
+    { href: 'altersvorsorgedepot-2027/', label: 'AV-Depot 2027' },
+    { href: 'ruerup-lehrer/',         label: 'Rürup für Lehrer' },
+    { href: 'pkv-beamte-ruhestand/',  label: 'PKV im Ruhestand' },
+  ];
+
+  const vergleiche = [
+    { href: 'pension-vs-rente/',              label: 'Pension vs. Rente' },
+    { href: 'pension-vs-rente-lehrer/',       label: 'Pension vs. Rente Lehrer' },
+    { href: 'ruerup-vs-altersvorsorgedepot/', label: 'Rürup vs. AV-Depot' },
+    { href: 'pkv-vs-gkv-beamte-ruhestand/',  label: 'PKV vs. GKV Beamte' },
+    { href: 'teilzeit-vs-vollzeit-pension/',  label: 'Teilzeit vs. Vollzeit' },
+  ];
+
+  const stats = [
+    { val: '71,75 %',   label: 'Max. Ruhegehaltssatz',  sub: '§ 14 BeamtVG · 40 Dienstjahre' },
+    { val: '40,79 €',   label: 'Rentenwert 2025',        sub: 'DRV · pro Entgeltpunkt · ab Juli' },
+    { val: '938 €/Mo.', label: 'Ø Versorgungslücke',     sub: 'Lehrkräfte · inflationsbereinigt' },
+    { val: '540 €',     label: 'AV-Depot Grundzulage',   sub: 'ab 01.01.2027 · pro Jahr' },
   ];
 </script>
 
@@ -39,64 +59,125 @@
 
   <!-- Nav -->
   <nav class="nav">
-    <button class="brand"><Logo /> Pensora</button>
-    <div class="row g32">
-      <a class="nav-link" href="ueber-uns/">Über uns</a>
-      <a class="nav-link" href="kontakt/">Kontakt</a>
+    <button class="brand" on:click={() => go('hub')}><Logo /> Pensora</button>
+
+    <!-- Center nav -->
+    <div class="nav-center">
+      <!-- Rechner dropdown -->
       <div class="ddwrap">
-        <button class="ddtrig">
-          FAQ
-          <svg width="9" height="6" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+        <button class="nav-link ddtrig">
+          Rechner
+          <svg width="9" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
         </button>
-        <div class="ddmenu">
-          {#each cards as c}
-            <a class="dditem" href={c.faq}>
-              <span style="font-family:var(--mono);color:var(--fg4);font-size:10px;margin-right:8px">{c.num}</span>
-              {c.title}
-            </a>
-          {/each}
+        <div class="ddmenu dd-wide">
+          <div class="dd-grid">
+            {#each cards as c}
+              <button class="dditem" on:click={() => go(c.id)}>
+                <span class="dd-num">{c.num}</span>
+                <span class="dd-text">
+                  <span class="dd-title">{c.title}</span>
+                  <span class="dd-badge">{c.badge}</span>
+                </span>
+              </button>
+            {/each}
+          </div>
         </div>
       </div>
+
+      <!-- Ratgeber dropdown -->
+      <div class="ddwrap">
+        <button class="nav-link ddtrig">
+          Ratgeber
+          <svg width="9" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+        </button>
+        <div class="ddmenu dd-wide">
+          <div class="dd-section-label">Bundesland & Thema</div>
+          <div class="dd-grid dd-grid-3">
+            {#each ratgeber as r}
+              <a class="dditem" href={r.href}>
+                <span class="dd-title">{r.label}</span>
+              </a>
+            {/each}
+          </div>
+          <div class="dd-divider"></div>
+          <div class="dd-section-label">Vergleiche für KI-Zitierungen</div>
+          <div class="dd-grid dd-grid-3">
+            {#each vergleiche as v}
+              <a class="dditem" href={v.href}>
+                <span class="dd-title">{v.label}</span>
+              </a>
+            {/each}
+          </div>
+        </div>
+      </div>
+
+      <!-- Direct link -->
+      <a class="nav-link" href="wie-wird-berechnet/">Wie berechnet?</a>
+      <a class="nav-link" href="ueber-uns/">Über uns</a>
     </div>
-    <button class="btn btnp" on:click={book}>Beratung buchen</button>
+
+    <!-- Right side -->
+    <div class="row g8">
+      <a class="nav-link" href="kontakt/" style="margin-right:4px">Kontakt</a>
+      <button class="btn btnp" style="height:36px;padding:0 18px;font-size:13px;border-radius:8px" on:click={book}>Termin buchen</button>
+    </div>
   </nav>
 
-  <!-- Scrollable content -->
+  <!-- Scrollable page -->
   <div class="vscr">
 
-    <!-- Hero -->
-    <section class="hero-section">
-      <div class="hero-inner">
-        <div class="ey" style="margin-bottom:18px;animation:fadeUp .5s var(--ease) both">Finanzrechner · 2025 · Geprüfte Formeln</div>
-        <h1 class="h1" style="margin-bottom:22px;animation:fadeUp .5s .07s var(--ease) both">
-          Deine Finanzen.<br/><span style="color:var(--fg3)">Klartext.</span>
-        </h1>
-        <p class="lead" style="max-width:52ch;margin-bottom:36px;animation:fadeUp .5s .14s var(--ease) both">
-          Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungscheck. Keine Anmeldung. Daten bleiben lokal.
-        </p>
-        <div class="row g12" style="animation:fadeUp .5s .20s var(--ease) both">
-          <button class="btn btnp btnlg" on:click={() => go('pension')}>Jetzt starten →</button>
-          <button class="btn btng btnlg" on:click={book}>Kostenloses Gespräch</button>
+    <!-- ── HERO ── -->
+    <section class="hero">
+      <!-- Background image with overlay -->
+      <div class="hero-bg">
+        <img
+          src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=80&fm=webp"
+          alt=""
+          class="hero-img"
+          loading="eager"
+        />
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="hero-content">
+        <div class="ey" style="margin-bottom:20px;animation:fadeUp .5s var(--ease) both">
+          Pension · Rente · Altersvorsorge · 2025
         </div>
+        <h1 class="h1 hero-title" style="animation:fadeUp .55s .06s var(--ease) both">
+          Deine Finanzen.<br/><span class="hero-muted">Klartext.</span>
+        </h1>
+        <p class="lead hero-lead" style="animation:fadeUp .55s .12s var(--ease) both">
+          Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungen — kostenlos, anonym, ohne Login.
+        </p>
+        <div class="row g12 hero-btns" style="animation:fadeUp .55s .18s var(--ease) both">
+          <button class="btn btnp btnlg" on:click={() => go('pension')}>Pensionsrechner starten →</button>
+          <button class="btn btno btnlg" on:click={book}>Kostenloses Gespräch</button>
+        </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="hero-scroll">
+        <span>Alle Rechner</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
       </div>
     </section>
 
-    <!-- Ticker -->
+    <!-- ── STATS TICKER ── -->
     <div class="ticker">
-      {#each tickers as t}
+      {#each stats as s}
         <div class="ti">
-          <div class="tl">{t.label}</div>
-          <div class="tv">{t.value}</div>
-          <div class="td">{t.sub}</div>
+          <div class="tl">{s.label}</div>
+          <div class="tv">{s.val}</div>
+          <div class="td">{s.sub}</div>
         </div>
       {/each}
     </div>
 
-    <!-- Calculator cards -->
-    <section style="padding:64px 52px 80px">
-      <div class="cards-header">
-        <h2 style="font-size:26px;font-weight:600;letter-spacing:-.025em">Alle Rechner</h2>
-        <span style="font-size:11px;color:var(--fg3);font-family:var(--mono)">{cards.length} Tools</span>
+    <!-- ── CALCULATOR CARDS ── -->
+    <section class="cards-section">
+      <div class="section-header">
+        <h2 class="section-title">Alle Rechner</h2>
+        <span class="section-sub">Geprüfte gesetzliche Formeln · Keine Anmeldung</span>
       </div>
       <div class="cards-grid">
         {#each cards as c}
@@ -121,19 +202,51 @@
       </div>
     </section>
 
-    <!-- CTA strip -->
-    <div class="cta-strip">
-      <div>
-        <h2 style="font-size:30px;font-weight:600;letter-spacing:-.025em;margin-bottom:10px">Zahlen allein reichen nicht.</h2>
-        <p style="font-size:15px;color:var(--fg2);max-width:48ch;line-height:1.65">Unabhängige Finanzberatung ohne Provision. 30 Minuten, kostenlos — wir besprechen deine persönliche Situation.</p>
+    <!-- ── TRUST SECTION ── -->
+    <section class="trust-section">
+      <div class="trust-inner">
+        <div class="ey" style="margin-bottom:16px">Warum Pensora</div>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <div class="trust-num">100 %</div>
+            <div class="trust-label">Lokal im Browser</div>
+            <div class="trust-sub">Keine Daten verlassen dein Gerät</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-num">0 €</div>
+            <div class="trust-label">Provision</div>
+            <div class="trust-sub">Unabhängige Beratung, kein Produktverkauf</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-num">100+</div>
+            <div class="trust-label">Lehrer beraten</div>
+            <div class="trust-sub">Niall Bradfield, Stuttgart</div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-num">6</div>
+            <div class="trust-label">Rechner</div>
+            <div class="trust-sub">Alle nach geprüften gesetzlichen Formeln</div>
+          </div>
+        </div>
       </div>
-      <button class="btn btnp btnlg" on:click={book} style="white-space:nowrap;flex-shrink:0">Kostenloses Gespräch buchen →</button>
-    </div>
+    </section>
 
-    <!-- Footer -->
+    <!-- ── CTA STRIP ── -->
+    <section class="cta-strip">
+      <div class="cta-inner">
+        <h2 class="cta-title">Zahlen allein reichen nicht.</h2>
+        <p class="cta-sub">Unabhängige Finanzberatung ohne Provision. 30 Minuten, kostenlos — Niall Bradfield bespricht deine persönliche Situation.</p>
+        <div class="row g12" style="justify-content:center;margin-top:32px">
+          <button class="btn btnp btnlg" on:click={book}>Kostenloses Erstgespräch buchen →</button>
+          <a class="btn btno btnlg" href="ueber-uns/">Über Pensora</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
     <footer class="foot">
       <div>
-        <button class="brand" style="margin-bottom:14px"><Logo /> Pensora</button>
+        <button class="brand" style="margin-bottom:14px" on:click={() => go('hub')}><Logo /> Pensora</button>
         <p>Unabhängige Finanzplanung.<br/>Keine Provisionen. Nur Klarheit.</p>
         <p style="font-size:13px;margin-top:8px">Niall Bradfield<br/>unabhängiger Finanzberater, Stuttgart</p>
         <div style="margin-top:12px;font-size:11px;color:var(--fg4);font-family:var(--mono)">© 2026 Pensora</div>
@@ -144,27 +257,15 @@
       </div>
       <div>
         <h5>Ratgeber</h5>
-        <a href="lehrerpension-nrw/">Lehrerpension NRW</a>
-        <a href="lehrerpension-bw/">Lehrerpension BW</a>
-        <a href="lehrerpension-bayern/">Lehrerpension Bayern</a>
-        <a href="a13-gehalt-pension/">Pension A13</a>
-        <a href="teilzeit-pension-lehrer/">Teilzeit & Pension</a>
-        <a href="referendariat-pension/">Referendariat</a>
-        <a href="altersvorsorgedepot-2027/">AV-Depot 2027</a>
-        <a href="ruerup-lehrer/">Rürup für Lehrer</a>
-        <a href="pkv-beamte-ruhestand/">PKV im Ruhestand</a>
+        {#each ratgeber as r}<a href={r.href}>{r.label}</a>{/each}
       </div>
       <div>
-        <h5>Vergleiche</h5>
-        <a href="pension-vs-rente/">Pension vs. Rente</a>
-        <a href="pension-vs-rente-lehrer/">Pension vs. Rente Lehrer</a>
-        <a href="ruerup-vs-altersvorsorgedepot/">Rürup vs. AV-Depot</a>
-        <a href="pkv-vs-gkv-beamte-ruhestand/">PKV vs. GKV Beamte</a>
-        <a href="teilzeit-vs-vollzeit-pension/">Teilzeit vs. Vollzeit</a>
+        <h5>Vergleiche & Mehr</h5>
+        {#each vergleiche as v}<a href={v.href}>{v.label}</a>{/each}
         <a href="wie-wird-berechnet/">Wie wird berechnet?</a>
         <a href="ueber-uns/">Über uns</a>
         <a href="kontakt/">Kontakt</a>
-        <a>Impressum</a>
+        <a style="margin-top:8px;display:block">Impressum</a>
         <a>Datenschutz</a>
       </div>
     </footer>
@@ -175,92 +276,236 @@
   /* ── Update banner ── */
   .update-bar {
     display:flex; align-items:center; gap:10px;
-    padding:9px 52px;
-    background:rgba(251,191,36,.06); border-bottom:1px solid rgba(251,191,36,.15);
+    padding:8px 52px;
+    background:rgba(251,191,36,.05); border-bottom:1px solid rgba(251,191,36,.12);
     font-size:12px; overflow:hidden; white-space:nowrap;
   }
   .update-dot {
-    width:6px; height:6px; border-radius:50%; background:var(--amber);
-    flex-shrink:0; animation:pulse 2s ease-in-out infinite;
+    width:6px; height:6px; border-radius:50%; background:#fbbf24;
+    flex-shrink:0; animation:pulse 2.5s ease-in-out infinite;
   }
   .update-label {
-    font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-    color:var(--amber); flex-shrink:0;
+    font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:#fbbf24; flex-shrink:0;
   }
   .update-entries { color:var(--fg3); overflow:hidden; text-overflow:ellipsis; }
   .update-entry { color:var(--fg2); }
-  .update-sep { margin:0 8px; color:var(--fg4); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .update-sep { margin:0 10px; color:var(--fg4); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-  .nav-link { font-size:13px; color:var(--fg3); cursor:pointer; transition:color .15s; text-decoration:none; }
-  .nav-link:hover { color:var(--fg); }
+  /* ── Nav ── */
+  .nav-center {
+    display:flex; align-items:center; gap:4px;
+    position:absolute; left:50%; transform:translateX(-50%);
+  }
+  .nav-link {
+    font-size:13px; font-weight:500; color:var(--fg2);
+    cursor:pointer; transition:color .15s; text-decoration:none;
+    padding:6px 10px; border-radius:6px; background:none; border:none;
+    font-family:inherit;
+  }
+  .nav-link:hover { color:var(--fg); background:rgba(255,255,255,.05); }
 
-  .hero-section {
-    padding: 96px 52px 72px;
-    position: relative; overflow: hidden;
+  /* Dropdown overrides for nav */
+  .ddtrig {
+    font-size:13px; color:var(--fg2);
+    display:flex; align-items:center; gap:4px;
+    cursor:pointer; user-select:none;
+    background:none; border:none; padding:6px 10px;
+    font-family:inherit; font-weight:500;
+    border-radius:6px;
+    transition:color .15s, background .15s;
   }
-  .hero-section::before {
-    content:''; position:absolute; inset:0;
-    background: radial-gradient(ellipse 80% 55% at 50% -5%, rgba(250,250,250,.04) 0%, transparent 60%);
-    pointer-events:none;
-  }
-  .hero-inner { max-width:860px; position:relative; }
+  .ddtrig:hover { color:var(--fg); background:rgba(255,255,255,.05); }
+  .ddtrig svg { transition:transform .2s var(--ease); margin-top:1px; }
+  .ddwrap { position:relative; }
+  .ddwrap:hover .ddtrig { color:var(--fg); }
+  .ddwrap:hover .ddtrig svg { transform:rotate(180deg); }
 
-  .cards-header {
-    display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px;
+  .ddmenu {
+    position:absolute; top:calc(100% + 8px); left:50%;
+    transform:translateX(-50%) translateY(-4px);
+    background:rgba(10,10,10,.98); border:1px solid rgba(255,255,255,.1);
+    border-radius:14px; padding:8px;
+    min-width:200px;
+    opacity:0; visibility:hidden;
+    transition:opacity .18s var(--ease), visibility .18s, transform .18s var(--ease);
+    box-shadow:0 20px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.04);
+    z-index:200;
+    backdrop-filter:blur(20px);
   }
-  .cards-grid {
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+  .ddwrap:hover .ddmenu {
+    opacity:1; visibility:visible;
+    transform:translateX(-50%) translateY(0);
   }
+  .dd-wide { min-width:480px; left:0; transform:translateX(-10px) translateY(-4px); }
+  .ddwrap:hover .dd-wide { transform:translateX(-10px) translateY(0); }
+
+  .dd-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+  .dd-grid-3 { grid-template-columns:1fr 1fr 1fr; }
+  .dd-section-label {
+    font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--fg4); padding:8px 10px 4px;
+  }
+  .dd-divider { height:1px; background:rgba(255,255,255,.06); margin:8px 4px; }
+
+  .dditem {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 10px; font-size:13px; color:var(--fg2);
+    border-radius:8px; width:100%; text-align:left; background:none; border:none;
+    font-family:inherit; cursor:pointer;
+    transition:background .1s, color .1s;
+    text-decoration:none;
+  }
+  .dditem:hover { background:rgba(255,255,255,.06); color:var(--fg); }
+  .dd-num { font-family:var(--mono); color:var(--fg4); font-size:10px; flex-shrink:0; width:18px; }
+  .dd-text { display:flex; flex-direction:column; gap:1px; }
+  .dd-title { font-size:13px; font-weight:500; color:var(--fg2); transition:color .1s; }
+  .dditem:hover .dd-title { color:var(--fg); }
+  .dd-badge { font-size:10px; color:var(--fg4); font-family:var(--mono); }
+
+  /* ── Hero ── */
+  .hero {
+    position:relative; height:100vh; min-height:600px;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center; overflow:hidden;
+  }
+  .hero-bg {
+    position:absolute; inset:0; z-index:0;
+  }
+  .hero-img {
+    width:100%; height:100%; object-fit:cover; object-position:center;
+    filter:brightness(.45) saturate(.8);
+  }
+  .hero-overlay {
+    position:absolute; inset:0;
+    background:linear-gradient(
+      180deg,
+      rgba(0,0,0,.1) 0%,
+      rgba(0,0,0,.2) 40%,
+      rgba(0,0,0,.7) 100%
+    );
+  }
+  .hero-content {
+    position:relative; z-index:1;
+    max-width:820px; padding:0 40px;
+  }
+  .hero-title {
+    margin-bottom:24px;
+    text-shadow:0 2px 40px rgba(0,0,0,.5);
+  }
+  .hero-muted { color:rgba(250,250,250,.45); }
+  .hero-lead {
+    max-width:56ch; margin:0 auto 36px;
+    text-shadow:0 1px 20px rgba(0,0,0,.6);
+  }
+  .hero-btns { justify-content:center; }
+  .hero-scroll {
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    z-index:1; display:flex; flex-direction:column; align-items:center; gap:6px;
+    color:rgba(250,250,250,.35); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    animation:floatY 2.5s ease-in-out infinite;
+    cursor:pointer;
+    font-family:var(--mono);
+  }
+  @keyframes floatY {
+    0%,100% { transform:translateX(-50%) translateY(0); }
+    50% { transform:translateX(-50%) translateY(6px); }
+  }
+
+  /* ── Stats ticker ── */
+  /* uses global .ticker, .ti, .tl, .tv, .td */
+
+  /* ── Calculator cards ── */
+  .cards-section { padding:80px 52px; }
+  .section-header {
+    display:flex; align-items:baseline; justify-content:space-between; margin-bottom:36px;
+  }
+  .section-title { font-size:28px; font-weight:700; letter-spacing:-.03em; }
+  .section-sub { font-size:12px; color:var(--fg4); font-family:var(--mono); }
+
+  .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
 
   .calc-card {
-    background: var(--bg1); border: 1px solid var(--line); border-radius: var(--rlg);
-    padding: 22px; cursor: pointer; text-align: left;
-    font-family: var(--sans); color: var(--fg);
+    background:var(--bg1); border:1px solid var(--line); border-radius:14px;
+    padding:24px; cursor:pointer; text-align:left;
+    font-family:var(--sans); color:var(--fg);
     position:relative; overflow:hidden;
-    transition: border-color .22s var(--ease), transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
+    transition:border-color .22s var(--ease), transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease);
     display:flex; flex-direction:column;
   }
   .calc-card:hover {
-    border-color: var(--line3);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 32px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.05);
-    background: var(--bg2);
+    border-color:var(--line3);
+    transform:translateY(-3px);
+    box-shadow:0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+    background:var(--bg2);
   }
-  .calc-card:active { transform: translateY(-1px) scale(0.99); }
+  .calc-card:active { transform:translateY(-1px) scale(0.99); }
   .calc-card::before {
     content:''; position:absolute; top:0; left:0; right:0; height:1px;
-    background: linear-gradient(90deg, transparent, rgba(250,250,250,.08), transparent);
+    background:linear-gradient(90deg,transparent,rgba(250,250,250,.06),transparent);
     opacity:0; transition:opacity .22s;
   }
   .calc-card:hover::before { opacity:1; }
 
-  .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
   .card-num { font-family:var(--mono); font-size:10px; color:var(--fg4); letter-spacing:.08em; }
-  .card-title { font-size:19px; font-weight:600; letter-spacing:-.02em; margin-bottom:9px; line-height:1.2; }
-  .card-desc { font-size:13px; color:var(--fg2); line-height:1.6; margin-bottom:16px; flex:1; }
-  .card-tags { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  .card-title { font-size:18px; font-weight:700; letter-spacing:-.025em; margin-bottom:10px; line-height:1.25; }
+  .card-desc { font-size:13px; color:var(--fg3); line-height:1.6; margin-bottom:18px; flex:1; }
+  .card-tags { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
   .card-tag { font-size:10px; color:var(--fg4); font-family:var(--mono); letter-spacing:.03em; }
   .card-cta-row {
     display:flex; align-items:center; justify-content:space-between;
-    padding-top:12px; border-top:1px solid var(--line);
-    font-size:12px; color:var(--fg3);
-    transition: color .15s;
+    padding-top:14px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--fg4);
+    transition:color .15s;
   }
   .calc-card:hover .card-cta-row { color:var(--fg2); }
 
-  .cta-strip {
-    display:flex; align-items:center; justify-content:space-between; gap:40px;
-    padding:52px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    background:var(--bg1);
+  /* ── Trust section ── */
+  .trust-section {
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:var(--bg1); padding:72px 52px;
   }
+  .trust-inner { max-width:960px; margin:0 auto; }
+  .trust-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    margin-top:32px;
+  }
+  .trust-item {
+    padding:32px 28px; border-right:1px solid var(--line);
+    transition:background .2s;
+  }
+  .trust-item:last-child { border-right:none; }
+  .trust-item:hover { background:var(--bg2); }
+  .trust-num { font-size:40px; font-weight:800; letter-spacing:-.05em; color:var(--fg); margin-bottom:6px; }
+  .trust-label { font-size:14px; font-weight:600; color:var(--fg); margin-bottom:4px; }
+  .trust-sub { font-size:12px; color:var(--fg4); line-height:1.5; }
 
+  /* ── CTA strip ── */
+  .cta-strip {
+    padding:100px 52px; text-align:center;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+  .cta-inner { max-width:700px; margin:0 auto; }
+  .cta-title { font-size:48px; font-weight:800; letter-spacing:-.04em; margin-bottom:16px; }
+  .cta-sub { font-size:18px; color:var(--fg2); line-height:1.65; }
+
+  /* ── Mobile ── */
   @media (max-width:760px) {
     .update-bar { padding:8px 20px; }
-    .hero-section { padding:56px 24px 44px; }
+    .nav-center { display:none; }
+    .hero { height:90vh; }
+    .hero-content { padding:0 24px; }
+    .cards-section { padding:48px 20px; }
     .cards-grid { grid-template-columns:1fr; }
-    :global(.cards-grid) section { padding:40px 24px 60px; }
-    .cta-strip { flex-direction:column; align-items:flex-start; padding:36px 24px; gap:24px; }
-    :global(.foot) { grid-template-columns:1fr 1fr; padding:36px 24px; gap:24px; }
+    .trust-grid { grid-template-columns:1fr 1fr; }
+    .trust-section { padding:48px 20px; }
+    .cta-strip { padding:64px 24px; }
+    .cta-title { font-size:32px; }
+    :global(.foot) { grid-template-columns:1fr 1fr; padding:40px 24px; gap:24px; }
   }
 </style>
