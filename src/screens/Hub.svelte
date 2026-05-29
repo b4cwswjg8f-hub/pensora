@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
+  import Search from '../components/Search.svelte';
 
   const dispatch = createEventDispatcher();
   const go = (name) => dispatch('navigate', name);
@@ -148,8 +149,12 @@
           Deine Finanzen.<br/><span class="hero-muted">Klartext.</span>
         </h1>
         <p class="hero-lead">
-          Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungen — kostenlos, anonym, ohne Login.
+          Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungen.
         </p>
+        <p class="hero-trust">Kostenlos, anonym, keine Verpflichtung. Reine Information — damit du weißt, wo du stehst.</p>
+        <div class="hero-search">
+          <Search on:navigate={e => go(e.detail)} />
+        </div>
         <div class="row g12 hero-btns">
           <button class="btn btnp btnlg" on:click={() => go('pension')}>Pensionsrechner starten →</button>
           <button class="btn btno btnlg" on:click={book}>Kostenloses Gespräch</button>
@@ -215,9 +220,9 @@
             <div class="trust-sub">Keine Daten verlassen dein Gerät</div>
           </div>
           <div class="trust-item">
-            <div class="trust-num">0 €</div>
-            <div class="trust-label">Provision</div>
-            <div class="trust-sub">Unabhängige Beratung, kein Produktverkauf</div>
+            <div class="trust-num">0</div>
+            <div class="trust-label">Login nötig</div>
+            <div class="trust-sub">Kein Konto, kein Formular, keine Wartezeit</div>
           </div>
           <div class="trust-item">
             <div class="trust-num">100+</div>
@@ -237,7 +242,7 @@
     <section class="cta-strip">
       <div class="cta-inner">
         <h2 class="cta-title">Zahlen allein reichen nicht.</h2>
-        <p class="cta-sub">Unabhängige Finanzberatung ohne Provision. 30 Minuten, kostenlos — Niall Bradfield bespricht deine persönliche Situation.</p>
+        <p class="cta-sub">30 Minuten, kostenlos — Niall Bradfield bespricht deine persönliche Situation und was deine Zahlen bedeuten.</p>
         <div class="row g12" style="justify-content:center;margin-top:32px">
           <button class="btn btnp btnlg" on:click={book}>Kostenloses Erstgespräch buchen →</button>
           <a class="btn btno btnlg" href="ueber-uns/">Über Pensora</a>
@@ -249,7 +254,7 @@
     <footer class="foot">
       <div>
         <button class="brand" style="margin-bottom:14px" on:click={() => go('hub')}><Logo /> Pensora</button>
-        <p>Unabhängige Finanzplanung.<br/>Keine Provisionen. Nur Klarheit.</p>
+        <p>Klare Zahlen. Unabhängige Beratung.</p>
         <p style="font-size:13px;margin-top:8px">Niall Bradfield<br/>unabhängiger Finanzberater, Stuttgart</p>
         <div style="margin-top:12px;font-size:11px;color:var(--fg4);font-family:var(--mono)">© 2026 Pensora</div>
       </div>
@@ -390,6 +395,10 @@
     font-size:17px; color:var(--fg2); line-height:1.65;
     margin-bottom:32px; max-width:46ch;
   }
+  .hero-trust {
+    font-size:13px; color:var(--fg4); margin-bottom:24px; letter-spacing:.01em;
+  }
+  .hero-search { margin-bottom:28px; }
   .hero-btns { flex-wrap:wrap; }
   .hero-visual {
     display:flex; align-items:center; justify-content:flex-end;

@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
   import PdfGate from '../components/PdfGate.svelte';
+  import PdfFinanzplan from '../components/PdfFinanzplan.svelte';
   import { fmtE, fmtP, de0 } from '../lib/utils.js';
   import { lineChart, barChart, legend } from '../lib/charts.js';
 
@@ -10,6 +11,7 @@
 
   const dispatch = createEventDispatcher();
   let showPdfGate = false;
+  let showFinanzplan = false;
 
   $: r = result;
   $: realLuecke = Math.max(P.zielEur - r.nettoR, 0);
@@ -135,12 +137,21 @@
   <div class="row g8">
     <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => showPdfGate = true} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Als PDF speichern">⬇ PDF</button>
     <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
 <PdfGate bind:show={showPdfGate} />
+
+{#if showFinanzplan}
+  <div class="fp-overlay" on:click|self={() => showFinanzplan = false}>
+    <div class="fp-overlay-inner">
+      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Schließen</button>
+      <PdfFinanzplan mode="pension" {P} {result} />
+    </div>
+  </div>
+{/if}
 
 <div class="vscr">
   <div class="calc-result-pad">
@@ -335,10 +346,10 @@
         <!-- PDF save card -->
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showPdfGate = true}>
-            ⬇ Als PDF speichern
+          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
+            ⬇ Finanzplan als PDF
           </button>
-          <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>
+          <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">Druckfertig · professionelles Layout</p>
         </div>
         <!-- Consultation card -->
         <div class="card" style="border-color:var(--fg);position:relative;overflow:hidden">
@@ -349,7 +360,7 @@
           </div>
           <div style="font-size:11px;color:rgba(255,107,107,.6);font-family:var(--mono);margin-top:4px;margin-bottom:16px">weniger über den Ruhestand</div>
           <h3 style="font-size:20px;font-weight:500;line-height:1.2;color:var(--fg)">Jetzt gegensteuern — bevor die Lücke wächst.</h3>
-          <p style="margin-top:10px;color:var(--fg2);font-size:13px;line-height:1.55">30 Min. kostenlos. Unabhängiger Finanzberater. Kein Verkauf.</p>
+          <p style="margin-top:10px;color:var(--fg2);font-size:13px;line-height:1.55">30 Min. kostenlos. Unabhängiger Finanzberater.</p>
           <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Kostenloses Gespräch buchen →</button>
           <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
           <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--line)">

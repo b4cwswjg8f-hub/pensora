@@ -94,7 +94,7 @@
             PDF herunterladen →
           {/if}
         </button>
-        <p class="gate-legal">Kein Spam. Kein Verkauf. Abmeldung jederzeit. Daten werden nicht weitergegeben.</p>
+        <p class="gate-legal">Kein Spam. Abmeldung jederzeit. Daten werden nicht weitergegeben.</p>
       {/if}
 
       <button class="gate-close" on:click={close} aria-label="Schließen">
