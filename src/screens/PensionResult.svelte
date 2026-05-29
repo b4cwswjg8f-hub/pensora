@@ -41,6 +41,78 @@
   ]);
 
   $: legendHtml = legend([['#60a5fa','Pension nominal'],['#4ade80','Real (Kaufkraft heute)','3 3'],['#FF6B6B','Klassisches Sparbuch','4 2'],['#fbbf24','Versorgungsziel','6 3']]);
+
+  // Gap diagram: Wunschrente vs. real pension vs. Lücke
+  $: gapSvg = (() => {
+    const w = 800, h = 320, padL = 64, padB = 52, padT = 48, padR = 40;
+    const plotH = h - padT - padB;
+    const goal = P.zielEur;
+    const actual = r.nettoR;
+    const luecke = Math.max(goal - actual, 0);
+    const maxVal = Math.max(goal, actual) * 1.06;
+    const sc = v => (Math.max(0, Math.min(v / maxVal, 1))) * plotH;
+    const baseY = h - padB;
+
+    // Bar positions: 3 bars with generous spacing
+    const bw = 110;
+    const spacing = (w - padL - padR - bw * 3) / 2;
+    const xs = [padL, padL + bw + spacing, padL + (bw + spacing) * 2];
+
+    let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">`;
+
+    // Grid lines
+    [0, 0.25, 0.5, 0.75, 1].forEach(f => {
+      const yg = baseY - sc(f * maxVal);
+      s += `<line x1="${padL}" x2="${w - padR}" y1="${yg.toFixed(1)}" y2="${yg.toFixed(1)}" stroke="#1c1c1c" stroke-width="1" ${f > 0 ? 'stroke-dasharray="3 3"' : ''}/>`;
+      s += `<text x="${padL - 8}" y="${(yg + 3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',monospace" text-anchor="end">${de0.format(Math.round(f * maxVal))}€</text>`;
+    });
+
+    // Dashed goal line
+    const goalLineY = baseY - sc(goal);
+    s += `<line x1="${padL}" x2="${w - padR}" y1="${goalLineY.toFixed(1)}" y2="${goalLineY.toFixed(1)}" stroke="rgba(251,191,36,.4)" stroke-width="1" stroke-dasharray="6 4"/>`;
+
+    // Bar 1: Versorgungsziel (amber)
+    const goalBarH = sc(goal);
+    const goalBarY = baseY - goalBarH;
+    s += `<rect x="${xs[0]}" y="${goalBarY.toFixed(1)}" width="${bw}" height="${goalBarH.toFixed(1)}" fill="rgba(251,191,36,.18)" stroke="rgba(251,191,36,.55)" stroke-width="1.5" rx="5"/>`;
+
+    // Bar 2: Pension-Anteil (blue) — bottom part of stacked bar
+    const pensionH = sc(actual);
+    const pensionY = baseY - pensionH;
+    s += `<rect x="${xs[1]}" y="${pensionY.toFixed(1)}" width="${bw}" height="${pensionH.toFixed(1)}" fill="rgba(96,165,250,.25)" stroke="rgba(96,165,250,.7)" stroke-width="1.5" rx="5"/>`;
+
+    // Bar 3: Lücke (red) on top — stacked on pension bar
+    if (luecke > 0) {
+      const lueckeH = sc(luecke);
+      const lueckeY = pensionY - lueckeH;
+      s += `<rect x="${xs[2]}" y="${lueckeY.toFixed(1)}" width="${bw}" height="${lueckeH.toFixed(1)}" fill="rgba(255,107,107,.22)" stroke="rgba(255,107,107,.65)" stroke-width="1.5" rx="5"/>`;
+      // Value label inside lücke bar
+      if (lueckeH > 28) {
+        s += `<text x="${(xs[2] + bw / 2).toFixed(1)}" y="${(lueckeY + lueckeH / 2 + 4).toFixed(1)}" fill="#FF6B6B" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">−${fmtE(luecke)}</text>`;
+      }
+    } else {
+      // No gap — full green indicator
+      const fullH = sc(actual);
+      s += `<rect x="${xs[2]}" y="${(baseY - fullH).toFixed(1)}" width="${bw}" height="${fullH.toFixed(1)}" fill="rgba(74,222,128,.22)" stroke="rgba(74,222,128,.65)" stroke-width="1.5" rx="5"/>`;
+    }
+
+    // Value labels inside bars (centered vertically)
+    const goalMidY = goalBarY + goalBarH / 2 + 4;
+    s += `<text x="${(xs[0] + bw / 2).toFixed(1)}" y="${goalMidY.toFixed(1)}" fill="rgba(251,191,36,.9)" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(goal)}</text>`;
+    const pensionMidY = pensionY + pensionH / 2 + 4;
+    if (pensionH > 28) {
+      s += `<text x="${(xs[1] + bw / 2).toFixed(1)}" y="${pensionMidY.toFixed(1)}" fill="rgba(96,165,250,.9)" font-size="13" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">${fmtE(actual)}</text>`;
+    }
+
+    // X-axis labels
+    const lblY = baseY + 18;
+    s += `<text x="${(xs[0] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Versorgungsziel</text>`;
+    s += `<text x="${(xs[1] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Pension real</text>`;
+    s += `<text x="${(xs[2] + bw / 2).toFixed(1)}" y="${lblY}" fill="#6b6b6b" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">${luecke > 0 ? 'Versorgungslücke' : 'Gedeckt ✓'}</text>`;
+
+    s += `</svg>`;
+    return s;
+  })();
 </script>
 
 <nav class="nav">
@@ -173,6 +245,22 @@
             </div>
           </div>
         {/if}
+
+        <!-- Gap diagram -->
+        <div class="cardf" style="padding:28px">
+          <div class="ey" style="margin-bottom:6px">Versorgungsanalyse auf einen Blick</div>
+          <div style="font-size:13px;color:var(--fg3);margin-bottom:20px">
+            Wunschrente · Pension real (heutige Kaufkraft) · {realLuecke > 0 ? 'Versorgungslücke' : 'Versorgungsziel gedeckt ✓'}
+          </div>
+          {@html gapSvg}
+          <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:11px;font-family:var(--mono);color:var(--fg3)">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(251,191,36,.5);border:1px solid rgba(251,191,36,.7);border-radius:2px;display:inline-block"></span>Versorgungsziel ({fmtE(P.zielEur)})</span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(96,165,250,.4);border:1px solid rgba(96,165,250,.7);border-radius:2px;display:inline-block"></span>Pension real ({fmtE(r.nettoR)})</span>
+            {#if realLuecke > 0}
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;background:rgba(255,107,107,.35);border:1px solid rgba(255,107,107,.65);border-radius:2px;display:inline-block"></span>Lücke (−{fmtE(realLuecke)})</span>
+            {/if}
+          </div>
+        </div>
       </div>
 
       <!-- CTA sidebar -->

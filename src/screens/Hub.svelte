@@ -128,37 +128,25 @@
 
     <!-- ── HERO ── -->
     <section class="hero">
-      <!-- Background image with overlay -->
-      <div class="hero-bg">
-        <img
-          src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&q=80&fm=webp"
-          alt=""
-          class="hero-img"
-          loading="eager"
-        />
-        <div class="hero-overlay"></div>
-      </div>
-
       <div class="hero-content">
-        <div class="ey" style="margin-bottom:20px;animation:fadeUp .5s var(--ease) both">
-          Pension · Rente · Altersvorsorge · 2025
-        </div>
-        <h1 class="h1 hero-title" style="animation:fadeUp .55s .06s var(--ease) both">
+        <div class="ey" style="margin-bottom:16px">Pension · Rente · Altersvorsorge · 2026</div>
+        <h1 class="hero-title">
           Deine Finanzen.<br/><span class="hero-muted">Klartext.</span>
         </h1>
-        <p class="lead hero-lead" style="animation:fadeUp .55s .12s var(--ease) both">
+        <p class="hero-lead">
           Sechs präzise Rechner für Pension, Rente, Depot, Rürup, Cashflow und Versicherungen — kostenlos, anonym, ohne Login.
         </p>
-        <div class="row g12 hero-btns" style="animation:fadeUp .55s .18s var(--ease) both">
+        <div class="row g12 hero-btns">
           <button class="btn btnp btnlg" on:click={() => go('pension')}>Pensionsrechner starten →</button>
           <button class="btn btno btnlg" on:click={book}>Kostenloses Gespräch</button>
         </div>
       </div>
-
-      <!-- Scroll hint -->
-      <div class="hero-scroll">
-        <span>Alle Rechner</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      <div class="hero-visual">
+        <img
+          src="{import.meta.env.BASE_URL}assets/hero-person.jpg"
+          alt="Pensora Nutzer plant Altersvorsorge"
+          class="hero-person"
+        />
       </div>
     </section>
 
@@ -366,52 +354,37 @@
 
   /* ── Hero ── */
   .hero {
-    position:relative; height:100vh; min-height:600px;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    text-align:center; overflow:hidden;
-  }
-  .hero-bg {
-    position:absolute; inset:0; z-index:0;
-  }
-  .hero-img {
-    width:100%; height:100%; object-fit:cover; object-position:center;
-    filter:brightness(.45) saturate(.8);
-  }
-  .hero-overlay {
-    position:absolute; inset:0;
-    background:linear-gradient(
-      180deg,
-      rgba(0,0,0,.1) 0%,
-      rgba(0,0,0,.2) 40%,
-      rgba(0,0,0,.7) 100%
-    );
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    gap:0;
+    padding:80px 52px 80px 52px;
+    border-bottom:1px solid var(--line);
+    min-height:580px;
   }
   .hero-content {
-    position:relative; z-index:1;
-    max-width:820px; padding:0 40px;
+    max-width:520px;
   }
   .hero-title {
-    margin-bottom:24px;
-    text-shadow:0 2px 40px rgba(0,0,0,.5);
+    font-size:54px; font-weight:700; line-height:1.08;
+    letter-spacing:-.025em;
+    margin-bottom:20px;
+    color:var(--fg);
   }
-  .hero-muted { color:rgba(250,250,250,.45); }
+  .hero-muted { color:rgba(250,250,250,.42); }
   .hero-lead {
-    max-width:56ch; margin:0 auto 36px;
-    text-shadow:0 1px 20px rgba(0,0,0,.6);
+    font-size:17px; color:var(--fg2); line-height:1.65;
+    margin-bottom:32px; max-width:46ch;
   }
-  .hero-btns { justify-content:center; }
-  .hero-scroll {
-    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
-    z-index:1; display:flex; flex-direction:column; align-items:center; gap:6px;
-    color:rgba(250,250,250,.35); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
-    animation:floatY 2.5s ease-in-out infinite;
-    cursor:pointer;
-    font-family:var(--mono);
+  .hero-btns { flex-wrap:wrap; }
+  .hero-visual {
+    display:flex; align-items:center; justify-content:flex-end;
   }
-  @keyframes floatY {
-    0%,100% { transform:translateX(-50%) translateY(0); }
-    50% { transform:translateX(-50%) translateY(6px); }
+  .hero-person {
+    width:100%; max-width:460px; max-height:540px;
+    object-fit:cover;
+    border-radius:20px;
+    display:block;
   }
 
   /* ── Stats ticker ── */
@@ -498,8 +471,9 @@
   @media (max-width:760px) {
     .update-bar { padding:8px 20px; }
     .nav-center { display:none; }
-    .hero { height:90vh; }
-    .hero-content { padding:0 24px; }
+    .hero { grid-template-columns:1fr; padding:48px 24px; min-height:auto; }
+    .hero-title { font-size:36px; }
+    .hero-visual { display:none; }
     .cards-section { padding:48px 20px; }
     .cards-grid { grid-template-columns:1fr; }
     .trust-grid { grid-template-columns:1fr 1fr; }

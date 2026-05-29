@@ -15,7 +15,7 @@
   --loss: #FF6B6B;
   --loss-dim: rgba(255,107,107,0.10);
   --green: #4ade80;
-  --sans: 'Inter', system-ui, sans-serif;
+  --sans: 'Montserrat', system-ui, sans-serif;
   --mono: 'Geist Mono', ui-monospace, monospace;
   --rmd:  10px;
   --rlg:  16px;
@@ -35,9 +35,9 @@ body {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "cv11","ss01","tnum";
+  font-feature-settings: "tnum";
   line-height: 1.5;
-  letter-spacing: -.012em;
+  letter-spacing: 0;
 }
 #app { min-height: 100vh; }
 button { font-family: inherit; cursor: pointer; }
@@ -151,10 +151,9 @@ input:-webkit-autofill:focus {
   font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
   color: var(--fg3); font-weight: 600; font-family: var(--mono);
 }
-/* Tesla-scale display type */
-.h1 { font-size: 96px; line-height: .95; letter-spacing: -.05em; font-weight: 800; }
-.h2 { font-size: 56px; line-height: 1.0; letter-spacing: -.04em; font-weight: 700; }
-.lead { font-size: 20px; color: var(--fg2); line-height: 1.6; letter-spacing: -.01em; }
+.h1 { font-size: 52px; line-height: 1.05; letter-spacing: -.025em; font-weight: 700; }
+.h2 { font-size: 36px; line-height: 1.1; letter-spacing: -.02em; font-weight: 700; }
+.lead { font-size: 18px; color: var(--fg2); line-height: 1.65; }
 .badge {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 4px 9px; border-radius: 999px;
