@@ -1,25 +1,25 @@
 <script>
   // PDF Finanzplan — Design C (Dashboard-Grid, monochrom, Signal-Rot nur für Lücke)
   // Props: mode='pension'|'rente', P or R (inputs), result (calc result)
+  import { onMount } from 'svelte';
+  import { de0 } from '../lib/utils.js';
+
   export let mode = 'rente';   // 'pension' | 'rente'
   export let P = null;         // pension inputs
   export let R = null;         // rente inputs
   export let result = null;
 
-  import { onMount } from 'svelte';
-  import { de0, fmtE } from '../lib/utils.js';
-
-  const inputs = mode === 'pension' ? P : R;
+  $: inputs = mode === 'pension' ? P : R;
   $: r = result || {};
-  $: goal = inputs?.zielEur || 2500;
+  $: goal = (inputs && inputs.zielEur) || 2500;
   $: realGap = Math.max(goal - (r.nettoR || 0), 0);
   $: lifetimeGap = Math.round(realGap * 12 * (r.jruh || 20) / 1000) * 1000;
   $: realOk = (r.nettoR || 0) >= goal;
   $: nomNetto = r.netto || 0;
   $: brutto  = r.brutto || 0;
   $: nettoR  = r.nettoR || 0;
-  $: inflation = inputs?.inf || 2.1;
-  $: rentAlter = mode === 'pension' ? (inputs?.pensAlter || 67) : (inputs?.rentAlter || 67);
+  $: inflation = (inputs && inputs.inf) || 2.1;
+  $: rentAlter = mode === 'pension' ? ((inputs && inputs.pensAlter) || 67) : ((inputs && inputs.rentAlter) || 67);
   $: today = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
 
   // Abzüge breakdown
@@ -130,7 +130,7 @@
   $: recos = (() => {
     const list = [];
     const grenz = mode === 'rente'
-      ? (R?.brutto > 70000 ? 42 : R?.brutto > 55000 ? 35 : 30)
+      ? ((R && R.brutto > 70000) ? 42 : (R && R.brutto > 55000) ? 35 : 30)
       : 35;
     if (grenz >= 35 && realGap > 400)
       list.push({ tag:'STEUER', num:'01', title:'Rürup lohnt sich ab Grenzsteuer 35 %',
@@ -183,7 +183,7 @@
     </div>
 
     <!-- KPI tiles -->
-    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Nominal netto</div><div class="fp-kv">{de0.format(nomNetto)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">ab {new Date().getFullYear() + (rentAlter - (inputs?.gebJ ? new Date().getFullYear() - inputs.gebJ : 35))}</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Nominal netto</div><div class="fp-kv">{de0.format(nomNetto)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">ab {new Date().getFullYear() + (rentAlter - ((inputs && inputs.gebJ) ? new Date().getFullYear() - inputs.gebJ : 35))}</div></div>
     <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Brutto</div><div class="fp-kv">{de0.format(brutto)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">vor Steuer & KV</div></div>
     <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">{mode==='pension'?'Ruhegehaltssatz':'Entgeltpunkte'}</div><div class="fp-kv">{mode==='pension'? (r.rs ? (r.rs*100).toFixed(2)+'%' : '—') : (r.ep ? r.ep.toFixed(1)+' EP' : '—')}</div><div class="fp-kn">{mode==='pension'?'§ 14 BeamtVG':'§ 64 SGB VI'}</div></div>
     <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Reale Kaufkraft</div><div class="fp-kv">{de0.format(nettoR)} <span class="fp-ku">€</span></div><div class="fp-kn">in heutigen €</div></div>
@@ -271,7 +271,7 @@
       <div class="fp-ledger">
         <div class="fp-ln"><span class="fp-ln-lab">Brutto{mode==='pension'?'pension':'rente'}</span><span class="fp-ln-amt">{de0.format(brutto)} €</span></div>
         <div class="fp-ln"><span class="fp-ln-lab">Einkommensteuer<span class="fp-ln-sub">{mode==='pension'?'Versorgungsfreibetrag':'97 % steuerpflichtig'}</span></span><span class="fp-ln-amt fp-neg">−{de0.format(abzSteuer)} €</span></div>
-        <div class="fp-ln"><span class="fp-ln-lab">KV + PV<span class="fp-ln-sub">gesetzlicher Abzug{mode==='pension' && P?.kv==='PKV'?' (PKV-Eigenanteil)':''}</span></span><span class="fp-ln-amt fp-neg">−{de0.format(abzKV)} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">KV + PV<span class="fp-ln-sub">gesetzlicher Abzug{mode==='pension' && (P && P.kv==='PKV')?' (PKV-Eigenanteil)':''}</span></span><span class="fp-ln-amt fp-neg">−{de0.format(abzKV)} €</span></div>
         <div class="fp-ln fp-ln-total"><span class="fp-ln-lab">Netto{mode==='pension'?'pension':'rente'}</span><span class="fp-ln-amt">{de0.format(nomNetto)} €</span></div>
       </div>
     </div>
