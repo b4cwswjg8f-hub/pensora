@@ -115,69 +115,69 @@
   }
   .gate-modal {
     position: relative;
-    background: #0f0f0f;
-    border: 1px solid rgba(255,255,255,.12);
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,.09);
     border-radius: 20px;
     padding: 44px 40px 36px;
     max-width: 420px; width: 100%;
-    box-shadow: 0 24px 80px rgba(0,0,0,.9);
+    box-shadow: 0 24px 80px rgba(0,0,0,.18);
     animation: slideUp .22s cubic-bezier(0.16,1,0.3,1) both;
   }
   .gate-icon {
     width: 56px; height: 56px; border-radius: 14px;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    background: rgba(0,0,0,.05); border: 1px solid rgba(0,0,0,.08);
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 20px; color: #fafafa;
+    margin-bottom: 20px; color: #0A0A0A;
   }
   .gate-title {
     font-size: 22px; font-weight: 700; letter-spacing: -.03em;
-    color: #fafafa; margin-bottom: 10px;
+    color: #0A0A0A; margin-bottom: 10px;
   }
   .gate-sub {
-    font-size: 14px; color: #6b6b6b; line-height: 1.6; margin-bottom: 24px;
+    font-size: 14px; color: #888; line-height: 1.6; margin-bottom: 24px;
   }
   .gate-field { margin-bottom: 14px; }
   .gate-input {
     width: 100%; height: 50px; padding: 0 16px;
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.04);
+    border: 1px solid rgba(0,0,0,.12);
     border-radius: 10px;
-    color: #fafafa; font-size: 16px; font-family: inherit;
+    color: #0A0A0A; font-size: 16px; font-family: inherit;
     outline: none; transition: border-color .15s, background .15s;
-    -webkit-text-fill-color: #fafafa;
+    -webkit-text-fill-color: #0A0A0A;
   }
-  .gate-input:focus { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.06); }
-  .gate-input.err { border-color: #FF6B6B; }
-  .gate-error { font-size: 12px; color: #FF6B6B; margin-top: 6px; }
+  .gate-input:focus { border-color: rgba(0,0,0,.35); background: rgba(0,0,0,.06); }
+  .gate-input.err { border-color: #E5251B; }
+  .gate-error { font-size: 12px; color: #E5251B; margin-top: 6px; }
   .gate-btn {
     width: 100%; height: 52px;
-    background: #fafafa; color: #000;
+    background: #0A0A0A; color: #fff;
     border: none; border-radius: 10px;
     font-size: 15px; font-weight: 700; font-family: inherit;
     cursor: pointer; letter-spacing: -.01em;
     display: flex; align-items: center; justify-content: center; gap: 8px;
     transition: background .15s, transform .1s;
   }
-  .gate-btn:hover:not(:disabled) { background: #e8e8e8; }
+  .gate-btn:hover:not(:disabled) { background: #2a2a2a; }
   .gate-btn:active { transform: scale(0.98); }
   .gate-btn:disabled { opacity: .6; cursor: default; }
   .gate-spinner {
-    width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.2);
-    border-top-color: #000; border-radius: 50%;
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.25);
+    border-top-color: #fff; border-radius: 50%;
     animation: spin .7s linear infinite;
   }
   .gate-legal {
-    font-size: 11px; color: #3d3d3d; text-align: center;
+    font-size: 11px; color: #aaa; text-align: center;
     margin-top: 12px; line-height: 1.5;
   }
   .gate-close {
     position: absolute; top: 16px; right: 16px;
     width: 32px; height: 32px; border-radius: 8px;
-    border: none; background: rgba(255,255,255,.06);
-    color: #6b6b6b; display: flex; align-items: center; justify-content: center;
+    border: none; background: rgba(0,0,0,.06);
+    color: #888; display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: background .15s, color .15s;
   }
-  .gate-close:hover { background: rgba(255,255,255,.1); color: #fafafa; }
+  .gate-close:hover { background: rgba(0,0,0,.1); color: #0A0A0A; }
 
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes slideUp {

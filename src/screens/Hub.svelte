@@ -311,7 +311,7 @@
     padding:6px 10px; border-radius:6px; background:none; border:none;
     font-family:inherit;
   }
-  .nav-link:hover { color:var(--fg); background:rgba(255,255,255,.05); }
+  .nav-link:hover { color:var(--fg); background:rgba(0,0,0,.05); }
 
   /* Dropdown overrides for nav */
   .ddtrig {
@@ -323,7 +323,7 @@
     border-radius:6px;
     transition:color .15s, background .15s;
   }
-  .ddtrig:hover { color:var(--fg); background:rgba(255,255,255,.05); }
+  .ddtrig:hover { color:var(--fg); background:rgba(0,0,0,.05); }
   .ddtrig svg { transition:transform .2s var(--ease); margin-top:1px; }
   .ddwrap { position:relative; }
   .ddwrap:hover .ddtrig { color:var(--fg); }
@@ -332,12 +332,12 @@
   .ddmenu {
     position:absolute; top:calc(100% + 8px); left:50%;
     transform:translateX(-50%) translateY(-4px);
-    background:rgba(10,10,10,.98); border:1px solid rgba(255,255,255,.1);
+    background:rgba(250,250,250,.98); border:1px solid rgba(0,0,0,.09);
     border-radius:14px; padding:8px;
     min-width:200px;
     opacity:0; visibility:hidden;
     transition:opacity .18s var(--ease), visibility .18s, transform .18s var(--ease);
-    box-shadow:0 20px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.04);
+    box-shadow:0 20px 60px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.04);
     z-index:200;
     backdrop-filter:blur(20px);
   }
@@ -354,7 +354,7 @@
     font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
     color:var(--fg4); padding:8px 10px 4px;
   }
-  .dd-divider { height:1px; background:rgba(255,255,255,.06); margin:8px 4px; }
+  .dd-divider { height:1px; background:rgba(0,0,0,.08); margin:8px 4px; }
 
   .dditem {
     display:flex; align-items:center; gap:10px;
@@ -364,7 +364,7 @@
     transition:background .1s, color .1s;
     text-decoration:none;
   }
-  .dditem:hover { background:rgba(255,255,255,.06); color:var(--fg); }
+  .dditem:hover { background:rgba(0,0,0,.05); color:var(--fg); }
   .dd-num { font-family:var(--mono); color:var(--fg4); font-size:10px; flex-shrink:0; width:18px; }
   .dd-text { display:flex; flex-direction:column; gap:1px; }
   .dd-title { font-size:13px; font-weight:500; color:var(--fg2); transition:color .1s; }
@@ -390,7 +390,7 @@
     margin-bottom:20px;
     color:var(--fg);
   }
-  .hero-muted { color:rgba(250,250,250,.42); }
+  .hero-muted { color:rgba(10,10,10,.35); }
   .hero-lead {
     font-size:17px; color:var(--fg2); line-height:1.65;
     margin-bottom:32px; max-width:46ch;
@@ -434,13 +434,13 @@
   .calc-card:hover {
     border-color:var(--line3);
     transform:translateY(-3px);
-    box-shadow:0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.04);
+    box-shadow:0 12px 40px rgba(0,0,0,.11), 0 0 0 1px rgba(0,0,0,.06);
     background:var(--bg2);
   }
   .calc-card:active { transform:translateY(-1px) scale(0.99); }
   .calc-card::before {
     content:''; position:absolute; top:0; left:0; right:0; height:1px;
-    background:linear-gradient(90deg,transparent,rgba(250,250,250,.06),transparent);
+    background:linear-gradient(90deg,transparent,rgba(0,0,0,.05),transparent);
     opacity:0; transition:opacity .22s;
   }
   .calc-card:hover::before { opacity:1; }

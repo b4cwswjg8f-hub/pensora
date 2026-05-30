@@ -445,4 +445,36 @@
     .fp-card { break-inside:avoid; }
     * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   }
+
+  /* ── Mobile: collapse 12-col grid ── */
+  @media (max-width: 760px) {
+    .fp-wrap { padding: 0 12px 40px; }
+    .fp-grid { grid-template-columns: 1fr; gap: 10px; }
+    .fp-s3, .fp-s4, .fp-s5, .fp-s7, .fp-s8, .fp-s12 { grid-column: 1 / -1; }
+
+    .fp-topbar { padding: 20px 4px 10px; flex-wrap: wrap; gap: 6px; }
+    .fp-wordmark { font-size: 15px; }
+    .fp-prog { font-size: 9px; padding: 0 4px 12px; }
+
+    /* Gap card */
+    .fp-gap-big { font-size: 48px; }
+    /* Kaufkraft */
+    .fp-real-big { font-size: 36px; }
+    /* KPI numbers */
+    .fp-kv { font-size: 20px; }
+    /* Warn card */
+    .fp-warn-big { font-size: 34px; }
+
+    /* Budget: 2-col → 1-col */
+    .fp-budget-grid { grid-template-columns: 1fr; }
+
+    /* Timeline legend: wrap tighter */
+    .fp-legend { gap: 10px; }
+
+    /* Rec cards: full width already from grid collapse */
+    .fp-card { padding: 16px 18px; }
+
+    /* Ledger rows: stack label + amount */
+    .fp-ln { flex-wrap: wrap; gap: 2px; }
+  }
 </style>
