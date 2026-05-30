@@ -99,6 +99,15 @@
     { href: 'teilzeit-vs-vollzeit-pension/',  label: 'Teilzeit vs. Vollzeit' },
   ];
 
+  const updates = [
+    { label: 'AV-Depot im Bundestag beschlossen', sub: 'Grundzulage 540 €/Jahr · ab 01.01.2027', href: 'altersvorsorgedepot-2027/', dot: true },
+    { label: 'Rentenwert 2026 steigt auf 42,52 €', sub: 'DRV · ab 1. Juli 2026 · +4,25 %', href: 'rentenluecke-2026/', dot: true },
+    { label: 'Rürup-Höchstbetrag 2026', sub: '30.826 € absetzbar · § 10 EStG', href: 'ruerup-lehrer/', dot: false },
+    { label: 'Aktivrente 2026 — unbegrenzt dazuverdienen', sub: 'Ab 65: kein Hinzuverdienstdeckel mehr', href: 'aktivrente-2026/', dot: false },
+    { label: 'Mütterrente 2027 — aktueller Stand', sub: 'Geplante Erweiterung im Überblick', href: 'muetterrente-2027/', dot: false },
+    { label: 'AV-Depot Förderung — Details', sub: 'Wer profitiert, wie viel, ab wann', href: 'altersvorsorgedepot-foerderung/', dot: false },
+  ];
+
   const stats = [
     { val: '71,75 %',   label: 'Max. Ruhegehaltssatz',  sub: '§ 14 BeamtVG · 40 Dienstjahre' },
     { val: '40,79 €',   label: 'Rentenwert 2025',        sub: 'DRV · pro Entgeltpunkt · ab Juli' },
@@ -163,20 +172,48 @@
               </a>
             {/each}
           </div>
-          <div class="dd-divider"></div>
-          <div class="dd-section-label">Vergleiche für KI-Zitierungen</div>
-          <div class="dd-grid dd-grid-3">
-            {#each vergleiche as v}
-              <a class="dditem" href={v.href}>
-                <span class="dd-title">{v.label}</span>
-              </a>
-            {/each}
-          </div>
         </div>
       </div>
 
-      <!-- Direct link -->
-      <a class="nav-link" href="wie-wird-berechnet/">Wie berechnet?</a>
+      <!-- Vergleiche dropdown -->
+      <div class="ddwrap">
+        <button class="nav-link ddtrig">
+          Vergleiche
+          <svg width="9" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+        </button>
+        <div class="ddmenu" style="min-width:260px">
+          {#each vergleiche as v}
+            <a class="dditem" href={v.href}>
+              <span class="dd-title">{v.label}</span>
+            </a>
+          {/each}
+        </div>
+      </div>
+
+      <!-- Updates dropdown -->
+      <div class="ddwrap">
+        <button class="nav-link ddtrig dd-updates-trig">
+          Updates
+          <span class="dd-updates-dot"></span>
+          <svg width="9" height="5" viewBox="0 0 10 6" fill="currentColor"><path d="M0 0l5 6 5-6z"/></svg>
+        </button>
+        <div class="ddmenu" style="min-width:340px">
+          <div class="dd-section-label">Aktuelle Meldungen · 2026</div>
+          {#each updates as u}
+            <a class="dditem" href={u.href}>
+              <span class="dd-text">
+                <span class="dd-title" style="display:flex;align-items:center;gap:6px">
+                  {#if u.dot}<span style="width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0"></span>{/if}
+                  {u.label}
+                </span>
+                <span class="dd-badge">{u.sub}</span>
+              </span>
+            </a>
+          {/each}
+        </div>
+      </div>
+
+      <!-- Direct links -->
       <a class="nav-link" href="ueber-uns/">Über uns</a>
     </div>
 
@@ -476,6 +513,13 @@
   .dd-title { font-size:13px; font-weight:500; color:var(--fg2); transition:color .1s; }
   .dditem:hover .dd-title { color:var(--fg); }
   .dd-badge { font-size:10px; color:var(--fg4); font-family:var(--mono); }
+
+  /* Updates nav trigger */
+  .dd-updates-trig { position:relative; }
+  .dd-updates-dot {
+    width:6px; height:6px; border-radius:50%; background:#fbbf24;
+    flex-shrink:0; animation:pulse 2.5s ease-in-out infinite;
+  }
 
   /* ── Hero ── */
   .hero {
