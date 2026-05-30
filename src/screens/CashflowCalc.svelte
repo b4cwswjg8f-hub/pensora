@@ -1,7 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import Logo from '../components/Logo.svelte';
-  import Stepper from '../components/Stepper.svelte';
+  import CalcNav from '../components/CalcNav.svelte';
+  import CalcStepperBar from '../components/CalcStepperBar.svelte';
+  import CalcStepHeader from '../components/CalcStepHeader.svelte';
+  import CalcNavButtons from '../components/CalcNavButtons.svelte';
   import CashflowResult from './CashflowResult.svelte';
   import { defaultC, calcC, CS_LABELS } from '../lib/calcs.js';
   import { fmtE, de0 } from '../lib/utils.js';
@@ -13,13 +15,12 @@
 
   $: result = (() => { try { return calcC(C); } catch(e) { return null; } })();
   $: s = CS_LABELS[step];
-  $: pct = Math.round(step / CS_LABELS.length * 100);
 
   function next() {
-    if (step < CS_LABELS.length - 1) { step++; window.scrollTo(0,0); }
-    else { showResult = true; window.scrollTo(0,0); }
+    if (step < CS_LABELS.length - 1) { step++; window.scrollTo(0, 0); }
+    else { showResult = true; window.scrollTo(0, 0); }
   }
-  function back() { if (step > 0) { step--; window.scrollTo(0,0); } }
+  function back() { if (step > 0) { step--; window.scrollTo(0, 0); } }
 </script>
 
 {#if showResult}
@@ -30,51 +31,32 @@
   />
 {:else}
 <div>
-  <nav class="nav">
-    <div class="row g16">
-      <button class="brand" on:click={() => dispatch('back')}><Logo /> Pensora</button>
-      <span style="color:var(--line2);font-size:16px">/</span>
-      <span style="color:var(--fg2);font-size:14px">Cashflow-Rechner</span>
-    </div>
-    <div class="row g8"><button class="btn btng" on:click={() => dispatch('back')}>← Hub</button></div>
-  </nav>
-
-  <div class="calc-stepper">
-    <div class="row" style="justify-content:space-between;margin-bottom:10px">
-      <div class="row g12">
-        <span style="font-family:var(--mono);font-size:12px;color:var(--fg3);letter-spacing:.08em;text-transform:uppercase">Schritt {String(step+1).padStart(2,'0')} · {String(CS_LABELS.length).padStart(2,'0')}</span>
-        <span style="font-size:15px;font-weight:500">{s.label}</span>
-      </div>
-      <span style="font-family:var(--mono);font-size:13px">{pct} %</span>
-    </div>
-    <Stepper total={CS_LABELS.length} current={step} />
-  </div>
+  <CalcNav title="Cashflow-Rechner" on:back={() => dispatch('back')} />
+  <CalcStepperBar labels={CS_LABELS} {step} />
 
   <div class="fbody">
     <div class="calc-layout">
       <div class="calc-form">
-        <div class="ey">{s.ey}</div>
-        <h2 style="font-size:36px;font-weight:500;letter-spacing:-.03em;max-width:700px;margin-top:12px;line-height:1.1">{s.title}</h2>
-        <p style="font-size:15px;color:var(--fg2);margin-top:12px;max-width:600px">{s.desc}</p>
-        <div style="margin-top:28px">
+        <CalcStepHeader {s} />
 
+        <div class="mt-7">
           {#if step === 0}
-            <div class="col g20">
-              <div class="col g8">
+            <div class="flex flex-col gap-5">
+              <div class="flex flex-col gap-2">
                 <label class="lbl">Monatliches Nettoeinkommen</label>
-                <div class="sfx" style="font-size:20px">
-                  <input type="number" step="50" bind:value={C.netto} style="font-size:20px;font-weight:500" />
-                  <span class="sfxt" style="font-size:15px">€ / Monat</span>
+                <div class="sfx text-xl">
+                  <input type="number" step="50" bind:value={C.netto} class="text-xl font-medium" />
+                  <span class="sfxt text-[15px]">€ / Monat</span>
                 </div>
               </div>
               {#if result}
                 <div class="card" style="background:var(--bg2)">
-                  <div class="ey" style="margin-bottom:10px">50/15/15-Faustregel (Richtwerte)</div>
-                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px">
-                    {#each [['Fixkosten (50 %)',result.emp_fix],['Vorsorge (15 %)',result.emp_av],['Freizeit (15 %)',result.emp_frei]] as [l,v]}
+                  <div class="ey mb-[10px]">50/15/15-Faustregel (Richtwerte)</div>
+                  <div class="grid gap-3 mt-2" style="grid-template-columns:repeat(3,1fr)">
+                    {#each [['Fixkosten (50 %)',result.emp_fix],['Vorsorge (15 %)',result.emp_av],['Freizeit (15 %)',result.emp_frei]] as [l, v]}
                       <div>
-                        <div style="font-size:10px;color:var(--fg3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em">{l}</div>
-                        <div style="font-size:20px;font-weight:500;font-family:var(--mono);margin-top:4px">{fmtE(v)}</div>
+                        <div class="text-[10px] text-fg3 font-mono uppercase tracking-[.06em]">{l}</div>
+                        <div class="text-xl font-medium font-mono mt-1">{fmtE(v)}</div>
                       </div>
                     {/each}
                   </div>
@@ -83,33 +65,46 @@
             </div>
 
           {:else if step === 1}
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="grid grid-cols-2 gap-4">
               <div>
-                <div style="font-size:11px;color:var(--fg3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Fixkosten</div>
-                <div class="col g12">
-                  {#each [['Warmmiete / Grundmiete','miete','€/Mo.',50],['Nebenkosten / Strom / Gas','nk','€/Mo.',10],['Lebensmittel','lm','€/Mo.',25],['Transport (ÖPNV / Tanken)','transport','€/Mo.',10],['Kommunikation (Handy, Internet)','komm','€/Mo.',5]] as [l,k,sfx,stp]}
-                    <div class="col g8">
-                      <label class="lbl" style="font-size:11px">{l}</label>
+                <div class="text-[11px] text-fg3 font-mono uppercase tracking-[.08em] mb-3">Fixkosten</div>
+                <div class="flex flex-col gap-3">
+                  {#each [
+                    ['Warmmiete / Grundmiete','miete','€/Mo.',50],
+                    ['Nebenkosten / Strom / Gas','nk','€/Mo.',10],
+                    ['Lebensmittel','lm','€/Mo.',25],
+                    ['Transport (ÖPNV / Tanken)','transport','€/Mo.',10],
+                    ['Kommunikation (Handy, Internet)','komm','€/Mo.',5],
+                  ] as [l, k, sfx, stp]}
+                    <div class="flex flex-col gap-2">
+                      <label class="lbl text-[11px]">{l}</label>
                       <div class="sfx"><input type="number" step={stp} bind:value={C[k]} /><span class="sfxt">{sfx}</span></div>
                     </div>
                   {/each}
                 </div>
               </div>
               <div>
-                <div style="font-size:11px;color:var(--fg3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Variable Kosten</div>
-                <div class="col g12">
-                  {#each [['Versicherungen gesamt','versich','€/Mo.',10],['Altersvorsorge (Sparen/ETF)','av','€/Mo.',25],['Freizeit & Hobbys','frei','€/Mo.',25],['Sonstiges','sonst','€/Mo.',10]] as [l,k,sfx,stp]}
-                    <div class="col g8">
-                      <label class="lbl" style="font-size:11px">{l}</label>
+                <div class="text-[11px] text-fg3 font-mono uppercase tracking-[.08em] mb-3">Variable Kosten</div>
+                <div class="flex flex-col gap-3">
+                  {#each [
+                    ['Versicherungen gesamt','versich','€/Mo.',10],
+                    ['Altersvorsorge (Sparen/ETF)','av','€/Mo.',25],
+                    ['Freizeit & Hobbys','frei','€/Mo.',25],
+                    ['Sonstiges','sonst','€/Mo.',10],
+                  ] as [l, k, sfx, stp]}
+                    <div class="flex flex-col gap-2">
+                      <label class="lbl text-[11px]">{l}</label>
                       <div class="sfx"><input type="number" step={stp} bind:value={C[k]} /><span class="sfxt">{sfx}</span></div>
                     </div>
                   {/each}
                 </div>
                 {#if result}
-                  <div class="card mt20" style="background:var(--bg2)">
-                    <div class="ey" style="margin-bottom:6px">Frei verfügbar</div>
-                    <div class="stat" style="font-size:32px;color:{result.frei > 0 ? 'var(--fg)' : 'var(--loss)'}">{fmtE(result.frei)}/Mo.</div>
-                    <div style="font-size:11px;color:var(--fg3);font-family:var(--mono);margin-top:6px">
+                  <div class="card mt-5" style="background:var(--bg2)">
+                    <div class="ey mb-[6px]">Frei verfügbar</div>
+                    <div class="stat text-[32px]" style="color:{result.frei > 0 ? 'var(--fg)' : 'var(--loss)'}">
+                      {fmtE(result.frei)}/Mo.
+                    </div>
+                    <div class="text-[11px] text-fg3 font-mono mt-[6px]">
                       Ausgaben: {fmtE(result.out)} von {fmtE(C.netto)}
                     </div>
                   </div>
@@ -119,33 +114,28 @@
           {/if}
         </div>
 
-        <div class="row" style="justify-content:space-between;margin-top:36px;padding-top:20px;border-top:1px solid var(--line)">
-          <button class="btn btnlg" on:click={back} style="opacity:{step===0?0.3:1};pointer-events:{step===0?'none':'auto'}">← Zurück</button>
-          <div class="row g12">
-            <button class="btn btng" on:click={next}>Überspringen</button>
-            <button class="btn btnp btnlg" on:click={next}>
-              {step === CS_LABELS.length - 1 ? 'Cashflow analysieren →' : 'Weiter →'}
-            </button>
-          </div>
-        </div>
+        <CalcNavButtons
+          {step} labels={CS_LABELS} calcLabel="Cashflow analysieren →"
+          on:back={back} on:next={next}
+        />
       </div>
 
       <!-- Sidebar -->
-      <aside style="border-left:1px solid var(--line);padding:36px 28px;background:var(--bg1)">
-        <div class="ey" style="margin-bottom:14px">Frei verfügbar</div>
-        <div class="stat" style="font-size:40px;color:{result && result.frei > 0 ? 'var(--fg)' : 'var(--loss)'}">
+      <aside class="calc-sidebar">
+        <div class="ey mb-[14px]">Frei verfügbar</div>
+        <div class="stat text-[40px]" style="color:{result && result.frei > 0 ? 'var(--fg)' : 'var(--loss)'}">
           {result ? fmtE(result.frei) + '/Mo.' : '–'}
         </div>
-        <div style="color:var(--fg3);font-size:11px;font-family:var(--mono);margin-top:6px;text-transform:uppercase;letter-spacing:.08em">nach allen Ausgaben</div>
+        <div class="text-fg3 text-[11px] font-mono mt-[6px] uppercase tracking-[.08em]">nach allen Ausgaben</div>
         {#if result}
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);font-size:13px">
-            <div class="row" style="justify-content:space-between;padding:8px 0">
-              <span style="color:var(--fg3)">Notgroschen (3 Mo.)</span>
-              <span style="font-family:var(--mono)">{fmtE(result.notg)}</span>
+          <div class="mt-4 pt-4 text-[13px]" style="border-top:1px solid var(--line)">
+            <div class="calc-sidebar-row">
+              <span class="text-fg3">Notgroschen (3 Mo.)</span>
+              <span class="font-mono">{fmtE(result.notg)}</span>
             </div>
-            <div class="row" style="justify-content:space-between;padding:8px 0">
-              <span style="color:var(--fg3)">Ausgaben gesamt</span>
-              <span style="font-family:var(--mono)">{fmtE(result.out)}</span>
+            <div class="flex items-center justify-between py-2 text-[13px]">
+              <span class="text-fg3">Ausgaben gesamt</span>
+              <span class="font-mono">{fmtE(result.out)}</span>
             </div>
           </div>
         {/if}
