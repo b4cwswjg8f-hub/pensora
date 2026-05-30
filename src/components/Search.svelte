@@ -95,7 +95,7 @@
       bind:this={inputEl}
       bind:value={query}
       on:keydown={onKey}
-      placeholder="Suche — z.B. „AV-Depot" oder „A13 Pension""
+      placeholder='Suche — z.B. „AV-Depot" oder „A13 Pension"'
       class="search-input"
       autocomplete="off"
       spellcheck="false"
