@@ -7,6 +7,55 @@
   const go = (name) => dispatch('navigate', name);
   const book = () => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank');
 
+  let showPersonaModal = false;
+  let selectedPersona = null;
+
+  const personas = [
+    {
+      id: 'beamter',
+      icon: '🏛',
+      title: 'Beamter/in',
+      sub: 'Pension · PKV · Beihilfe',
+      hint: 'Lehrkraft, Richter, Polizei, Verwaltung',
+      calcs: ['pension', 'depot', 'ruerup', 'versicherung'],
+    },
+    {
+      id: 'angestellter',
+      icon: '💼',
+      title: 'Angestellte/r',
+      sub: 'Gesetzliche Rente · Depot · Budget',
+      hint: 'Sozialversicherungspflichtig beschäftigt',
+      calcs: ['rente', 'depot', 'ruerup', 'cashflow'],
+    },
+    {
+      id: 'selbstaendiger',
+      icon: '⚡',
+      title: 'Selbständige/r',
+      sub: 'Rürup · Depot · Versicherungen',
+      hint: 'Freiberufler, Unternehmer, Freelancer',
+      calcs: ['ruerup', 'depot', 'cashflow', 'versicherung'],
+    },
+    {
+      id: 'vorrente',
+      icon: '🌅',
+      title: 'Kurz vor Rente',
+      sub: 'Versorgung · Entnahme · Cashflow',
+      hint: 'Weniger als 5 Jahre bis zum Ruhestand',
+      calcs: ['pension', 'rente', 'depot', 'cashflow'],
+    },
+  ];
+
+  function selectPersona(p) {
+    selectedPersona = p;
+    showPersonaModal = false;
+    setTimeout(() => {
+      document.getElementById('rechner')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  }
+
+  $: recCards = selectedPersona ? cards.filter(c => selectedPersona.calcs.includes(c.id)) : [];
+  $: otherCards = selectedPersona ? cards.filter(c => !selectedPersona.calcs.includes(c.id)) : cards;
+
   const cards = [
     { id: 'pension',      faq: 'pensionsrechner30.html',  num: '01', badge: 'Beamte',             title: 'Pensionsrechner',    desc: 'Nettopension nach § 14 BeamtVG — Ruhegehaltssatz, Mindestversorgung, Steuer und KV-Beihilfe.', tags: ['§ 14 BeamtVG', '17 Bundesländer', 'PKV/GKV'] },
     { id: 'rente',        faq: 'rentenrechner.html',       num: '02', badge: 'Angestellte',         title: 'Rentenrechner',      desc: 'Gesetzliche Rente nach § 64 SGB VI. Entgeltpunkte, Rentenwert 2025 · 40,79 €, Besteuerungsanteil.', tags: ['§ 64 SGB VI', 'Rentenwert 40,79 €', 'Rentenlücke'] },
@@ -138,6 +187,29 @@
     </div>
   </nav>
 
+  <!-- Persona modal -->
+  {#if showPersonaModal}
+    <div class="persona-backdrop" on:click|self={() => showPersonaModal = false}>
+      <div class="persona-modal">
+        <button class="persona-close" on:click={() => showPersonaModal = false}>✕</button>
+        <div class="ey" style="margin-bottom:8px">Personalisiert starten</div>
+        <h2 style="font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--fg);margin-bottom:6px">Wer bist du?</h2>
+        <p style="font-size:13px;color:var(--fg3);margin-bottom:24px;line-height:1.5">Wir zeigen dir die passenden Rechner und Artikel — kostenlos und anonym.</p>
+        <div class="persona-grid">
+          {#each personas as p}
+            <button class="persona-card" on:click={() => selectPersona(p)}>
+              <span class="persona-icon">{p.icon}</span>
+              <span class="persona-title">{p.title}</span>
+              <span class="persona-sub">{p.sub}</span>
+              <span class="persona-hint">{p.hint}</span>
+            </button>
+          {/each}
+        </div>
+        <p style="font-size:11px;color:var(--fg4);text-align:center;margin-top:20px">Keine Anmeldung · Keine Daten gespeichert</p>
+      </div>
+    </div>
+  {/if}
+
   <!-- Scrollable page -->
   <div class="vscr">
 
@@ -156,7 +228,7 @@
           <Search on:navigate={e => go(e.detail)} />
         </div>
         <div class="row g12 hero-btns">
-          <button class="btn btnp btnlg" on:click={() => go('pension')}>Pensionsrechner starten →</button>
+          <button class="btn btnp btnlg" on:click={() => showPersonaModal = true}>Start → Was passt zu mir?</button>
           <button class="btn btno btnlg" on:click={book}>Kostenloses Gespräch</button>
         </div>
       </div>
@@ -181,13 +253,49 @@
     </div>
 
     <!-- ── CALCULATOR CARDS ── -->
-    <section class="cards-section">
+    <section class="cards-section" id="rechner">
       <div class="section-header">
-        <h2 class="section-title">Alle Rechner</h2>
-        <span class="section-sub">Geprüfte gesetzliche Formeln · Keine Anmeldung</span>
+        <h2 class="section-title">{selectedPersona ? `Für dich — ${selectedPersona.title}` : 'Alle Rechner'}</h2>
+        <div style="display:flex;align-items:center;gap:12px">
+          {#if selectedPersona}
+            <button class="persona-reset" on:click={() => selectedPersona = null}>× Alle anzeigen</button>
+          {:else}
+            <span class="section-sub">Geprüfte gesetzliche Formeln · Keine Anmeldung</span>
+          {/if}
+          <button class="btn btng" style="font-size:12px;height:32px;padding:0 14px" on:click={() => showPersonaModal = true}>
+            {selectedPersona ? '↺ Persona ändern' : '→ Für mich filtern'}
+          </button>
+        </div>
       </div>
+
+      {#if selectedPersona && recCards.length > 0}
+        <div class="persona-label">Empfohlen für {selectedPersona.title}</div>
+        <div class="cards-grid" style="margin-bottom:24px">
+          {#each recCards as c}
+            <button class="calc-card calc-card-rec" on:click={() => go(c.id)}>
+              <div class="card-head">
+                <span class="card-num">{c.num}</span>
+                <span class="badge badge-rec">{c.badge}</span>
+              </div>
+              <h3 class="card-title">{c.title}</h3>
+              <p class="card-desc">{c.desc}</p>
+              <div class="card-tags">
+                {#each c.tags as tag}<span class="card-tag">{tag}</span>{/each}
+              </div>
+              <div class="card-cta-row">
+                <span>Rechner starten</span>
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+              </div>
+            </button>
+          {/each}
+        </div>
+        {#if otherCards.length > 0}
+          <div class="persona-label" style="color:var(--fg4)">Weitere Rechner</div>
+        {/if}
+      {/if}
+
       <div class="cards-grid">
-        {#each cards as c}
+        {#each otherCards as c}
           <button class="calc-card" on:click={() => go(c.id)}>
             <div class="card-head">
               <span class="card-num">{c.num}</span>
@@ -196,9 +304,7 @@
             <h3 class="card-title">{c.title}</h3>
             <p class="card-desc">{c.desc}</p>
             <div class="card-tags">
-              {#each c.tags as tag}
-                <span class="card-tag">{tag}</span>
-              {/each}
+              {#each c.tags as tag}<span class="card-tag">{tag}</span>{/each}
             </div>
             <div class="card-cta-row">
               <span>Rechner starten</span>
@@ -490,6 +596,72 @@
   .cta-title { font-size:48px; font-weight:800; letter-spacing:-.04em; margin-bottom:16px; }
   .cta-sub { font-size:18px; color:var(--fg2); line-height:1.65; }
 
+  /* ── Persona modal ── */
+  .persona-backdrop {
+    position:fixed; inset:0; z-index:900;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .persona-modal {
+    background:#fff; border:1px solid rgba(0,0,0,.08);
+    border-radius:20px; padding:36px;
+    max-width:560px; width:100%;
+    position:relative;
+    box-shadow:0 24px 80px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.04);
+  }
+  .persona-close {
+    position:absolute; top:16px; right:16px;
+    width:32px; height:32px; border-radius:50%;
+    background:rgba(0,0,0,.06); border:none; cursor:pointer;
+    font-size:13px; color:var(--fg3);
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, color .15s;
+  }
+  .persona-close:hover { background:rgba(0,0,0,.1); color:var(--fg); }
+  .persona-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .persona-card {
+    display:flex; flex-direction:column; gap:4px;
+    padding:18px 16px; border-radius:12px;
+    border:1px solid rgba(0,0,0,.09); background:rgba(0,0,0,.02);
+    cursor:pointer; text-align:left; font-family:inherit;
+    transition:border-color .18s, background .18s, transform .18s, box-shadow .18s;
+  }
+  .persona-card:hover {
+    border-color:var(--fg); background:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(0,0,0,.1);
+  }
+  .persona-icon { font-size:28px; margin-bottom:4px; }
+  .persona-title { font-size:16px; font-weight:700; color:var(--fg); letter-spacing:-.02em; }
+  .persona-sub { font-size:12px; font-weight:500; color:var(--fg3); font-family:var(--mono); }
+  .persona-hint { font-size:11px; color:var(--fg4); margin-top:2px; }
+
+  /* ── Persona banner in cards ── */
+  .persona-reset {
+    font-size:11px; color:var(--fg3); background:none; border:none;
+    cursor:pointer; font-family:var(--mono); padding:4px 8px;
+    border-radius:6px; transition:color .15s, background .15s;
+  }
+  .persona-reset:hover { color:var(--fg); background:rgba(0,0,0,.05); }
+  .persona-label {
+    font-size:10px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--fg3);
+    font-family:var(--mono); margin-bottom:14px;
+  }
+  .calc-card-rec {
+    border-color:rgba(0,0,0,.2);
+    background:var(--bg);
+  }
+  .calc-card-rec:hover { border-color:var(--fg); }
+  .badge-rec {
+    background:rgba(0,0,0,.08) !important;
+    color:var(--fg2) !important;
+  }
+
   /* ── Mobile ── */
   @media (max-width:760px) {
     .update-bar { padding:8px 20px; }
@@ -504,5 +676,9 @@
     .cta-strip { padding:64px 24px; }
     .cta-title { font-size:32px; }
     :global(.foot) { grid-template-columns:1fr 1fr; padding:40px 24px; gap:24px; }
+    .persona-grid { grid-template-columns:1fr 1fr; gap:8px; }
+    .persona-modal { padding:24px 20px; }
+    .persona-title { font-size:14px; }
+    .section-header { flex-direction:column; align-items:flex-start; gap:10px; }
   }
 </style>

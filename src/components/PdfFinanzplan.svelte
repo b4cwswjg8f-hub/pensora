@@ -4,10 +4,15 @@
   import { onMount } from 'svelte';
   import { de0 } from '../lib/utils.js';
 
-  export let mode = 'rente';   // 'pension' | 'rente'
+  export let mode = 'rente';   // 'pension' | 'rente' | 'depot' | 'ruerup' | 'cashflow' | 'versicherung'
   export let P = null;         // pension inputs
   export let R = null;         // rente inputs
+  export let D = null;         // depot inputs
+  export let Ru = null;        // rürup inputs
+  export let C = null;         // cashflow inputs
+  export let V = null;         // versicherung inputs (object)
   export let result = null;
+  export let total = null;     // versicherung monthly total
 
   $: inputs = mode === 'pension' ? P : R;
   $: r = result || {};
@@ -21,6 +26,78 @@
   $: inflation = (inputs && inputs.inf) || 2.1;
   $: rentAlter = mode === 'pension' ? ((inputs && inputs.pensAlter) || 67) : ((inputs && inputs.rentAlter) || 67);
   $: today = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  // ── Depot ──────────────────────────────────────────────────
+  $: dEndwert  = (r && r.fvG)  || 0;
+  $: dReal     = (r && r.fvR)  || 0;
+  $: dEingez   = (r && r.eingez) || 0;
+  $: dSparb    = (r && r.fvSparB) || 0;
+  $: dEntnahme = Math.round(dEndwert * 0.04 / 12);
+  $: dGewinn   = Math.round(dEndwert - dEingez);
+
+  // ── Rürup ──────────────────────────────────────────────────
+  $: ruEndwert = (r && r.fv)     || 0;
+  $: ruSteG    = (r && r.gesSte) || 0;
+  $: ruSteM    = (r && r.steM)   || 0;
+  $: ruNettoK  = (r && r.nettoK) || 0;
+  $: ruNettoR  = (r && r.nettoR) || 0;
+  $: ruSparb   = (r && r.fvSparB)|| 0;
+  $: ruMRente  = (r && r.mRente) || 0;
+
+  // ── Cashflow ───────────────────────────────────────────────
+  $: cNet   = (C && C.net) || 0;
+  $: cFix   = (r && r.fix)  || 0;
+  $: cVers  = (r && r.vers) || 0;
+  $: cAV    = (r && r.av)   || 0;
+  $: cLeb   = (r && r.leb)  || 0;
+  $: cFrei  = (r && r.frei) || 0;
+  $: cSparq = (r && r.sparq)|| 0;
+  $: cEmpAV = (r && r.emp_av)|| 0;
+
+  // ── Versicherung ───────────────────────────────────────────
+  const V_AVG_TOTAL = 255; // GDV Marktschnitt ~255 €/Mo alle 8 Kategorien
+  $: vTotal    = total || 0;
+  $: vDiff     = vTotal - V_AVG_TOTAL;
+  $: vSavings  = Math.max(-vDiff, 0);
+  $: vEntries  = V ? Object.entries(V).filter(([,v]) => Number(v) > 0) : [];
+  $: vOverCnt  = V ? vEntries.filter(([,v]) => Number(v) > 80).length : 0;
+  $: vUnderCnt = V ? vEntries.filter(([,v]) => Number(v) < 5).length  : 0;
+
+  // ── Simple bar chart helper ─────────────────────────────────
+  function fpBarSvg(bars) {
+    const W=680, H=150, pt=10, pr=8, pb=34, pl=50;
+    const maxV = Math.max(...bars.map(b => b.val), 1) * 1.15;
+    const bw = (W-pl-pr) / bars.length * 0.55;
+    const gp = (W-pl-pr - bars.length*bw) / Math.max(bars.length-1,1);
+    const X = i => pl + i*(bw+gp);
+    const YH = v => Math.min(v/maxV,1) * (H-pt-pb);
+    const YT = v => (H-pb) - YH(v);
+    let s = '';
+    [0,0.5,1].forEach(f => {
+      const y=(H-pb)-f*(H-pt-pb);
+      s += `<line x1="${pl}" x2="${W-pr}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#E6E6E3" stroke-width="1"/>`;
+      s += `<text x="${(pl-4).toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="end" font-size="8" fill="#8B8B90" font-family="'Plus Jakarta Sans',system-ui">${de0.format(Math.round(f*maxV/1000))}k</text>`;
+    });
+    bars.forEach((b,i) => {
+      const x=X(i), yh=YH(b.val), yt=YT(b.val);
+      s += `<rect x="${x.toFixed(1)}" y="${yt.toFixed(1)}" width="${bw.toFixed(1)}" height="${yh.toFixed(1)}" fill="${b.c}" rx="3"/>`;
+      s += `<text x="${(x+bw/2).toFixed(1)}" y="${(yt-5).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="#0B0B0C" font-family="'Plus Jakarta Sans',system-ui">${b.label2 || (de0.format(Math.round(b.val/1000))+'k')}</text>`;
+      s += `<text x="${(x+bw/2).toFixed(1)}" y="${(H-pb+14).toFixed(1)}" text-anchor="middle" font-size="8.5" fill="#8B8B90" font-family="'Plus Jakarta Sans',system-ui">${b.label}</text>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">${s}</svg>`;
+  }
+  $: depotBarSvg = mode === 'depot' ? fpBarSvg([
+    { label:'ETF nom.',  val:dEndwert, c:'#0B0B0C' },
+    { label:'ETF real',  val:dReal,    c:'#636368' },
+    { label:'Sparbuch',  val:dSparb,   c:'#E5251B' },
+    { label:'Eingezahlt',val:dEingez,  c:'#B6B6BA' },
+  ]) : '';
+  $: ruerupBarSvg = mode === 'ruerup' ? fpBarSvg([
+    { label:'Rürup (brutto)',  val:ruEndwert,              c:'#0B0B0C' },
+    { label:'Sparbuch-Vgl.',   val:ruSparb,                c:'#E5251B' },
+    { label:'Steuervorteil',   val:ruSteG,                 c:'#16a34a', label2: de0.format(Math.round(ruSteG/1000))+'k' },
+    { label:'Eingezahlt',      val:(Ru&&Ru.mb||0)*(Ru&&Ru.lz||1)*12, c:'#B6B6BA' },
+  ]) : '';
 
   // Abzüge breakdown
   $: abzSteuer = Math.round((brutto - nomNetto) * 0.56);
@@ -157,10 +234,19 @@
       <div class="fp-muted-sm">Erstellt am {today}</div>
     </div>
   </header>
-  <div class="fp-prog">{mode === 'pension' ? 'Pensionsprognose' : 'Rentenprognose'} · {rentAlter} J. · Rentenwert 40,79 € · DRV 2025</div>
+  <div class="fp-prog">
+    {#if mode==='pension'}Pensionsprognose · {rentAlter} J. · § 14 BeamtVG
+    {:else if mode==='rente'}Rentenprognose · {rentAlter} J. · Rentenwert 40,79 € · DRV 2025
+    {:else if mode==='depot'}AV-Depot-Analyse · {(D&&D.lz)||30} J. · ETF-Zinseszins
+    {:else if mode==='ruerup'}Rürup-Analyse · {(Ru&&Ru.lz)||30} J. · § 10 EStG 2025
+    {:else if mode==='cashflow'}Cashflow-Analyse · 50/15/15-Regel · Monatliche Übersicht
+    {:else if mode==='versicherung'}Versicherungscheck · GDV-Marktvergleich 2025
+    {/if}
+  </div>
 
   <div class="fp-grid">
 
+  {#if mode === 'pension' || mode === 'rente'}
     <!-- Hero Gap card (dark) -->
     <div class="fp-card fp-dark fp-s7 fp-gap-card">
       <div class="fp-gap-label">Reale {mode==='pension'?'Versorgungslücke':'Rentenlücke'} · inflationsbereinigt</div>
@@ -285,6 +371,193 @@
         <p class="fp-rec-body">{rec.body}</p>
       </div>
     {/each}
+
+  <!-- ── DEPOT MODE ─────────────────────────────────────────── -->
+  {:else if mode === 'depot'}
+    <div class="fp-card fp-dark fp-s7 fp-gap-card">
+      <div class="fp-gap-label">ETF-Depot nach {(D&&D.lz)||30} Jahren</div>
+      <div class="fp-gap-big">{de0.format(dEndwert)}<span class="fp-gap-unit">€</span></div>
+      <p class="fp-gap-body">Nominales Endkapital · {(D&&D.rendite)||7} % Rendite · {de0.format((D&&D.spar)||0)} €/Mo. Sparrate</p>
+      <span class="fp-pill">Vorteil ggü. Sparbuch: <b>+{de0.format(Math.max(dEndwert-dSparb,0))} €</b></span>
+    </div>
+    <div class="fp-card fp-s5 fp-real-card">
+      <div class="fp-clabel">Real — heutige Kaufkraft</div>
+      <div class="fp-real-big">{de0.format(dReal)}<span class="fp-real-unit">€</span></div>
+      <p class="fp-real-body">Inflationsbereinigt ({(D&&D.inf)||2.1} % p.a.) am Ende der Laufzeit.</p>
+      <div class="fp-mini">
+        <div class="fp-mini-r"><span class="fp-mini-lab">4 %-Entnahme</span><span class="fp-mini-v">{de0.format(dEntnahme)} €/Mo.</span></div>
+        <div class="fp-mini-r"><span class="fp-mini-lab">Renditegewinn</span><span class="fp-mini-v">+{de0.format(dGewinn)} €</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Eingezahlt gesamt</div><div class="fp-kv">{de0.format(dEingez)} <span class="fp-ku">€</span></div><div class="fp-kn">eigenes Kapital</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Monatliche Rate</div><div class="fp-kv">{de0.format((D&&D.spar)||0)} <span class="fp-ku">€</span></div><div class="fp-kn">+ {de0.format((D&&D.startK)||0)} € Start</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Rendite p. a.</div><div class="fp-kv">{(D&&D.rendite)||7} <span class="fp-ku">%</span></div><div class="fp-kn">ETF Zielrendite</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Laufzeit</div><div class="fp-kv">{(D&&D.lz)||30} <span class="fp-ku">J.</span></div><div class="fp-kn">Ansparphase</div></div>
+    <div class="fp-card fp-s12">
+      <div class="fp-chead"><span class="fp-clabel">ETF-Depot vs. Sparbuch — Endkapital im Vergleich</span><span class="fp-chead-m">nach {(D&&D.lz)||30} Jahren · inkl. inflationsbereinigtem Wert</span></div>
+      {@html depotBarSvg}
+      <div class="fp-legend" style="margin-top:10px">
+        <div class="fp-legend-item"><span style="display:inline-block;width:14px;height:10px;background:#0B0B0C;border-radius:2px;margin-right:6px"></span>ETF nominal</div>
+        <div class="fp-legend-item"><span style="display:inline-block;width:14px;height:10px;background:#636368;border-radius:2px;margin-right:6px"></span>ETF real</div>
+        <div class="fp-legend-item"><span style="display:inline-block;width:14px;height:10px;background:#E5251B;border-radius:2px;margin-right:6px"></span>Sparbuch</div>
+        <div class="fp-legend-item"><span style="display:inline-block;width:14px;height:10px;background:#B6B6BA;border-radius:2px;margin-right:6px"></span>Eingezahlt</div>
+      </div>
+    </div>
+    <div class="fp-card fp-s8">
+      <div class="fp-clabel">4 %-Entnahmeregel — monatlicher Cashflow aus dem Depot</div>
+      <div style="font-size:36px;font-weight:700;letter-spacing:-.02em;margin:10px 0">{de0.format(dEntnahme)} <span style="font-size:14px;font-weight:500;color:var(--muted)">€/Mo.</span></div>
+      <p style="font-size:11.5px;color:var(--ink2);line-height:1.6">Bei 4 % jährlicher Entnahme bleibt das Kapital statistisch stabil (Trinity-Studie). Über den Daumen: reale Kaufkraft heute entspricht ca. {de0.format(Math.round(dEntnahme / Math.pow(1+((D&&D.inf)||2.1)/100, (D&&D.lz)||30)))} €/Mo.</p>
+    </div>
+    <div class="fp-card fp-s4" style="display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:34px;font-weight:700;letter-spacing:-.03em;color:#16a34a">+{de0.format(dGewinn)} €</div>
+      <h3 style="font-size:13px;font-weight:700;margin:8px 0 6px">Renditegewinn vs. Eigenkapital</h3>
+      <p style="font-size:10.5px;color:var(--ink2);line-height:1.5;margin:0">Sparbuch: {de0.format(dSparb)} € — ETF-Vorteil: {de0.format(Math.max(dEndwert-dSparb,0))} €</p>
+    </div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">01</span><span class="fp-rec-tag">STRATEGIE</span><h3 class="fp-rec-h">Sparrate jährlich erhöhen</h3><p class="fp-rec-body">3–5 % Steigerung der Sparrate pro Jahr erhöht das Endkapital überproportional durch den Zinseszinseffekt über lange Anlagehorizonte.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">02</span><span class="fp-rec-tag">FÖRDERUNG</span><h3 class="fp-rec-h">AV-Depot ab 2027 nutzen</h3><p class="fp-rec-body">Ab 01.01.2027: Grundzulage 540 €/Jahr + Kinderzulage 300 €/Kind. Bestehendes Depot kann als AV-Depot zertifiziert werden — kein Neustart nötig.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">03</span><span class="fp-rec-tag">PLANUNG</span><h3 class="fp-rec-h">Entnahmephase strukturieren</h3><p class="fp-rec-body">Neben der 4%-Regel: Reihenfolgerisiko (Sequence-of-Returns), Steueroptimierung beim Verkauf und Entnahmestrategie rechtzeitig planen.</p></div>
+
+  <!-- ── RÜRUP MODE ─────────────────────────────────────────── -->
+  {:else if mode === 'ruerup'}
+    <div class="fp-card fp-dark fp-s7 fp-gap-card">
+      <div class="fp-gap-label">Steuervorteil gesamt über {(Ru&&Ru.lz)||30} Jahre</div>
+      <div class="fp-gap-big">{de0.format(ruSteG)}<span class="fp-gap-unit">€</span></div>
+      <p class="fp-gap-body">§ 10 EStG — 100 % absetzbar 2025. Monatlich: −{de0.format(ruSteM)} € Steuervorteil, Netto-Kosten: {de0.format(ruNettoK)} €/Mo.</p>
+      <span class="fp-pill">Depot bei Rente: <b>{de0.format(Math.round(ruEndwert))} €</b></span>
+    </div>
+    <div class="fp-card fp-s5 fp-real-card">
+      <div class="fp-clabel">Netto-Monatsrente aus Rürup</div>
+      <div class="fp-real-big">{de0.format(ruNettoR)}<span class="fp-real-unit">€/Mo.</span></div>
+      <p class="fp-real-body">Nach Besteuerung § 22 EStG. Brutto: {de0.format(ruMRente)} €/Mo.</p>
+      <div class="fp-mini">
+        <div class="fp-mini-r"><span class="fp-mini-lab">Depot (brutto)</span><span class="fp-mini-v">{de0.format(Math.round(ruEndwert))} €</span></div>
+        <div class="fp-mini-r"><span class="fp-mini-lab">Sparbuch-Vgl.</span><span class="fp-mini-v fp-neg">{de0.format(Math.round(ruSparb))} €</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Monatsbeitrag</div><div class="fp-kv">{de0.format((Ru&&Ru.mb)||0)} <span class="fp-ku">€</span></div><div class="fp-kn">brutto Einzahlung</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Steuervorteil/Mo.</div><div class="fp-kv">{de0.format(ruSteM)} <span class="fp-ku">€</span></div><div class="fp-kn">sofortige Erstattung</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Netto-Kosten</div><div class="fp-kv">{de0.format(ruNettoK)} <span class="fp-ku">€</span></div><div class="fp-kn">echte monatl. Belastung</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Laufzeit</div><div class="fp-kv">{(Ru&&Ru.lz)||30} <span class="fp-ku">J.</span></div><div class="fp-kn">§ 10 EStG bis Rente</div></div>
+    <div class="fp-card fp-s12">
+      <div class="fp-chead"><span class="fp-clabel">Kapitalentwicklung — Rürup vs. Sparbuch</span><span class="fp-chead-m">nach {(Ru&&Ru.lz)||30} Jahren</span></div>
+      {@html ruerupBarSvg}
+    </div>
+    <div class="fp-card fp-s8">
+      <div class="fp-chead"><span class="fp-clabel">Steuerliche Förderung § 10 EStG</span></div>
+      <div class="fp-ledger">
+        <div class="fp-ln"><span class="fp-ln-lab">Monatsbeitrag (brutto)</span><span class="fp-ln-amt">{de0.format((Ru&&Ru.mb)||0)} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">Steuervorteil/Monat<span class="fp-ln-sub">Grenzsteuersatz {(Ru&&Ru.grenzSt)||35} %</span></span><span class="fp-ln-amt" style="color:#16a34a">−{de0.format(ruSteM)} €</span></div>
+        <div class="fp-ln fp-ln-total"><span class="fp-ln-lab">Netto-Kosten/Monat</span><span class="fp-ln-amt">{de0.format(ruNettoK)} €</span></div>
+        <div class="fp-ln" style="margin-top:10px"><span class="fp-ln-lab">Steuervorteil gesamt ({(Ru&&Ru.lz)||30} J.)</span><span class="fp-ln-amt" style="color:#16a34a">{de0.format(ruSteG)} €</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-s4" style="display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:32px;font-weight:700;letter-spacing:-.03em;color:#16a34a">{de0.format(ruSteG)} €</div>
+      <h3 style="font-size:13px;font-weight:700;margin:8px 0 6px">Steuern gespart</h3>
+      <p style="font-size:10.5px;color:var(--ink2);line-height:1.5;margin:0">Vorteil ggü. Sparbuch: {de0.format(Math.max(ruEndwert-ruSparb,0))} €</p>
+    </div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">01</span><span class="fp-rec-tag">STEUER</span><h3 class="fp-rec-h">Spielraum voll ausschöpfen</h3><p class="fp-rec-body">2025: 29.344 € Höchstbetrag. Wer den Spielraum nicht ausnutzt, verzichtet auf jährliche Steuererstattung und Renditechancen zugleich.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">02</span><span class="fp-rec-tag">PRODUKT</span><h3 class="fp-rec-h">ETF-Rürup wählen</h3><p class="fp-rec-body">Klassische Rürup-Versicherungen haben oft hohe Kosten. ETF-basierte Tarife (z.B. über Nürnberger, Condor) bieten mehr Renditechance bei gleicher Förderung.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">03</span><span class="fp-rec-tag">PLANUNG</span><h3 class="fp-rec-h">Kombination mit AV-Depot</h3><p class="fp-rec-body">Ab 2027: Rürup für Steueroptimierung + AV-Depot für Flexibilität. Beide Produkte ergänzen sich ideal — kein Kapital wird verschenkt.</p></div>
+
+  <!-- ── CASHFLOW MODE ──────────────────────────────────────── -->
+  {:else if mode === 'cashflow'}
+    <div class="fp-card fp-dark fp-s7 fp-gap-card">
+      <div class="fp-gap-label">Deine monatliche Sparquote</div>
+      <div class="fp-gap-big">{Math.round(cSparq)}<span class="fp-gap-unit">%</span></div>
+      <p class="fp-gap-body">Empfehlung: 15–20 % des Nettoeinkommens. Monatlich frei verfügbar: {de0.format(Math.round(cFrei))} €.</p>
+      <span class="fp-pill">{cSparq >= 15 ? 'Sehr gute Sparquote — weiter so!' : cSparq >= 10 ? 'Gute Basis — Potenzial nach oben' : 'Unter 10 % — Verbesserungspotenzial vorhanden'}</span>
+    </div>
+    <div class="fp-card fp-s5 fp-real-card">
+      <div class="fp-clabel">Frei verfügbar / Monat</div>
+      <div class="fp-real-big">{de0.format(Math.round(cFrei))}<span class="fp-real-unit">€</span></div>
+      <p class="fp-real-body">Nach Fixkosten, Vorsorge, Versicherungen und Lebenshaltung.</p>
+      <div class="fp-mini">
+        <div class="fp-mini-r"><span class="fp-mini-lab">Nettoeinkommen</span><span class="fp-mini-v">{de0.format(cNet)} €/Mo.</span></div>
+        <div class="fp-mini-r"><span class="fp-mini-lab">Vorsorge/Sparen</span><span class="fp-mini-v">{de0.format(Math.round(cAV))} €/Mo.</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Nettoeinkommen</div><div class="fp-kv">{de0.format(cNet)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">Ausgangsbasis</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Fixkosten</div><div class="fp-kv">{Math.round(cFix/cNet*100)||0} <span class="fp-ku">%</span></div><div class="fp-kn">{de0.format(Math.round(cFix))} €/Mo. · Ziel ≤ 50 %</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Vorsorge</div><div class="fp-kv">{Math.round(cAV/cNet*100)||0} <span class="fp-ku">%</span></div><div class="fp-kn">{de0.format(Math.round(cAV))} €/Mo. · Ziel ≥ 15 %</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Potenzial</div><div class="fp-kv">{de0.format(Math.max(Math.round(cNet*0.15-cAV),0))} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">bis Ziel-Sparquote 15 %</div></div>
+    <div class="fp-card fp-s12">
+      <div class="fp-chead"><span class="fp-clabel">Monatliche Ausgabenstruktur</span><span class="fp-chead-m">Ist-Wert vs. 50/15/15-Empfehlung</span></div>
+      <div class="fp-vbars">
+        {#each [['Fixkosten (Ziel ≤ 50 %)', cFix, cNet*0.50], ['Versicherungen (Ziel ≤ 10 %)', cVers, cNet*0.10], ['Vorsorge/Sparen (Ziel ≥ 15 %)', cAV, cNet*0.15], ['Freizeit/Leben (Ziel ≤ 15 %)', cLeb, cNet*0.15]] as [name, ist, emp]}
+          <div class="fp-vbar">
+            <div class="fp-vbar-top">
+              <span class="fp-vbar-name">{name}</span>
+              <span class="fp-vbar-val">{de0.format(Math.round(ist))} € / {de0.format(Math.round(emp))} € Ziel</span>
+            </div>
+            <div class="fp-track">
+              <div class="fp-seg-ink" style="width:{Math.min(ist/emp*100,100).toFixed(0)}%"></div>
+              {#if ist > emp}<div class="fp-seg-gap" style="width:{Math.min((ist-emp)/emp*100, 40).toFixed(0)}%"></div>{/if}
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+    <div class="fp-card fp-s8">
+      <div class="fp-chead"><span class="fp-clabel">Ausgaben-Breakdown</span></div>
+      <div class="fp-ledger">
+        <div class="fp-ln"><span class="fp-ln-lab">Nettoeinkommen</span><span class="fp-ln-amt">{de0.format(cNet)} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">Fixkosten</span><span class="fp-ln-amt fp-neg">−{de0.format(Math.round(cFix))} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">Versicherungen</span><span class="fp-ln-amt fp-neg">−{de0.format(Math.round(cVers))} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">Vorsorge/Sparen</span><span class="fp-ln-amt fp-neg">−{de0.format(Math.round(cAV))} €</span></div>
+        <div class="fp-ln"><span class="fp-ln-lab">Freizeit/Lebenshaltung</span><span class="fp-ln-amt fp-neg">−{de0.format(Math.round(cLeb))} €</span></div>
+        <div class="fp-ln fp-ln-total"><span class="fp-ln-lab">Frei verfügbar</span><span class="fp-ln-amt">{de0.format(Math.round(cFrei))} €</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-s4" style="display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:32px;font-weight:700;letter-spacing:-.03em;color:{cSparq>=15?'#16a34a':'#E5251B'}">{Math.round(cSparq)} %</div>
+      <h3 style="font-size:13px;font-weight:700;margin:8px 0 6px">Sparquote</h3>
+      <p style="font-size:10.5px;color:var(--ink2);line-height:1.5;margin:0">Empfehlung: 15–20 %. {cSparq>=15?'Sehr gut — weiter so!': 'Potenzial: '+ de0.format(Math.max(Math.round(cNet*0.15-cAV),0))+' €/Mo. mehr.'}</p>
+    </div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">01</span><span class="fp-rec-tag">AUFBAU</span><h3 class="fp-rec-h">Vorsorge auf 15 % erhöhen</h3><p class="fp-rec-body">Die 15-%-Vorsorgeempfehlung ist der Ausgangspunkt für finanzielle Unabhängigkeit. Selbst kleine monatliche Steigerungen wirken durch den Zinseszinseffekt langfristig erheblich.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">02</span><span class="fp-rec-tag">KOSTEN</span><h3 class="fp-rec-h">Fixkosten unter 50 % halten</h3><p class="fp-rec-body">Hohe Fixkosten sind der häufigste Grund für geringe Sparquoten. Miete, Abos und Verträge kritisch prüfen — jeder Euro weniger Fixkosten ist dauerhafter Spielraum.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">03</span><span class="fp-rec-tag">AUTOMATIK</span><h3 class="fp-rec-h">Sparen automatisieren</h3><p class="fp-rec-body">Dauerauftrag am 1. des Monats direkt nach Gehaltseingang sichern — was automatisch abgeht, wird nicht ausgegeben. Sparrate erst erhöhen, dann den Rest verwenden.</p></div>
+
+  <!-- ── VERSICHERUNG MODE ──────────────────────────────────── -->
+  {:else if mode === 'versicherung'}
+    <div class="fp-card fp-dark fp-s7 fp-gap-card">
+      <div class="fp-gap-label">Monatliche Versicherungskosten</div>
+      <div class="fp-gap-big">{de0.format(vTotal)}<span class="fp-gap-unit">€/Mo.</span></div>
+      <p class="fp-gap-body">GDV-Marktdurchschnitt: ca. {V_AVG_TOTAL} €/Mo. — {vDiff > 0 ? 'Du zahlst mehr als der Durchschnitt — Einsparpotenzial prüfen.' : 'Du liegst unter dem Marktdurchschnitt — Deckungslücken prüfen.'}</p>
+      <span class="fp-pill">{vOverCnt} Kategorien mögl. überhöht · {vUnderCnt} mögl. unterversichert</span>
+    </div>
+    <div class="fp-card fp-s5 fp-real-card">
+      <div class="fp-clabel">Differenz zum Marktschnitt</div>
+      <div class="fp-real-big" style="color:{vDiff > 0 ? 'var(--red-ink)' : '#16a34a'}">{vDiff > 0 ? '+' : ''}{de0.format(Math.round(vDiff))}<span class="fp-real-unit">€/Mo.</span></div>
+      <p class="fp-real-body">GDV-Marktschnitt: ca. {V_AVG_TOTAL} €/Mo. für 8 Kategorien.</p>
+      <div class="fp-mini">
+        <div class="fp-mini-r"><span class="fp-mini-lab">Einsparpotenzial</span><span class="fp-mini-v">{de0.format(vSavings)} €/Mo.</span></div>
+        <div class="fp-mini-r"><span class="fp-mini-lab">Jährliches Einsparen</span><span class="fp-mini-v">{de0.format(vSavings * 12)} €</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Gesamtkosten</div><div class="fp-kv">{de0.format(vTotal)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">{de0.format(vTotal*12)} €/Jahr</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Marktschnitt</div><div class="fp-kv">{V_AVG_TOTAL} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">GDV-Referenz 2025</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Einsparpotenzial</div><div class="fp-kv">{de0.format(vSavings)} <span class="fp-ku">€/Mo.</span></div><div class="fp-kn">{de0.format(vSavings*12)} €/Jahr</div></div>
+    <div class="fp-card fp-kpi fp-s3"><div class="fp-clabel">Kategorien</div><div class="fp-kv">{vEntries.length} <span class="fp-ku">aktiv</span></div><div class="fp-kn">{vOverCnt} mögl. überhöht</div></div>
+    <div class="fp-card fp-s12">
+      <div class="fp-chead"><span class="fp-clabel">Versicherungskosten nach Kategorie</span><span class="fp-chead-m">GDV-Marktvergleich 2025</span></div>
+      <div class="fp-ledger">
+        {#each vEntries as [k, v]}
+          <div class="fp-ln"><span class="fp-ln-lab">{k}</span><span class="fp-ln-amt">{de0.format(Number(v))} €/Mo.</span></div>
+        {/each}
+        <div class="fp-ln fp-ln-total"><span class="fp-ln-lab">Gesamt</span><span class="fp-ln-amt">{de0.format(vTotal)} €/Mo.</span></div>
+      </div>
+    </div>
+    <div class="fp-card fp-warn-card fp-s4">
+      <div class="fp-warn-big">{vDiff > 0 ? '+' : ''}{de0.format(Math.round(vDiff))} €</div>
+      <h3 class="fp-warn-h">{vDiff > 0 ? 'Mögliches Einsparpotenzial' : 'Unter Marktdurchschnitt'}</h3>
+      <p class="fp-warn-body">{vDiff > 0 ? 'Marktvergleich empfohlen — mit unabhängiger Beratung lassen sich oft 20–30 % der Kosten einsparen.' : 'Prüfe ob alle wichtigen Risiken (BU, Haftpflicht) ausreichend abgedeckt sind.'}</p>
+    </div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">01</span><span class="fp-rec-tag">PRIORITÄT</span><h3 class="fp-rec-h">BU und Haftpflicht zuerst</h3><p class="fp-rec-body">Berufsunfähigkeitsversicherung und private Haftpflicht sind die wichtigsten Absicherungen. Alles andere ist nachrangig.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">02</span><span class="fp-rec-tag">KOSTEN</span><h3 class="fp-rec-h">Marktvergleich durchführen</h3><p class="fp-rec-body">Versicherungsbeiträge können ohne Leistungsverlust oft deutlich reduziert werden — besonders bei Kfz, Hausrat und Rechtsschutz.</p></div>
+    <div class="fp-card fp-rec fp-s4"><span class="fp-rec-badge">03</span><span class="fp-rec-tag">ANALYSE</span><h3 class="fp-rec-h">Doppelversicherungen prüfen</h3><p class="fp-rec-body">PKV-Zusatz, Reisekranken und Unfallversicherung sind häufig doppelt oder redundant abgedeckt. Potenzial für sofortige Einsparung.</p></div>
+
+  {/if}
 
   </div>
 

@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
   import PdfGate from '../components/PdfGate.svelte';
+  import PdfFinanzplan from '../components/PdfFinanzplan.svelte';
   import { fmtE, de0 } from '../lib/utils.js';
   import { VBENCH } from '../lib/calcs.js';
 
@@ -10,6 +11,7 @@
 
   const dispatch = createEventDispatcher();
   let showPdfGate = false;
+  let showFinanzplan = false;
 
   $: vKeys = Object.keys(VBENCH);
   $: avgTotal = vKeys.reduce((s, k) => s + VBENCH[k].avg, 0);
@@ -27,15 +29,15 @@
     let svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">`;
     [0, 0.25, 0.5, 0.75, 1].forEach(f => {
       const y = ys(f * maxV);
-      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
+      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
       svg += `<text x="${pad - 6}" y="${(y + 3).toFixed(1)}" fill="#6b6b6b" font-size="9" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f * maxV))}€</text>`;
     });
     vKeys.forEach((k, i) => {
       const x = pad + i * (bw * 2 + gap);
       const ist = Number(V[k]) || 0, avg = VBENCH[k].avg;
-      const color = ist > avg * 1.3 ? '#FF6B6B' : ist < avg * 0.7 ? '#6fcf97' : '#fafafa';
+      const color = ist > avg * 1.3 ? '#FF6B6B' : ist < avg * 0.7 ? '#6fcf97' : '#0A0A0A';
       svg += `<rect x="${x}" y="${ys(ist).toFixed(1)}" width="${bw}" height="${yh(ist).toFixed(1)}" fill="${color}" opacity=".9" rx="2"/>`;
-      svg += `<rect x="${x + bw + 2}" y="${ys(avg).toFixed(1)}" width="${bw - 2}" height="${yh(avg).toFixed(1)}" fill="#fafafa" opacity=".25" rx="2" stroke="#fafafa" stroke-width="1" stroke-dasharray="2 2"/>`;
+      svg += `<rect x="${x + bw + 2}" y="${ys(avg).toFixed(1)}" width="${bw - 2}" height="${yh(avg).toFixed(1)}" fill="#0A0A0A" opacity=".15" rx="2" stroke="#fafafa" stroke-width="1" stroke-dasharray="2 2"/>`;
       // Short label
       const short = k.split(' ')[0].replace(/[()]/g, '').substring(0, 8);
       svg += `<text x="${(x + bw).toFixed(1)}" y="${(h - pad + 16).toFixed(1)}" fill="#6b6b6b" font-size="8" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${short}</text>`;
@@ -54,12 +56,21 @@
   <div class="row g8">
     <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => showPdfGate = true} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Als PDF speichern">⬇ PDF</button>
     <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
 <PdfGate bind:show={showPdfGate} />
+
+{#if showFinanzplan}
+  <div class="fp-overlay" on:click|self={() => showFinanzplan = false}>
+    <div class="fp-overlay-inner">
+      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Schließen</button>
+      <PdfFinanzplan mode="versicherung" {V} {total} />
+    </div>
+  </div>
+{/if}
 
 <div class="vscr">
   <div class="calc-result-pad">
@@ -156,7 +167,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showPdfGate = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.12);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Als PDF speichern
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>

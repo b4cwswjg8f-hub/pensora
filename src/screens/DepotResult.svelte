@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
   import PdfGate from '../components/PdfGate.svelte';
+  import PdfFinanzplan from '../components/PdfFinanzplan.svelte';
   import { fmtE, de0 } from '../lib/utils.js';
   import { barChart, legend } from '../lib/charts.js';
 
@@ -10,6 +11,7 @@
 
   const dispatch = createEventDispatcher();
   let showPdfGate = false;
+  let showFinanzplan = false;
   $: r = result;
 
   // Custom depot growth chart (month-by-month)
@@ -27,7 +29,7 @@
     const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
     return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
       <defs><linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#60a5fa" stop-opacity=".3"/><stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/></linearGradient></defs>
-      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
         <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
       ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Jahr ${Math.round(f*lz)}</text>`).join('')}
       <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#dg)"/>
@@ -57,12 +59,21 @@
   <div class="row g8">
     <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => showPdfGate = true} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Als PDF speichern">⬇ PDF</button>
     <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
 <PdfGate bind:show={showPdfGate} />
+
+{#if showFinanzplan}
+  <div class="fp-overlay" on:click|self={() => showFinanzplan = false}>
+    <div class="fp-overlay-inner">
+      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Schließen</button>
+      <PdfFinanzplan mode="depot" {D} {result} />
+    </div>
+  </div>
+{/if}
 
 <div class="vscr">
   <div class="calc-result-pad">
@@ -106,7 +117,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showPdfGate = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.12);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Als PDF speichern
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>

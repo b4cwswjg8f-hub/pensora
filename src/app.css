@@ -540,8 +540,18 @@ input[type=range] { width: 100%; height: 3px; accent-color: var(--fg); cursor: p
 /* ─── PRINT / PDF ────────────────────────────────────────────── */
 @media print {
   /* Hide interactive / navigation elements */
-  .nav, .cta-strip, .foot, .btn, .btnp, .btnlg, .btnxl,
-  .print-hide, aside, .ddwrap { display: none !important; }
+  .nav, .update-bar, .cta-strip, .foot, .btn, .btnp, .btnlg, .btnxl,
+  .print-hide, aside, .ddwrap, .gate-backdrop, .fp-overlay-close { display: none !important; }
+
+  /* PDF overlay: flatten to normal flow so only Finanzplan content prints */
+  .fp-overlay {
+    position: static !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .fp-overlay-inner { max-width: 100% !important; }
 
   /* Reset page background to white */
   html, body { background: #fff !important; color: #000 !important; }

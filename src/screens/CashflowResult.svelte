@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Logo from '../components/Logo.svelte';
   import PdfGate from '../components/PdfGate.svelte';
+  import PdfFinanzplan from '../components/PdfFinanzplan.svelte';
   import { fmtE, de0 } from '../lib/utils.js';
 
   export let C;
@@ -9,13 +10,14 @@
 
   const dispatch = createEventDispatcher();
   let showPdfGate = false;
+  let showFinanzplan = false;
   $: r = result;
 
   // Donut/bar-style cashflow breakdown chart
   $: chartSvg = (() => {
     const w = 800, h = 220, pad = 40;
     const cats = [
-      { label: 'Fixkosten', ist: r.fix, emp: r.emp_fix, color: '#fafafa' },
+      { label: 'Fixkosten', ist: r.fix, emp: r.emp_fix, color: '#0A0A0A' },
       { label: 'Versicherungen', ist: r.vers, emp: r.emp_vers, color: '#a3a3a3' },
       { label: 'Vorsorge/Sparen', ist: r.av, emp: r.emp_av, color: '#6fcf97' },
       { label: 'Freizeit', ist: r.leb, emp: r.emp_frei, color: '#f2994a' },
@@ -29,7 +31,7 @@
     // Grid lines
     [0, 0.25, 0.5, 0.75, 1].forEach(f => {
       const y = ys(f * maxV);
-      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
+      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
       svg += `<text x="${pad - 6}" y="${(y + 3).toFixed(1)}" fill="#6b6b6b" font-size="9" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f * maxV))}€</text>`;
     });
     cats.forEach((c, i) => {
@@ -58,12 +60,21 @@
   <div class="row g8">
     <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
     <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => showPdfGate = true} title="Als PDF speichern">⬇ PDF</button>
+    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Als PDF speichern">⬇ PDF</button>
     <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
   </div>
 </nav>
 
 <PdfGate bind:show={showPdfGate} />
+
+{#if showFinanzplan}
+  <div class="fp-overlay" on:click|self={() => showFinanzplan = false}>
+    <div class="fp-overlay-inner">
+      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Schließen</button>
+      <PdfFinanzplan mode="cashflow" {C} {result} />
+    </div>
+  </div>
+{/if}
 
 <div class="vscr">
   <div class="calc-result-pad">
@@ -134,7 +145,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showPdfGate = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.12);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Als PDF speichern
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>

@@ -12,7 +12,7 @@ export function lineChart(series, years) {
   const labels = [0, .25, .5, .75, 1].map(f => Math.round(f * maxY));
   return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
     <defs>${series.map((s, i) => s.fill ? `<linearGradient id="lg${i}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${s.color}" stop-opacity=".3"/><stop offset="100%" stop-color="${s.color}" stop-opacity="0"/></linearGradient>` : '').join('')}</defs>
-    ${labels.map(v => `<line x1="${pad}" x2="${w - pad}" y1="${ys(v).toFixed(1)}" y2="${ys(v).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${v > 0 ? 'stroke-dasharray="2 3"' : ''}/>
+    ${labels.map(v => `<line x1="${pad}" x2="${w - pad}" y1="${ys(v).toFixed(1)}" y2="${ys(v).toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${v > 0 ? 'stroke-dasharray="2 3"' : ''}/>
       <text x="${pad - 6}" y="${(ys(v) + 3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(v / 1000))}k</text>`).join('')}
     ${[0, .25, .5, .75, 1].map(f => `<text x="${xs(Math.round(f * years)).toFixed(1)}" y="${h - pad + 16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${yr + Math.round(f * years)}</text>`).join('')}
     ${series.map((s, i) => s.fill ? `<path d="${area(s.data)}" fill="url(#lg${i})"/>` : '').join('')}
@@ -27,7 +27,7 @@ export function barChart(bars) {
   const xs = i => pad + (i + 0.2) * (w - pad * 2) / bars.length;
   const ys = v => h - pad - Math.max(0, v / max) * (h - pad * 1.5);
   return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
-    ${[0, .25, .5, .75, 1].map(f => `<line x1="${pad}" x2="${w - pad}" y1="${ys(f * max).toFixed(1)}" y2="${ys(f * max).toFixed(1)}" stroke="#1f1f1f" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>
+    ${[0, .25, .5, .75, 1].map(f => `<line x1="${pad}" x2="${w - pad}" y1="${ys(f * max).toFixed(1)}" y2="${ys(f * max).toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>
       <text x="${pad - 6}" y="${(ys(f * max) + 3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f * max / 1000))}k</text>`).join('')}
     ${bars.map((b, i) => `
       <rect x="${xs(i)}" y="${ys(b.val).toFixed(1)}" width="${bw}" height="${(h - pad - ys(b.val)).toFixed(1)}" fill="${b.color}" rx="3"/>
