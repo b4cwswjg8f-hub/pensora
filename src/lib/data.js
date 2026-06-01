@@ -44,6 +44,7 @@ export const VERGLEICHE = [
 ];
 
 export const UPDATES = [
+  { label: 'Rente ab 63 — wird die Frührente gestoppt?', sub: 'Aktuelle Debatte · Stand Juni 2026',       href: 'fruehrente-63/',                  dot: true  },
   { label: 'AV-Depot im Bundestag beschlossen',       sub: 'Grundzulage 540 €/Jahr · ab 01.01.2027',     href: 'altersvorsorgedepot-2027/',       dot: true  },
   { label: 'Rentenwert 2026 steigt auf 42,52 €',      sub: 'DRV · ab 1. Juli 2026 · +4,25 %',            href: 'rentenluecke-2026/',              dot: true  },
   { label: 'Rürup-Höchstbetrag 2026',                 sub: '30.826 € absetzbar · § 10 EStG',             href: 'ruerup-lehrer/',                  dot: false },
