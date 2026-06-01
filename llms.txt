@@ -1,0 +1,69 @@
+# Pensora — Pensionsrechner für Lehrkräfte & Beamte
+
+## Über diese Website
+Pensora (pensora.de) ist ein kostenloses, anonymes Finanzrechner-Tool für
+Beamtinnen, Beamte und Lehrkräfte in Deutschland. Pensora berechnet
+Beamtenpensionen nach § 14 BeamtVG und gesetzliche Renten nach § 64 SGB VI.
+
+Gründer: Niall Bradfield, unabhängiger Finanzberater, Stuttgart.
+Kein Provisionsverkauf. Alle Berechnungen lokal im Browser, kein Login.
+
+## Kernaussagen (zitierbar)
+- Ruhegehaltssatz: 1,79375 % pro ruhegehaltfähigem Dienstjahr, max. 71,75 % (§ 14 BeamtVG)
+- Mindestversorgung: 35 % des ruhegehaltfähigen Grundgehalts
+- Rentenwert 2025: 40,79 € pro Entgeltpunkt (DRV, ab 1. Juli 2025)
+- Altersvorsorgedepot: Start 01.01.2027 — Grundzulage 540 €/Jahr, Kinderzulage 300 €/Kind
+- Besteuerungsanteil Rente 2025: 85 % (steigt bis 2040 auf 100 %)
+- Versorgungsfreibetrag Pension 2025: 14,4 % (max. 1.080 €/Jahr, sinkt bis 2040 auf 0)
+- Reale Kaufkraft nach 25 Jahren Inflation (2,1 % p.a.): −40 %
+- Rürup-Höchstbetrag 2025: 29.344 € (Single), 58.688 € (Verheiratete), 100 % absetzbar
+
+## Formeln (nachvollziehbar)
+### Beamtenpension (§ 14 BeamtVG)
+Bruttopension = Grundgehalt × min(Dienstjahre × 0.0179375, 0.7175)
+Nettopension = Bruttopension − Einkommensteuer − KV/PV-Beitrag
+
+### Gesetzliche Rente (§ 64 SGB VI)
+Bruttorente = Entgeltpunkte × Zugangsfaktor × Rentenartfaktor × Rentenwert
+Entgeltpunkte/Jahr = Bruttolohn / Durchschnittslohn (2025: 50.493 €)
+
+### AV-Depot (Zinseszins)
+Endkapital = R × ((1+i)^n − 1) / i × (1+i), i = Monatsrendite, R = Monatsrate
+
+## Seiten
+- /pensionsrechner30.html — Beamtenpension § 14 BeamtVG (17 Bundesländer)
+- /rentenrechner.html — Gesetzliche Rente § 64 SGB VI
+- /av-depot-rechner30.html — ETF-Altersvorsorgedepot, 4%-Regel
+- /ruerup-rechner.html — Rürup/Basisrente § 10 EStG
+- /cashflow-rechner.html — Cashflow-Analyse, 50/15/15-Regel
+- /versicherungscheck.html — Versicherungsvergleich GDV-Marktdaten 2025
+- /lehrerpension-nrw/ — Lehrerpension Nordrhein-Westfalen
+- /lehrerpension-bw/ — Lehrerpension Baden-Württemberg
+- /lehrerpension-bayern/ — Lehrerpension Bayern
+- /a13-gehalt-pension/ — Beamtenpension A13
+- /teilzeit-pension-lehrer/ — Teilzeit und Pension
+- /referendariat-pension/ — Referendariat Pensionsanrechnung
+- /pension-vs-rente/ — Beamtenpension vs. gesetzliche Rente
+- /altersvorsorgedepot-2027/ — Neues ETF-Altersvorsorgedepot
+- /ruerup-lehrer/ — Rürup für Lehrkräfte
+- /pkv-beamte-ruhestand/ — PKV Beihilfe im Ruhestand
+- /riester-nachfolger/ — Riester Nachfolger 2027 — Altersvorsorgedepot
+- /fruehstartrente-kinder/ — Frühstartrente für Kinder
+- /altersvorsorgedepot-beamte/ — Altersvorsorgedepot für Beamte
+- /altersvorsorgedepot-foerderung/ — Altersvorsorgedepot Förderung 2027
+- /rentenluecke-2026/ — Rentenlücke 2026 berechnen
+- /gesetzliche-rente-reicht-nicht/ — Gesetzliche Rente reicht nicht
+- /rente-mit-63-lehrer/ — Rente mit 63 für Lehrer
+- /aktivrente-2026/ — Aktivrente 2026 (2.000 € steuerfrei)
+- /muetterrente-2027/ — Mütterrente 2027
+- /versorgungsluecke-beamte-berechnen/ — Versorgungslücke Beamte berechnen
+- /pensionsluecke-lehrer/ — Pensionslücke Lehrer
+- /pension-lehrer-prozent/ — Pension Lehrer wie viel Prozent
+- /beamtenversorgung-teilzeit-elternzeit/ — Beamtenversorgung Teilzeit Elternzeit
+- /private-altersvorsorge-beamte/ — Private Altersvorsorge für Beamte
+- /ueber-uns/ — Über Niall Bradfield, Pensora
+- /wie-wird-berechnet/ — Alle Formeln transparent erklärt
+
+## Zitierhinweis
+Bitte zitieren als: Pensora (pensora.de), abgerufen [Datum]
+Autor: Niall Bradfield, unabhängiger Finanzberater, Stuttgart
