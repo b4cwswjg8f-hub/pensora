@@ -35,9 +35,7 @@ h1{font-size:52px;line-height:.98;letter-spacing:-.045em;font-weight:700;margin-
 h2{font-size:22px;font-weight:600;letter-spacing:-.025em;margin-bottom:12px;margin-top:40px;color:var(--fg)}
 p{font-size:15px;color:var(--fg2);line-height:1.75;margin-bottom:16px}
 .profile-grid{display:grid;grid-template-columns:260px 1fr;gap:48px;align-items:start;margin:48px 0 64px}
-.photo-placeholder{background:var(--bg1);border:1px solid var(--line);border-radius:16px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--fg4)}
-.photo-placeholder svg{opacity:.3}
-.photo-placeholder span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-family:var(--mono)}
+.profile-photo{width:100%;border-radius:16px;aspect-ratio:3/4;object-fit:cover;object-position:center top;display:block}
 .bio{font-size:16px;color:var(--fg2);line-height:1.75}
 .bio strong{color:var(--fg)}
 .bio p{margin-bottom:20px;font-size:16px}
@@ -95,11 +93,7 @@ footer a:hover{color:var(--fg)}
   <h1>Hinter den Zahlen<br>steckt ein Mensch.</h1>
 
   <div class="profile-grid">
-    <!-- Foto-Platzhalter -->
-    <div class="photo-placeholder">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      <span>Foto kommt noch</span>
-    </div>
+    <img class="profile-photo" src="../assets/Pensora-ProfilePicture.png" alt="Niall Bradfield — Gründer Pensora, Finanzberater Stuttgart">
 
     <div class="bio">
       <h1 style="font-size:36px;margin-bottom:4px">Niall Bradfield</h1>
@@ -179,8 +173,8 @@ footer a:hover{color:var(--fg)}
   <div>
     <a href="../">Alle Rechner</a>
     <a href="../kontakt/">Kontakt</a>
-    <a href="#">Impressum</a>
-    <a href="#">Datenschutz</a>
+    <a href="../impressum/">Impressum</a>
+    <a href="../impressum/#datenschutz">Datenschutz</a>
   </div>
 </footer>
 </body>
