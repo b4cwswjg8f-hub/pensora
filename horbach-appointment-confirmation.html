@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointment Confirmation – HORBACH</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f5f5f3;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #3a3a3a;
+    }
+
+    .wrapper {
+      max-width: 620px;
+      margin: 40px auto;
+      background-color: #ffffff;
+    }
+
+    /* ── Header ── */
+    .header {
+      background-color: #ffffff;
+      padding: 32px 40px 24px;
+      border-bottom: 3px solid #8db83a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-wordmark {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #7a6e50;
+      text-transform: uppercase;
+    }
+
+    /* Diamond grid (CSS recreation of the logo mark) */
+    .diamond-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 14px);
+      grid-template-rows: repeat(3, 14px);
+      gap: 3px;
+    }
+
+    .diamond-grid span {
+      width: 14px;
+      height: 14px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+
+    .d-light  { background-color: #d4e89a; }
+    .d-mid    { background-color: #a8cc55; }
+    .d-dark   { background-color: #6fa020; }
+    .d-empty  { background-color: transparent; }
+
+    /* ── Hero banner ── */
+    .hero {
+      background-color: #7a6e50;
+      padding: 36px 40px;
+      color: #ffffff;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #c8bf9f;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #ffffff;
+    }
+
+    /* ── Body ── */
+    .body {
+      padding: 36px 40px;
+    }
+
+    .greeting {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #3a3a3a;
+      margin-bottom: 28px;
+    }
+
+    /* ── Detail card ── */
+    .card {
+      border: 1px solid #e0ddd5;
+      border-radius: 4px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+    }
+
+    .card-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #9b9280;
+      margin-bottom: 16px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .detail-row:last-child { margin-bottom: 0; }
+
+    .detail-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7a6e50;
+      width: 90px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .detail-value {
+      font-size: 14px;
+      color: #3a3a3a;
+      line-height: 1.5;
+    }
+
+    .detail-value.placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
+
+    /* ── Topics ── */
+    .topics {
+      margin-bottom: 28px;
+    }
+
+    .topics-title {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #9b9280;
+      margin-bottom: 12px;
+    }
+
+    .topic-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #3a3a3a;
+    }
+
+    .topic-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #8db83a;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* ── Teams CTA ── */
+    .teams-box {
+      background-color: #f5f7ef;
+      border-left: 3px solid #8db83a;
+      padding: 20px 24px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 32px;
+    }
+
+    .teams-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #7a6e50;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .teams-link-placeholder {
+      font-size: 13px;
+      color: #aaa;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .teams-btn {
+      display: inline-block;
+      background-color: #7a6e50;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 10px 22px;
+      border-radius: 3px;
+      text-decoration: none;
+    }
+
+    /* ── Closing ── */
+    .closing {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #3a3a3a;
+      margin-bottom: 32px;
+    }
+
+    .signature-name {
+      font-weight: 700;
+      color: #3a3a3a;
+    }
+
+    .signature-role {
+      font-size: 12px;
+      color: #9b9280;
+      margin-top: 2px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background-color: #f0ede6;
+      padding: 24px 40px;
+      border-top: 1px solid #e0ddd5;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #7a6e50;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .footer-tagline {
+      font-size: 11px;
+      color: #9b9280;
+      margin-bottom: 12px;
+    }
+
+    .footer-links {
+      font-size: 11px;
+      color: #b0a890;
+    }
+
+    .footer-links a {
+      color: #8db83a;
+      text-decoration: none;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e8e4dc;
+      margin: 24px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-wordmark">HORBACH</div>
+    <div class="diamond-grid">
+      <!--  Row 1  -->
+      <span class="d-empty"></span>
+      <span class="d-light"></span>
+      <span class="d-empty"></span>
+      <!--  Row 2  -->
+      <span class="d-light"></span>
+      <span class="d-mid"></span>
+      <span class="d-light"></span>
+      <!--  Row 3  -->
+      <span class="d-empty"></span>
+      <span class="d-mid"></span>
+      <span class="d-dark"></span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-label">Appointment Confirmation</p>
+    <h1>Your Financial Consulting<br>Session with HORBACH</h1>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <p class="greeting">
+      Dear [Client First Name],<br><br>
+      Thank you for scheduling a consultation with us. We are looking forward to speaking with you
+      and helping you make the most of your financial situation as an expat in Germany.
+      Below you will find the details of your upcoming appointment.
+    </p>
+
+    <!-- Appointment details -->
+    <div class="card">
+      <p class="card-title">Appointment Details</p>
+
+      <div class="detail-row">
+        <span class="detail-label">Date</span>
+        <span class="detail-value">[DD Month YYYY]</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Time</span>
+        <span class="detail-value">[HH:MM] – [HH:MM] (CET)</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Format</span>
+        <span class="detail-value">Microsoft Teams · Video Call</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Advisor</span>
+        <span class="detail-value">[Advisor Full Name]</span>
+      </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="topics">
+      <p class="topics-title">Topics We Will Cover</p>
+      <div class="topic-item">
+        <span class="topic-dot"></span>
+        Investments &amp; Tax Benefits
+      </div>
+      <div class="topic-item">
+        <span class="topic-dot"></span>
+        Your Personal Financial Goals
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Teams link -->
+    <div class="teams-box">
+      <p class="teams-label">Microsoft Teams Link</p>
+      <p class="teams-link-placeholder">[ Insert Teams meeting link here ]</p>
+      <a href="#" class="teams-btn">Join Meeting</a>
+    </div>
+
+    <!-- Closing -->
+    <div class="closing">
+      <p>
+        If you have any questions before our meeting or need to reschedule, please do not hesitate
+        to reach out. We are happy to help.
+      </p>
+      <br>
+      <p>We look forward to meeting you.</p>
+      <br>
+      <p>Kind regards,</p>
+      <br>
+      <p class="signature-name">[Advisor Full Name]</p>
+      <p class="signature-role">Financial Consultant · HORBACH</p>
+      <p class="signature-role">[Phone] &nbsp;|&nbsp; [Email]</p>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- Footer -->
+  <div class="footer">
+    <p class="footer-logo">HORBACH</p>
+    <p class="footer-tagline">Independent financial consulting — specialised for expats</p>
+    <p class="footer-links">
+      <a href="#">horbach.de</a> &nbsp;·&nbsp;
+      <a href="#">Impressum</a> &nbsp;·&nbsp;
+      <a href="#">Privacy Policy</a>
+    </p>
+  </div>
+
+</div><!-- /wrapper -->
+
+</body>
+</html>

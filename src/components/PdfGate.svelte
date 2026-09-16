@@ -11,13 +11,13 @@
 
   // Pre-fill from localStorage if user entered before
   if (typeof localStorage !== 'undefined') {
-    email = localStorage.getItem('pensora_email') || '';
+    email = localStorage.getItem('thrive_abroad_email') || '';
   }
 
   function validate() {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !re.test(email)) {
-      error = 'Bitte eine gültige E-Mail-Adresse eingeben.';
+      error = 'Please enter a valid email address.';
       return false;
     }
     error = '';
@@ -27,7 +27,7 @@
   function submit() {
     if (!validate()) return;
     sending = true;
-    localStorage.setItem('pensora_email', email);
+    localStorage.setItem('thrive_abroad_email', email);
 
     // Brief visual confirmation, then print
     setTimeout(() => {
@@ -58,7 +58,7 @@
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="gate-backdrop" on:click={close}>
     <!-- Modal -->
-    <div class="gate-modal" on:click|stopPropagation role="dialog" aria-modal="true" aria-label="PDF herunterladen">
+    <div class="gate-modal" on:click|stopPropagation role="dialog" aria-modal="true" aria-label="Download PDF">
       <div class="gate-icon">
         {#if done}
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -68,17 +68,17 @@
       </div>
 
       {#if done}
-        <h2 class="gate-title" style="color:#4ade80">PDF wird erstellt…</h2>
-        <p class="gate-sub">Dein Druckdialog öffnet sich gleich.</p>
+        <h2 class="gate-title" style="color:#4ade80">Preparing your PDF…</h2>
+        <p class="gate-sub">Your print dialog will open shortly.</p>
       {:else}
-        <h2 class="gate-title">Ergebnis als PDF speichern</h2>
-        <p class="gate-sub">Gib deine E-Mail-Adresse ein — wir schicken dir wichtige Aktualisierungen zu Pensionswerten, Rentenwert und Förderungen. Einmal, selten, nur wenn es zählt.</p>
+        <h2 class="gate-title">Save Your Result as a PDF</h2>
+        <p class="gate-sub">Enter your email — we'll send you occasional updates on investing, tax and financial planning for expats in Germany. Rarely, and only when it matters.</p>
 
         <div class="gate-field">
           <input
             type="email"
             bind:value={email}
-            placeholder="deine@email.de"
+            placeholder="you@email.com"
             class="gate-input"
             class:err={!!error}
             on:keydown={onKey}
@@ -89,15 +89,15 @@
 
         <button class="gate-btn" on:click={submit} disabled={sending}>
           {#if sending}
-            <span class="gate-spinner"></span> Wird vorbereitet…
+            <span class="gate-spinner"></span> Preparing…
           {:else}
-            PDF herunterladen →
+            Download PDF →
           {/if}
         </button>
-        <p class="gate-legal">Kein Spam. Abmeldung jederzeit. Daten werden nicht weitergegeben.</p>
+        <p class="gate-legal">No spam. Unsubscribe anytime. Your data is never shared.</p>
       {/if}
 
-      <button class="gate-close" on:click={close} aria-label="Schließen">
+      <button class="gate-close" on:click={close} aria-label="Close">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>

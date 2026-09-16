@@ -4,38 +4,22 @@
 
   // ─── Search index ──────────────────────────────────────────────
   const INDEX = [
-    // Rechner (SPA navigate)
-    { type:'calc', id:'pension',      title:'Pensionsrechner',      sub:'Beamtenpension § 14 BeamtVG berechnen',    tags:['pension','beamte','ruhegehalt','dienstzeit','pension berechnen','beamtenpension','lehrer pension'] },
-    { type:'calc', id:'rente',        title:'Rentenrechner',        sub:'Gesetzliche Rente § 64 SGB VI',            tags:['rente','rentenrechner','gesetzliche rente','entgeltpunkte','rentenlücke','rente berechnen'] },
-    { type:'calc', id:'depot',        title:'AV-Depot-Rechner',     sub:'ETF-Altersvorsorgedepot, Zinseszins',      tags:['depot','etf','altersvorsorge','av depot','zinseszins','sparen','altersvorsorgedepot'] },
-    { type:'calc', id:'ruerup',       title:'Rürup-Rechner',        sub:'Basisrente § 10 EStG, Steuervorteil',      tags:['rürup','ruerup','basisrente','steuer','steuervorteil','sonderausgaben'] },
-    { type:'calc', id:'cashflow',     title:'Cashflow-Rechner',     sub:'Monatlichen Cashflow analysieren',          tags:['cashflow','ausgaben','budget','sparen','haushalt','sparquote'] },
-    { type:'calc', id:'versicherung', title:'Versicherungscheck',   sub:'Über- und Unterversicherung prüfen',        tags:['versicherung','versicherungscheck','pkv','gkv','berufsunfähigkeit','bu'] },
+    // Calculators (SPA navigate)
+    { type:'calc', id:'depot',        title:'ETF Savings Plan Calculator', sub:'Compound interest, real return, the 4% rule', tags:['etf','depot','investing','compound interest','savings plan','4% rule'] },
+    { type:'calc', id:'rente',        title:'German Pension Calculator',   sub:'Statutory pension § 64 SGB VI',                tags:['pension','rente','state pension','pension gap','entgeltpunkte'] },
+    { type:'calc', id:'ruerup',       title:'Rürup Pension Calculator',    sub:'Basic pension § 10 EStG, tax advantage',       tags:['rürup','ruerup','tax','basic pension','deduction'] },
+    { type:'calc', id:'cashflow',     title:'Cashflow Calculator',         sub:'Monthly budget vs. the 50/15/15 rule',         tags:['cashflow','budget','savings rate','emergency fund'] },
+    { type:'calc', id:'versicherung', title:'Insurance Check',             sub:'Over- and under-insurance vs. market average', tags:['insurance','versicherung','pkv','gkv','disability'] },
 
-    // Ratgeber-Artikel (static pages)
-    { type:'article', href:'altersvorsorgedepot-2027/',         title:'Altersvorsorgedepot 2027',            sub:'Das neue geförderte ETF-Depot ab 2027',         tags:['altersvorsorgedepot','av depot','2027','riester nachfolger','grundzulage','etf depot','depot news','av news','förderung','zulage'] },
-    { type:'article', href:'riester-nachfolger/',               title:'Riester Nachfolger 2027',             sub:'Was kommt nach Riester?',                       tags:['riester','riester nachfolger','av depot','2027','reform'] },
-    { type:'article', href:'fruehstartrente-kinder/',           title:'Frühstartrente für Kinder',           sub:'Altersvorsorge ab Geburt — 10 €/Monat vom Staat', tags:['frühstartrente','kinder','altersvorsorge kinder','früh anfangen'] },
-    { type:'article', href:'altersvorsorgedepot-beamte/',       title:'AV-Depot für Beamte',                 sub:'Lohnt sich das neue Depot für Beamte?',         tags:['beamte','altersvorsorgedepot','av depot beamte','förderung beamte'] },
-    { type:'article', href:'altersvorsorgedepot-foerderung/',   title:'AV-Depot Förderung 2027',             sub:'Grundzulage 540 €, Kinderzulage 300 €',         tags:['förderung','grundzulage','kinderzulage','steuerbonus','av depot','förderung 2027'] },
-    { type:'article', href:'rentenluecke-2026/',                title:'Rentenlücke 2026',                    sub:'Wie groß ist die Versorgungslücke wirklich?',    tags:['rentenlücke','versorgungslücke','rente reicht nicht','lücke','altersarmut','2026'] },
-    { type:'article', href:'gesetzliche-rente-reicht-nicht/',   title:'Gesetzliche Rente reicht nicht',     sub:'Was tun wenn GRV nicht ausreicht?',              tags:['rente reicht nicht','gesetzliche rente','grv','rentenniveau','altersarmut','lücke'] },
-    { type:'article', href:'rente-mit-63-lehrer/',              title:'Rente mit 63 für Lehrer',             sub:'Frühpensionierung, Abzüge, Nettopension',        tags:['rente mit 63','früh pension','lehrer','frühpensionierung','abzüge'] },
-    { type:'article', href:'aktivrente-2026/',                  title:'Aktivrente 2026',                     sub:'Bis 2.000 € steuerfrei dazuverdienen',           tags:['aktivrente','dazuverdienen','steuerfrei','rente','2026','nebenerwerb'] },
-    { type:'article', href:'muetterrente-2027/',                title:'Mütterrente 2027',                    sub:'Kindererziehungszeiten & Rentenerhöhung',        tags:['mütterrente','mutterrente','kindererziehung','rente','2027','frauen'] },
-    { type:'article', href:'versorgungsluecke-beamte-berechnen/', title:'Versorgungslücke Beamte',          sub:'Lücke korrekt berechnen',                       tags:['versorgungslücke','beamte','lücke berechnen','ruhegehalt','pension'] },
-    { type:'article', href:'pensionsluecke-lehrer/',            title:'Pensionslücke Lehrer',                sub:'Wie groß ist die Lücke bei Lehrern?',            tags:['pensionslücke','lehrer','pension','lücke','teilzeit','elternzeit'] },
-    { type:'article', href:'pension-lehrer-prozent/',           title:'Pension Lehrer: wie viel Prozent?',   sub:'Ruhegehaltssatz, A12, A13, A14',                tags:['pension prozent','lehrer pension','ruhegehaltssatz','a13','a14','wie viel pension'] },
-    { type:'article', href:'beamtenversorgung-teilzeit-elternzeit/', title:'Beamtenversorgung Teilzeit',    sub:'Was kostet Teilzeit & Elternzeit an Pension?',   tags:['teilzeit','elternzeit','pension','beamtenversorgung','verlust'] },
-    { type:'article', href:'private-altersvorsorge-beamte/',    title:'Private Altersvorsorge Beamte',      sub:'Wann ist private Vorsorge sinnvoll?',            tags:['private altersvorsorge','beamte','rürup','etf','sinnvoll'] },
-    { type:'article', href:'lehrerpension-nrw/',                title:'Lehrerpension NRW',                   sub:'Pension in Nordrhein-Westfalen',                 tags:['lehrer','nrw','pension','nordrhein-westfalen','lehrerpension nrw'] },
-    { type:'article', href:'lehrerpension-bw/',                 title:'Lehrerpension BW',                    sub:'Pension in Baden-Württemberg',                  tags:['lehrer','bw','baden-württemberg','pension','lehrerpension bw'] },
-    { type:'article', href:'lehrerpension-bayern/',             title:'Lehrerpension Bayern',                sub:'Pension in Bayern',                              tags:['lehrer','bayern','pension','lehrerpension'] },
-    { type:'article', href:'a13-gehalt-pension/',               title:'A13 Gehalt und Pension',              sub:'Beamtenbesoldung A13, Ruhegehalt',               tags:['a13','gehalt','pension','besoldung','beamte','wie bekomme ich mit a13'] },
-    { type:'article', href:'teilzeit-pension-lehrer/',          title:'Teilzeit und Pension Lehrer',         sub:'Pensionsverluste durch Teilzeit',                tags:['teilzeit','pension','lehrer','verlust'] },
-    { type:'article', href:'referendariat-pension/',            title:'Referendariat & Pension',             sub:'Anrechnung des Referendariats',                  tags:['referendariat','pension','anrechnung','beamte'] },
-    { type:'article', href:'ruerup-lehrer/',                    title:'Rürup für Lehrer',                    sub:'Steuervorteil der Basisrente für Lehrkräfte',    tags:['rürup','lehrer','basisrente','steuervorteil','pension'] },
-    { type:'article', href:'pkv-beamte-ruhestand/',             title:'PKV Beamte im Ruhestand',             sub:'Beihilfe und PKV-Kosten',                       tags:['pkv','beamte','ruhestand','beihilfe','krankenversicherung'] },
+    // Guide articles (static pages)
+    { type:'article', href:'etf-investing-expats-germany/',    title:'ETF Investing for Expats in Germany',    sub:'Broker accounts, taxes, and getting started',   tags:['etf','stock market','investing','broker','depot','abgeltungssteuer'] },
+    { type:'article', href:'buying-property-germany-expat/',   title:'Buying Property in Germany as a Foreigner', sub:'Mortgages, Grunderwerbsteuer, the Notar process', tags:['property','real estate','mortgage','baufinanzierung','grunderwerbsteuer'] },
+    { type:'article', href:'inheritance-tax-germany-expats/',  title:'Inheritance Tax for Expats in Germany',  sub:'Erbschaftsteuer basics for cross-border estates', tags:['inheritance','erbschaftsteuer','estate','tax class'] },
+    { type:'article', href:'investing-for-kids-germany/',      title:'Investment Accounts for Kids in Germany', sub:'Custodial accounts and junior depots',          tags:['kids','children','junior depot','custodial','family'] },
+    { type:'article', href:'tax-residency-germany-expats/',    title:'German Tax Residency for Expats',        sub:'The 183-day rule and double-tax treaties',      tags:['tax residency','183 day rule','double tax treaty','tax optimization'] },
+    { type:'article', href:'rsu-stock-options-tax-germany/',   title:'RSUs & Stock Options: Taxation in Germany', sub:'Equity compensation for tech employees',       tags:['rsu','stock options','equity','tech','it professional'] },
+    { type:'article', href:'us-citizens-investing-germany-pfic/', title:'US Citizens in Germany: Avoiding the PFIC Trap', sub:'PFIC and FATCA basics for American expats', tags:['us citizen','pfic','fatca','american expat'] },
+    { type:'article', href:'financial-planning-expats-germany/', title:'Holistic Financial Planning for Expats', sub:'Bringing it all together',                    tags:['financial planning','holistic','overview'] },
   ];
 
   // ─── State ─────────────────────────────────────────────────────
@@ -95,7 +79,7 @@
       bind:this={inputEl}
       bind:value={query}
       on:keydown={onKey}
-      placeholder='Suche — z.B. „AV-Depot" oder „A13 Pension"'
+      placeholder="Search calculators, guides…"
       class="search-input"
       autocomplete="off"
       spellcheck="false"
@@ -114,7 +98,7 @@
           on:click={() => select(item)}
           on:mouseenter={() => focused = i}
         >
-          <span class="search-item-type">{item.type === 'calc' ? '⊞ Rechner' : '✦ Artikel'}</span>
+          <span class="search-item-type">{item.type === 'calc' ? '⊞ Calculator' : '✦ Guide'}</span>
           <span class="search-item-body">
             <span class="search-item-title">{item.title}</span>
             <span class="search-item-sub">{item.sub}</span>

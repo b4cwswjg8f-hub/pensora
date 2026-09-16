@@ -22,17 +22,17 @@
   />
 {:else}
 <div>
-  <CalcNav title="Versicherungs-Check" on:back={() => dispatch('back')} />
+  <CalcNav title="Insurance Check" on:back={() => dispatch('back')} />
 
   <div class="fbody">
     <div class="calc-layout">
       <div class="calc-form">
-        <div class="ey">Versicherungsanalyse</div>
+        <div class="ey">Insurance Analysis</div>
         <h2 class="text-4xl font-medium tracking-[-0.03em] max-w-[700px] mt-3 leading-[1.1]">
-          Was zahlst du für deine Versicherungen?
+          What are you paying for your insurance?
         </h2>
         <p class="text-[15px] text-fg2 mt-3 max-w-[600px]">
-          Trage deine monatlichen Beiträge ein. Pensora vergleicht deine Ausgaben mit dem GDV-Marktdurchschnitt 2025.
+          Enter your monthly premiums. We compare your spending against the 2025 GDV market average.
         </p>
 
         <div class="grid grid-cols-2 gap-4 mt-7">
@@ -41,7 +41,7 @@
               <div class="ey mb-[6px] text-[10px]">{k}</div>
               <div class="sfx">
                 <input type="number" step="1" bind:value={V[k]} style="font-size:18px;font-weight:500" />
-                <span class="sfxt">€/Mo.</span>
+                <span class="sfxt">€/mo.</span>
               </div>
               <div class="mt-2 text-[11px] text-fg3 font-mono">{VBENCH[k].hint}</div>
               <div class="flex items-center gap-2 mt-[6px]">
@@ -49,7 +49,7 @@
                   <div style="height:100%;width:{Math.min((V[k]/VBENCH[k].avg)*100,200)}%;background:{V[k]>VBENCH[k].avg*1.3?'var(--loss)':V[k]<VBENCH[k].avg*0.7?'#6fcf97':'var(--fg)'};border-radius:2px;transition:width .2s"></div>
                 </div>
                 <span class="text-[10px] font-mono" style="color:{V[k]>VBENCH[k].avg*1.3?'var(--loss)':V[k]<VBENCH[k].avg*0.7?'#6fcf97':'var(--fg3)'}">
-                  Ø {VBENCH[k].avg} €
+                  avg. {VBENCH[k].avg} €
                 </span>
               </div>
             </div>
@@ -58,24 +58,24 @@
 
         <div class="flex justify-end mt-9 pt-5" style="border-top:1px solid var(--line)">
           <button class="btn btnp btnlg" on:click={() => { showResult = true; window.scrollTo(0, 0); }}>
-            Versicherungen analysieren →
+            Analyze Insurance →
           </button>
         </div>
       </div>
 
       <!-- Sidebar -->
       <aside class="calc-sidebar">
-        <div class="ey mb-[14px]">Gesamtkosten</div>
-        <div class="stat text-[40px]">{fmtE(total)}/Mo.</div>
-        <div class="text-fg3 text-[11px] font-mono mt-[6px] uppercase tracking-[.08em]">monatlich</div>
+        <div class="ey mb-[14px]">Total Costs</div>
+        <div class="stat text-[40px]">{fmtE(total)}/mo.</div>
+        <div class="text-fg3 text-[11px] font-mono mt-[6px] uppercase tracking-[.08em]">monthly</div>
         <div class="mt-4 pt-4 text-[13px]" style="border-top:1px solid var(--line)">
           <div class="calc-sidebar-row">
-            <span class="text-fg3">Pro Jahr</span>
+            <span class="text-fg3">Per Year</span>
             <span class="font-mono">{de0.format(Math.round(totalJ))} €</span>
           </div>
           <div class="flex items-center justify-between py-2 text-[13px]">
-            <span class="text-fg3">Ø-Markt</span>
-            <span class="font-mono">{fmtE(Object.values(VBENCH).reduce((s,b)=>s+b.avg,0))}/Mo.</span>
+            <span class="text-fg3">Market Avg.</span>
+            <span class="font-mono">{fmtE(Object.values(VBENCH).reduce((s,b)=>s+b.avg,0))}/mo.</span>
           </div>
         </div>
         <div class="mt-4">

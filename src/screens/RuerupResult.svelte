@@ -6,11 +6,13 @@
   import { fmtE, de0 } from '../lib/utils.js';
   import { legend } from '../lib/charts.js';
   import { RMAX, RMAX26 } from '../lib/calcs.js';
+  import { BOOK_URL, BRAND_NAME } from '../lib/data.js';
 
   export let Ru;
   export let result;
 
   const dispatch = createEventDispatcher();
+  const book = () => window.open(BOOK_URL, '_blank');
   let showPdfGate = false;
   let showFinanzplan = false;
   $: r = result;
@@ -33,9 +35,9 @@
     const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
     return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
       <defs><linearGradient id="rg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#fbbf24" stop-opacity=".3"/><stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/></linearGradient></defs>
-      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="#E0E0E0" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
-        <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
-      ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#6b6b6b" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Jahr ${Math.round(f*lz)}</text>`).join('')}
+      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+        <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#8a8a8a" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
+      ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#8a8a8a" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Year ${Math.round(f*lz)}</text>`).join('')}
       <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#rg)"/>
       <path d="${path(etf)}" stroke="#fbbf24" stroke-width="2" fill="none"/>
       <path d="${path(netEtf)}" stroke="#4ade80" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
@@ -43,20 +45,20 @@
     </svg>`;
   })();
 
-  $: legendHtml = legend([['#fbbf24','Rürup-ETF (brutto)'],['#4ade80','Rürup-ETF (netto nach Steuervorteil)','3 3'],['#FF6B6B','Klassisches Sparbuch (0,5 % p.a.)']]);
+  $: legendHtml = legend([['#fbbf24','Rürup ETF (gross)'],['#4ade80','Rürup ETF (net of tax benefit)','3 3'],['#FF6B6B','Classic savings account (0.5% p.a.)']]);
 </script>
 
 <nav class="nav">
   <div class="row g16">
-    <button class="brand" on:click={() => dispatch('back')}><Logo /> Pensora</button>
+    <button class="brand" on:click={() => dispatch('back')}><Logo /> {BRAND_NAME}</button>
     <span style="color:var(--line2);font-size:16px">/</span>
-    <span style="color:var(--fg2);font-size:14px">Ergebnis · Rürup</span>
+    <span style="color:var(--fg2);font-size:14px">Result · Rürup</span>
   </div>
   <div class="row g8">
-    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Hub</button>
-    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
-    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Als PDF speichern">⬇ PDF</button>
-    <button class="btn btnp print-hide" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Beratung buchen →</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('back')}>← Home</button>
+    <button class="btn btng print-hide" on:click={() => dispatch('recalc')}>← Recalculate</button>
+    <button class="btn btng print-hide" on:click={() => showFinanzplan = true} title="Save as PDF">⬇ PDF</button>
+    <button class="btn btnp print-hide" on:click={book}>Book a Consultation →</button>
   </div>
 </nav>
 
@@ -65,7 +67,7 @@
 {#if showFinanzplan}
   <div class="fp-overlay" on:click|self={() => showFinanzplan = false}>
     <div class="fp-overlay-inner">
-      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Schließen</button>
+      <button class="fp-overlay-close" on:click={() => showFinanzplan = false}>✕ Close</button>
       <PdfFinanzplan mode="ruerup" {Ru} {result} />
     </div>
   </div>
@@ -73,13 +75,13 @@
 
 <div class="vscr">
   <div class="calc-result-pad">
-    <div class="ey" style="margin-bottom:12px">Rürup-Analyse · {Ru.lz} J. · § 10 EStG · 2025</div>
+    <div class="ey" style="margin-bottom:12px">Rürup Analysis · {Ru.lz} yrs. · § 10 EStG · 2025</div>
     <h1 style="font-size:48px;font-weight:600;letter-spacing:-.04em;margin-bottom:28px">
-      Monatlicher Steuervorteil: <span>{fmtE(r.steM)}</span>
+      Monthly tax benefit: <span>{fmtE(r.steM)}</span>
     </h1>
 
     <div style="display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--rlg);overflow:hidden;background:var(--bg1);margin-bottom:20px">
-      {#each [['Steuerersparnis/Jahr',fmtE(r.steJ),'Grenzst. '+Ru.grenzSt+' %'],['Nettokosten/Monat',fmtE(r.nettoK),'statt '+fmtE(Ru.mb)+' brutto'],['Depot bei Rente',de0.format(Math.round(r.fv))+' €','nach '+Ru.lz+' Jahren'],['Monatsrente (netto)',fmtE(r.nettoR),'ab '+r.rentJ]] as [l,v,sub], i}
+      {#each [['Tax Savings/Year',fmtE(r.steJ),'Marginal rate '+Ru.grenzSt+'%'],['Net Cost/Month',fmtE(r.nettoK),'instead of '+fmtE(Ru.mb)+' gross'],['Portfolio at Retirement',de0.format(Math.round(r.fv))+' €','after '+Ru.lz+' years'],['Monthly Pension (net)',fmtE(r.nettoR),'from '+r.rentJ]] as [l,v,sub], i}
         <div style="padding:24px;border-right:{i<3?'1px solid var(--line)':'0'}">
           <div class="ey" style="margin-bottom:10px">{l}</div>
           <div class="stat" style="font-size:28px">{v}</div>
@@ -91,14 +93,14 @@
     <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px">
       <div class="col g16">
         <div class="cardf" style="padding:28px">
-          <div class="ey" style="margin-bottom:12px">Rürup-ETF vs. Sparbuch · Aufbaukurve</div>
+          <div class="ey" style="margin-bottom:12px">Rürup ETF vs. Savings Account · Growth Curve</div>
           {@html chartSvg}
           {@html legendHtml}
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
           <div class="cardf" style="padding:24px">
-            <div class="ey" style="margin-bottom:12px">Steuerliche Förderung § 10 EStG</div>
-            {#each [['Höchstbetrag 2025','29.344 €'],['Höchstbetrag 2026',de0.format(RMAX26)+' €'],['GRV-Abzug',Ru.selbst==='Ja'?'0 € (Selbst.)':'−'+fmtE(Ru.grvAN*2)],['Spielraum',fmtE(r.sp)],['Jahresbeitrag',fmtE(r.jB)],['Absetzbar (100%)',fmtE(r.absB)],['Steuer-Vorteil/J.',fmtE(r.steJ)],['Gesamt '+Ru.lz+' J.',fmtE(r.gesSte)]] as [l,v]}
+            <div class="ey" style="margin-bottom:12px">Tax Benefit § 10 EStG</div>
+            {#each [['Max. Contribution 2025','€29,344'],['Max. Contribution 2026',de0.format(RMAX26)+' €'],['Pension Insurance Deduction',Ru.selbst==='Ja'?'€0 (self-employed)':'−'+fmtE(Ru.grvAN*2)],['Contribution Room',fmtE(r.sp)],['Annual Contribution',fmtE(r.jB)],['Deductible (100%)',fmtE(r.absB)],['Tax Benefit/Yr.',fmtE(r.steJ)],['Total over '+Ru.lz+' yrs.',fmtE(r.gesSte)]] as [l,v]}
               <div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px">
                 <span style="color:var(--fg2)">{l}</span>
                 <span style="font-family:var(--mono)">{v}</span>
@@ -106,8 +108,8 @@
             {/each}
           </div>
           <div class="cardf" style="padding:24px">
-            <div class="ey" style="margin-bottom:12px">Rentenphase</div>
-            {#each [['Depot bei Rente',de0.format(Math.round(r.fv))+' €'],['Sparbuch-Vergl.',de0.format(Math.round(r.fvSparB))+' €'],['Brutto-Monatsrente',fmtE(r.mRente)],['Besteuerungsanteil',Math.round(r.bestAnt*100)+' % (§ 22)'],['Netto-Monatsrente',fmtE(r.nettoR)],['Bezugsdauer',r.jruh+' Jahre'],['Kumuliert netto',de0.format(Math.round(r.nettoR*12*r.jruh))+' €']] as [l,v]}
+            <div class="ey" style="margin-bottom:12px">Payout Phase</div>
+            {#each [['Portfolio at Retirement',de0.format(Math.round(r.fv))+' €'],['Savings Acct. Comparison',de0.format(Math.round(r.fvSparB))+' €'],['Gross Monthly Pension',fmtE(r.mRente)],['Taxable Share',Math.round(r.bestAnt*100)+'% (§ 22)'],['Net Monthly Pension',fmtE(r.nettoR)],['Payout Duration',r.jruh+' years'],['Cumulative Net',de0.format(Math.round(r.nettoR*12*r.jruh))+' €']] as [l,v]}
               <div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px">
                 <span style="color:var(--fg2)">{l}</span>
                 <span style="font-family:var(--mono)">{v}</span>
@@ -118,18 +120,18 @@
       </div>
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
-          <div class="ey" style="margin-bottom:8px">Ergebnis sichern</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(0,0,0,.05);border:1px solid rgba(0,0,0,.12);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
-            ⬇ Als PDF speichern
+          <div class="ey" style="margin-bottom:8px">Save Your Result</div>
+          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
+            ⬇ Save as PDF
           </button>
-          <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">E-Mail eingeben · sofort druckfertig</p>
+          <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">Enter your email · ready to print instantly</p>
         </div>
         <div class="card" style="border-color:var(--fg);position:relative;overflow:hidden">
           <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--fg)"></div>
-          <h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Rürup-Strategie optimieren.</h3>
-          <p style="font-size:13px;color:var(--fg2);line-height:1.55;margin-bottom:0">Spielraum ausschöpfen, ETF auswählen, Steuervorteil maximieren. 30 Min. kostenlos.</p>
-          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={() => window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach', '_blank')}>Kostenloses Gespräch buchen →</button>
-          <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Neu berechnen</button>
+          <h3 style="font-size:22px;font-weight:500;margin-bottom:10px">Optimize your Rürup strategy.</h3>
+          <p style="font-size:13px;color:var(--fg2);line-height:1.55;margin-bottom:0">Use your full contribution room, pick ETFs, maximize the tax benefit. 30 min., free.</p>
+          <button class="btn btnp btnlg" style="width:100%;margin-top:16px" on:click={book}>Book a Free Call →</button>
+          <button class="btn btng" style="width:100%;margin-top:8px" on:click={() => dispatch('recalc')}>← Recalculate</button>
         </div>
       </aside>
     </div>

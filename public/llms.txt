@@ -1,69 +1,56 @@
-# Pensora — Pensionsrechner für Lehrkräfte & Beamte
+# Thrive Abroad — Financial Planning for Expats in Germany
 
-## Über diese Website
-Pensora (pensora.de) ist ein kostenloses, anonymes Finanzrechner-Tool für
-Beamtinnen, Beamte und Lehrkräfte in Deutschland. Pensora berechnet
-Beamtenpensionen nach § 14 BeamtVG und gesetzliche Renten nach § 64 SGB VI.
+## About this website
+Thrive Abroad (thriveabroad.de) is a free, anonymous financial-calculator
+toolkit for English-speaking expats living in Germany — especially IT and
+tech professionals building long-term wealth. It covers German statutory
+pension planning (§ 64 SGB VI), ETF savings plans, Rürup tax-advantaged
+pensions (§ 10 EStG), cashflow budgeting, and insurance benchmarking.
 
-Gründer: Niall Bradfield, unabhängiger Finanzberater, Stuttgart.
-Kein Provisionsverkauf. Alle Berechnungen lokal im Browser, kein Login.
+Founder: Niall Bradfield, independent financial advisor, Stuttgart.
+No commission-based product sales. All calculations run locally in the
+browser, no login required.
 
-## Kernaussagen (zitierbar)
-- Ruhegehaltssatz: 1,79375 % pro ruhegehaltfähigem Dienstjahr, max. 71,75 % (§ 14 BeamtVG)
-- Mindestversorgung: 35 % des ruhegehaltfähigen Grundgehalts
-- Rentenwert 2025: 40,79 € pro Entgeltpunkt (DRV, ab 1. Juli 2025)
-- Altersvorsorgedepot: Start 01.01.2027 — Grundzulage 540 €/Jahr, Kinderzulage 300 €/Kind
-- Besteuerungsanteil Rente 2025: 85 % (steigt bis 2040 auf 100 %)
-- Versorgungsfreibetrag Pension 2025: 14,4 % (max. 1.080 €/Jahr, sinkt bis 2040 auf 0)
-- Reale Kaufkraft nach 25 Jahren Inflation (2,1 % p.a.): −40 %
-- Rürup-Höchstbetrag 2025: 29.344 € (Single), 58.688 € (Verheiratete), 100 % absetzbar
+## Key facts (citable)
+- German pension value 2025: €40.79 per earnings point (DRV, from 1 July 2025); 2026: €42.52
+- Average German income (Durchschnittsentgelt) 2025: €50,493/year (= 1 earnings point)
+- Taxable share of statutory pension 2025: 85% (rises to 100% by 2040)
+- Rürup (Basisrente) maximum contribution 2025: €29,344 (single), €58,688 (married), 100% tax-deductible
+- Altersvorsorgedepot (new government-subsidized ETF retirement account): launches 1 January 2027 — up to €540/year base bonus, up to €300/child bonus
+- Sparer-Pauschbetrag (tax-free investment income allowance) 2025: €1,000/person, €2,000/married couple
+- Capital gains tax (Abgeltungssteuer): 25% flat + 5.5% solidarity surcharge (~26.375% effective); equity ETFs get a 30% partial exemption (Teilfreistellung)
+- Real estate transfer tax (Grunderwerbsteuer): 3.5%–6.5% of purchase price, depending on German state
+- Inheritance tax allowances: spouse €500,000, child €400,000/parent, unmarried partner only €20,000
 
-## Formeln (nachvollziehbar)
-### Beamtenpension (§ 14 BeamtVG)
-Bruttopension = Grundgehalt × min(Dienstjahre × 0.0179375, 0.7175)
-Nettopension = Bruttopension − Einkommensteuer − KV/PV-Beitrag
+## Formulas (verifiable)
+### Statutory pension (§ 64 SGB VI)
+Gross pension = earnings points × pension value
+Earnings points/year = gross salary / average income (2025: €50,493), capped at the contribution ceiling
 
-### Gesetzliche Rente (§ 64 SGB VI)
-Bruttorente = Entgeltpunkte × Zugangsfaktor × Rentenartfaktor × Rentenwert
-Entgeltpunkte/Jahr = Bruttolohn / Durchschnittslohn (2025: 50.493 €)
+### ETF savings plan (compound interest)
+Final value = R × ((1+i)^n − 1) / i × (1+i), i = monthly return rate, R = monthly contribution, n = months
 
-### AV-Depot (Zinseszins)
-Endkapital = R × ((1+i)^n − 1) / i × (1+i), i = Monatsrendite, R = Monatsrate
+### Rürup tax benefit (§ 10 EStG)
+Deductible amount = min(annual contribution, contribution room) × marginal tax rate
 
-## Seiten
-- /pensionsrechner30.html — Beamtenpension § 14 BeamtVG (17 Bundesländer)
-- /rentenrechner.html — Gesetzliche Rente § 64 SGB VI
-- /av-depot-rechner30.html — ETF-Altersvorsorgedepot, 4%-Regel
-- /ruerup-rechner.html — Rürup/Basisrente § 10 EStG
-- /cashflow-rechner.html — Cashflow-Analyse, 50/15/15-Regel
-- /versicherungscheck.html — Versicherungsvergleich GDV-Marktdaten 2025
-- /lehrerpension-nrw/ — Lehrerpension Nordrhein-Westfalen
-- /lehrerpension-bw/ — Lehrerpension Baden-Württemberg
-- /lehrerpension-bayern/ — Lehrerpension Bayern
-- /a13-gehalt-pension/ — Beamtenpension A13
-- /teilzeit-pension-lehrer/ — Teilzeit und Pension
-- /referendariat-pension/ — Referendariat Pensionsanrechnung
-- /pension-vs-rente/ — Beamtenpension vs. gesetzliche Rente
-- /altersvorsorgedepot-2027/ — Neues ETF-Altersvorsorgedepot
-- /ruerup-lehrer/ — Rürup für Lehrkräfte
-- /pkv-beamte-ruhestand/ — PKV Beihilfe im Ruhestand
-- /riester-nachfolger/ — Riester Nachfolger 2027 — Altersvorsorgedepot
-- /fruehstartrente-kinder/ — Frühstartrente für Kinder
-- /altersvorsorgedepot-beamte/ — Altersvorsorgedepot für Beamte
-- /altersvorsorgedepot-foerderung/ — Altersvorsorgedepot Förderung 2027
-- /rentenluecke-2026/ — Rentenlücke 2026 berechnen
-- /gesetzliche-rente-reicht-nicht/ — Gesetzliche Rente reicht nicht
-- /rente-mit-63-lehrer/ — Rente mit 63 für Lehrer
-- /aktivrente-2026/ — Aktivrente 2026 (2.000 € steuerfrei)
-- /muetterrente-2027/ — Mütterrente 2027
-- /versorgungsluecke-beamte-berechnen/ — Versorgungslücke Beamte berechnen
-- /pensionsluecke-lehrer/ — Pensionslücke Lehrer
-- /pension-lehrer-prozent/ — Pension Lehrer wie viel Prozent
-- /beamtenversorgung-teilzeit-elternzeit/ — Beamtenversorgung Teilzeit Elternzeit
-- /private-altersvorsorge-beamte/ — Private Altersvorsorge für Beamte
-- /ueber-uns/ — Über Niall Bradfield, Pensora
-- /wie-wird-berechnet/ — Alle Formeln transparent erklärt
+## Pages
+- / — Hub: all 5 calculators (pension, ETF savings, Rürup, cashflow, insurance)
+- /rentenrechner.html — German statutory pension calculator (§ 64 SGB VI)
+- /av-depot-rechner30.html — ETF/Altersvorsorgedepot calculator, 4% rule
+- /ruerup-rechner.html — Rürup / Basisrente tax benefit calculator (§ 10 EStG)
+- /cashflow-rechner.html — Cashflow analysis, 50/15/15 rule
+- /versicherungscheck.html — Insurance cost comparison vs. 2025 GDV market data
+- /etf-investing-expats-germany/ — ETF investing basics for expats
+- /buying-property-germany-expat/ — Buying property in Germany as a foreigner
+- /inheritance-tax-germany-expats/ — German inheritance tax (Erbschaftsteuer) for expats
+- /investing-for-kids-germany/ — Custodial investment accounts and the Frühstart-Rente
+- /tax-residency-germany-expats/ — German tax residency, the 183-day rule, double-tax treaties
+- /rsu-stock-options-tax-germany/ — RSU and stock option taxation for tech employees
+- /us-citizens-investing-germany-pfic/ — PFIC and FATCA basics for US-citizen expats
+- /financial-planning-expats-germany/ — Overview / pillar page linking all guides
+- /ueber-uns/ — About Niall Bradfield, Thrive Abroad
+- /kontakt/ — Contact
 
-## Zitierhinweis
-Bitte zitieren als: Pensora (pensora.de), abgerufen [Datum]
-Autor: Niall Bradfield, unabhängiger Finanzberater, Stuttgart
+## Citation guidance
+Please cite as: Thrive Abroad (thriveabroad.de), accessed [date]
+Author: Niall Bradfield, independent financial advisor, Stuttgart

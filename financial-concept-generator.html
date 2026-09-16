@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Concept Generator</title>
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f4f3ef;
+  --card: #ffffff;
+  --border: #e0ddd6;
+  --accent: #1A2B4A;
+  --green: #B3C801;
+  --green-light: #F7F9E6;
+  --green-mid: #D4DF80;
+  --green-dark: #7A8A01;
+  --text: #374151;
+  --text-muted: #6B7280;
+  --red: #c0392b;
+  --radius: 10px;
+  --sans: 'Segoe UI', Arial, sans-serif;
+}
+body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ─── SCREEN LAYOUT ────────────────────────────────────────────── */
+.app-shell { display: grid; grid-template-columns: 430px 1fr; min-height: 100vh; }
+.sidebar { background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; position: sticky; top: 0; height: 100vh; }
+.main-content { padding: 40px; overflow-y: auto; height: 100vh; }
+
+/* ─── SIDEBAR HEADER ───────────────────────────────────────────── */
+.sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); background: var(--accent); }
+.sidebar-header h1 { color: #fff; font-family: var(--sans); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.01em; line-height: 1.4; }
+.sidebar-header p { color: rgba(255,255,255,0.5); font-size: 0.73rem; margin-top: 4px; }
+
+/* ─── FORM ─────────────────────────────────────────────────────── */
+.form-body { padding: 20px 20px 40px; }
+
+.section-block { margin-bottom: 12px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.section-toggle { width: 100%; background: #f9f8f5; border: none; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-family: var(--sans); font-size: 0.8rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; transition: background 0.15s; }
+.section-toggle:hover { background: #f0ede5; }
+.section-toggle .chevron { transition: transform 0.2s; font-size: 0.7rem; }
+.section-toggle.open .chevron { transform: rotate(180deg); }
+.section-inner { padding: 16px; display: none; }
+.section-inner.open { display: block; }
+
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.field input[type="text"],
+.field input[type="number"],
+.field input[type="date"],
+.field textarea,
+.field select { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 0.85rem; font-family: var(--sans); background: #fff; color: var(--text); transition: border-color 0.15s; }
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--green); }
+.field textarea { resize: vertical; min-height: 64px; }
+.field-hint { font-size: 0.71rem; color: var(--text-muted); margin-top: 3px; font-style: italic; }
+
+.name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.radio-group label, .checkbox-group label { display: flex; align-items: center; gap: 5px; font-size: 0.79rem; font-weight: normal; color: var(--text); text-transform: none; letter-spacing: normal; cursor: pointer; padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px; background: #fff; transition: all 0.15s; }
+.radio-group label:hover, .checkbox-group label:hover { border-color: var(--green); background: var(--green-light); }
+.radio-group input, .checkbox-group input { accent-color: var(--green-dark); }
+
+.toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.toggle-row > label:last-child { font-size: 0.8rem; color: var(--text); font-weight: normal; text-transform: none; letter-spacing: normal; }
+.toggle { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 21px; cursor: pointer; transition: 0.2s; }
+.toggle-slider::before { content: ''; position: absolute; width: 15px; height: 15px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+input:checked + .toggle-slider { background: var(--green-dark); }
+input:checked + .toggle-slider::before { transform: translateX(17px); }
+
+.fund-row { display: grid; grid-template-columns: 1fr 70px 28px; gap: 6px; margin-bottom: 6px; align-items: center; }
+.fund-row input { font-size: 0.8rem; }
+.btn-remove { background: none; border: 1px solid #ddd; border-radius: 4px; width: 26px; height: 26px; cursor: pointer; color: var(--text-muted); font-size: 1rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.btn-remove:hover { border-color: var(--red); color: var(--red); }
+.btn-add { background: none; border: 1px dashed var(--border); border-radius: 6px; padding: 6px 12px; font-size: 0.78rem; color: var(--green-dark); cursor: pointer; width: 100%; margin-top: 4px; font-family: var(--sans); transition: all 0.15s; }
+.btn-add:hover { background: var(--green-light); border-color: var(--green); }
+
+.products-header { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; margin-top: 4px; }
+
+.hidden { display: none !important; }
+
+.generate-btn { width: 100%; padding: 14px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius); font-size: 0.9rem; font-weight: 700; cursor: pointer; font-family: var(--sans); letter-spacing: 0.02em; margin-top: 20px; transition: background 0.2s; }
+.generate-btn:hover { background: #243d6b; }
+
+/* ─── OUTPUT PLACEHOLDER ───────────────────────────────────────── */
+.output-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 400px; color: var(--text-muted); text-align: center; gap: 16px; }
+.output-placeholder .icon { font-size: 3rem; opacity: 0.25; }
+.output-placeholder p { font-size: 0.88rem; max-width: 280px; line-height: 1.65; }
+
+/* ─── DOCUMENT WRAPPER ─────────────────────────────────────────── */
+#document-output { display: none; }
+#document-output.visible { display: block; }
+
+.doc-actions { display: flex; gap: 12px; margin-bottom: 28px; max-width: 900px; margin-left: auto; margin-right: auto; }
+.doc-btn { padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-size: 0.85rem; font-family: var(--sans); cursor: pointer; font-weight: 600; transition: all 0.15s; color: var(--text); }
+.doc-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.doc-btn.primary:hover { background: #243d6b; }
+.doc-btn:hover { background: #f0ede5; }
+
+/* ─── DOCUMENT ─────────────────────────────────────────────────── */
+.document {
+  background: #fff;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: var(--sans);
+  color: var(--text);
+  box-shadow: 0 4px 40px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Top accent bar */
+.doc-top-bar { height: 8px; background: var(--accent); width: 100%; }
+
+.doc-inner { padding: 56px 64px 64px; }
+
+/* Doc Header */
+.doc-header { margin-bottom: 44px; }
+.doc-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+.doc-logo-area {}
+.doc-logo-name { font-size: 1rem; font-weight: 700; color: var(--accent); letter-spacing: 0.01em; }
+.doc-logo-sub { font-size: 0.71rem; color: var(--text-muted); margin-top: 3px; }
+.doc-date { font-size: 0.73rem; color: var(--text-muted); text-align: right; line-height: 1.6; }
+.doc-title { font-size: 2.1rem; font-weight: 700; color: var(--accent); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 6px; }
+.doc-title-name { color: var(--green-dark); }
+.doc-subtitle { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px; letter-spacing: 0.01em; }
+.doc-intro { font-size: 0.96rem; line-height: 1.8; color: #4B5563; font-style: italic; padding-bottom: 24px; border-bottom: 1px solid #E5E7EB; }
+
+/* Product section cards */
+.doc-section {
+  background: #F8F9FC;
+  border-left: 3px solid var(--green);
+  border-radius: 8px;
+  padding: 32px;
+  margin-bottom: 28px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  page-break-inside: avoid;
+}
+.section-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.section-icon { font-size: 1.4rem; line-height: 1; }
+.section-name { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.section-subtitle { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 2px; }
+
+.why-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--green-dark); margin-bottom: 8px; }
+.why-box { font-size: 0.93rem; line-height: 1.8; color: #374151; margin-bottom: 20px; }
+
+/* Custom bullets */
+.custom-bullets { margin-bottom: 20px; }
+.custom-bullet { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; font-size: 0.88rem; color: #374151; line-height: 1.6; }
+.custom-bullet-dot { color: #B3C801; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* Callout boxes */
+.callouts { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+.callout { background: #fff; border: 1px solid var(--green-mid); border-radius: 10px; padding: 18px 20px; text-align: center; flex: 1; min-width: 130px; page-break-inside: avoid; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+.callout-label { font-size: 0.65rem; font-family: var(--sans); color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.callout-value { font-size: 1.65rem; font-weight: 700; color: var(--accent); line-height: 1.1; }
+
+/* Fund bars */
+.fund-chart { margin-bottom: 22px; }
+.fund-chart-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px; }
+.fund-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 0.8rem; }
+.fund-bar-label { width: 190px; flex-shrink: 0; color: var(--text); }
+.fund-bar-track { flex: 1; background: #E5E7EB; border-radius: 6px; height: 12px; }
+.fund-bar-fill { height: 12px; border-radius: 6px; background: var(--green); }
+.fund-bar-pct { width: 42px; text-align: right; color: var(--green-dark); font-weight: 600; }
+
+/* Good to know */
+.good-to-know { background: var(--green-light); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; padding: 18px 20px; page-break-inside: avoid; }
+.good-to-know-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--green-dark); margin-bottom: 12px; }
+.good-to-know ul { list-style: none; padding: 0; }
+.good-to-know li { font-size: 0.84rem; line-height: 1.7; color: #374151; margin-bottom: 6px; padding-left: 16px; position: relative; }
+.good-to-know li::before { content: '›'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.good-to-know li:last-child { margin-bottom: 0; }
+
+/* Summary */
+.summary-section { page-break-inside: avoid; }
+.summary-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.83rem; }
+.summary-table th { background: var(--accent); color: #fff; padding: 11px 16px; text-align: left; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.summary-table th:first-child { border-radius: 4px 0 0 0; }
+.summary-table th:last-child { border-radius: 0 4px 0 0; }
+.summary-table td { padding: 11px 16px; border-bottom: 1px solid #F3F4F6; vertical-align: top; color: var(--text); }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tbody tr:nth-child(even) td { background: #F9FAFB; }
+.total-row { display: flex; justify-content: space-between; align-items: center; background: var(--green-light); border: 1px solid var(--green-mid); border-radius: 8px; padding: 16px 20px; margin-bottom: 28px; }
+.total-label { font-weight: 700; font-size: 0.9rem; color: var(--accent); }
+.total-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+
+.closing-para { font-size: 0.93rem; line-height: 1.85; color: #4B5563; font-style: italic; border-top: 1px solid #E5E7EB; padding-top: 26px; margin-top: 4px; }
+
+/* Signature */
+.doc-signature { margin-top: 44px; padding-top: 28px; border-top: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: flex-end; }
+.sig-left { font-size: 0.78rem; color: var(--text-muted); line-height: 1.7; }
+.sig-right { text-align: right; }
+.sig-name { font-size: 1.05rem; font-weight: 700; color: var(--accent); }
+.sig-title { font-size: 0.71rem; color: var(--text-muted); margin-top: 3px; }
+
+/* ─── PRINT ────────────────────────────────────────────────────── */
+@media print {
+  @page { size: A4; margin: 14mm 14mm 20mm; }
+  html, body { background: white !important; }
+  .app-shell { display: block !important; }
+  .sidebar { display: none !important; }
+  .main-content { padding: 0 !important; overflow: visible !important; height: auto !important; }
+  .doc-actions { display: none !important; }
+  .output-placeholder { display: none !important; }
+  #document-output { display: block !important; }
+  .document { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
+  .doc-inner { padding: 0 !important; }
+  .doc-top-bar { display: none; }
+  .doc-section { box-shadow: none !important; page-break-inside: avoid; }
+  .callout { page-break-inside: avoid; box-shadow: none !important; }
+  .summary-section { page-break-inside: avoid; }
+  .good-to-know { page-break-inside: avoid; }
+  .doc-signature { page-break-inside: avoid; }
+  .doc-footer-print { display: flex !important; }
+}
+
+.doc-footer-print {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  font-size: 0.62rem; color: #aaa;
+  justify-content: space-between;
+  padding: 6px 14mm;
+  border-top: 1px solid #eee;
+  background: white;
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ── SIDEBAR / FORM ─────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1>Financial Concept Generator</h1>
+      <p>Niall · Horbach Wirtschaftsberatung</p>
+    </div>
+    <div class="form-body">
+
+      <!-- CLIENT PROFILE -->
+      <div class="section-block">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          Client Profile <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field">
+            <label>Name</label>
+            <div class="name-row">
+              <input type="text" id="f-firstname" placeholder="Vorname">
+              <input type="text" id="f-lastname" placeholder="Nachname">
+            </div>
+          </div>
+          <div class="field">
+            <label>Client Type</label>
+            <div class="radio-group" id="rg-type">
+              <label><input type="radio" name="clientType" value="Student" checked> Student</label>
+              <label><input type="radio" name="clientType" value="Referendar"> Referendar</label>
+              <label><input type="radio" name="clientType" value="Lehrer"> Lehrer</label>
+              <label><input type="radio" name="clientType" value="Beamter"> Beamter</label>
+              <label><input type="radio" name="clientType" value="Selbstständig"> Selbstständig</label>
+              <label><input type="radio" name="clientType" value="Expat"> Expat</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Age</label>
+            <input type="number" id="f-age" min="16" max="70" placeholder="z.B. 26">
+          </div>
+          <div class="field">
+            <label>Target Retirement Age</label>
+            <input type="number" id="f-retage" min="55" max="75" value="67">
+          </div>
+          <div class="field">
+            <label>Planned Retirement Start Date</label>
+            <input type="date" id="f-retdate">
+          </div>
+          <div class="toggle-row">
+            <label class="toggle">
+              <input type="checkbox" id="f-expat" onchange="onExpatToggle()">
+              <span class="toggle-slider"></span>
+            </label>
+            <label>International / Expat situation?</label>
+          </div>
+          <div class="field hidden" id="expat-country-field">
+            <label>Country of Origin</label>
+            <input type="text" id="f-country" placeholder="z.B. Ireland">
+          </div>
+          <div class="field">
+            <label>Key Priority</label>
+            <div class="radio-group">
+              <label><input type="radio" name="priority" value="Sicherheit" checked> Sicherheit</label>
+              <label><input type="radio" name="priority" value="Rendite"> Rendite</label>
+              <label><input type="radio" name="priority" value="Flexibilität"> Flexibilität</label>
+              <label><input type="radio" name="priority" value="Absicherung"> Absicherung</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="section-block">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          Products to Include <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <p class="products-header">Protection</p>
+          <div class="checkbox-group" style="margin-bottom:10px">
+            <label><input type="checkbox" id="cb-bu" onchange="onProductChange()"> BU</label>
+            <label id="label-du"><input type="checkbox" id="cb-du" onchange="onProductChange()"> DU</label>
+          </div>
+          <p class="products-header">Altersvorsorge &amp; Investition</p>
+          <div class="checkbox-group" style="flex-direction:column; align-items:flex-start;">
+            <label><input type="checkbox" id="cb-depot" onchange="onProductChange()"> Normales Depot (ETF-Depot)</label>
+            <div style="margin-left:8px; margin-top:4px;">
+              <p style="font-size:0.7rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Flexible AV</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <label><input type="checkbox" id="cb-etf" onchange="onProductChange()"> ETF Investment Plan</label>
+                <label><input type="checkbox" id="cb-hybrid" onchange="onProductChange()"> Hybrid Plan</label>
+              </div>
+            </div>
+            <label style="margin-top:6px;"><input type="checkbox" id="cb-ruerup" onchange="onProductChange()"> Rürup</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- BU FIELDS -->
+      <div class="section-block hidden" id="section-bu">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          BU — Berufsunfähigkeit <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="bu-provider" value="MetallRente"></div>
+          <div class="field"><label>Monthly Premium (€)</label><input type="number" id="bu-premium" min="0" step="0.01" placeholder="z.B. 45"></div>
+          <div class="field"><label>Monthly BU Benefit (€)</label><input type="number" id="bu-benefit" min="0" step="0.01" placeholder="z.B. 1500"></div>
+          <div class="field"><label>Cover Until Age</label><input type="number" id="bu-endage" min="50" max="75" placeholder="z.B. 67"></div>
+          <div class="toggle-row">
+            <label class="toggle">
+              <input type="checkbox" id="bu-special" onchange="document.getElementById('bu-special-field').classList.toggle('hidden', !this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+            <label>Special condition applicable?</label>
+          </div>
+          <div class="field hidden" id="bu-special-field">
+            <label>Which condition?</label>
+            <input type="text" id="bu-special-txt" placeholder="z.B. Ausbildungstarif">
+          </div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="bu-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DU FIELDS -->
+      <div class="section-block hidden" id="section-du">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          DU — Dienstunfähigkeit <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="du-provider" placeholder="z.B. Nürnberger"></div>
+          <div class="field"><label>Monthly Premium (€)</label><input type="number" id="du-premium" min="0" step="0.01" placeholder="z.B. 38"></div>
+          <div class="field"><label>Monthly DU Benefit (€)</label><input type="number" id="du-benefit" min="0" step="0.01" placeholder="z.B. 1200"></div>
+          <div class="field"><label>Cover Until Age</label><input type="number" id="du-endage" min="50" max="75" placeholder="z.B. 67"></div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="du-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEPOT FIELDS -->
+      <div class="section-block hidden" id="section-depot">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          Normales Depot <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="depot-provider" placeholder="z.B. Scalable Capital"></div>
+          <div class="field"><label>Monthly Contribution (€)</label><input type="number" id="depot-contrib" min="0" step="0.01" placeholder="z.B. 200"></div>
+          <div class="field"><label>Effektivkostenquote (%)</label><input type="number" id="depot-cost" min="0" step="0.01" placeholder="z.B. 0.15"></div>
+          <div class="field">
+            <label>Fund Allocation</label>
+            <div id="depot-funds"></div>
+            <button class="btn-add" onclick="addFundRow('depot-funds')">+ Add Fund</button>
+          </div>
+          <div class="field"><label>Notes (optional)</label><textarea id="depot-notes" rows="2"></textarea></div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="depot-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ETF PLAN FIELDS -->
+      <div class="section-block hidden" id="section-etf">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          ETF Investment Plan <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="etf-provider" value="Die Stuttgarter"></div>
+          <div class="field"><label>Monthly Contribution (€)</label><input type="number" id="etf-contrib" min="0" step="0.01" placeholder="z.B. 150"></div>
+          <div class="field">
+            <label>Beitragsgarantie</label>
+            <div style="padding:8px 10px;background:#f4f3ef;border-radius:6px;font-size:0.84rem;color:var(--text-muted);">0% — vollständig fondsgebunden</div>
+          </div>
+          <div class="toggle-row" style="margin-top:8px;">
+            <label class="toggle">
+              <input type="checkbox" id="etf-fonds-rente" onchange="document.getElementById('etf-fonds-note').classList.toggle('hidden', !this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+            <label>Fondsgebundener Rentenbezug</label>
+          </div>
+          <div class="field-hint hidden" id="etf-fonds-note" style="margin-bottom:8px;">Rente ebenfalls in ETFs investiert</div>
+          <div class="field"><label>Projected Capital CRK (€)</label><input type="number" id="etf-cap" min="0" placeholder="z.B. 380000"></div>
+          <div class="field"><label>Projected Monthly Pension CRK (€)</label><input type="number" id="etf-pension" min="0" placeholder="z.B. 1100"></div>
+          <div class="field">
+            <label>Fund Allocation</label>
+            <div id="etf-funds"></div>
+            <button class="btn-add" onclick="addFundRow('etf-funds')">+ Add Fund</button>
+          </div>
+          <div class="field"><label>Notes (optional)</label><textarea id="etf-notes" rows="2"></textarea></div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="etf-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HYBRID FIELDS -->
+      <div class="section-block hidden" id="section-hybrid">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          Hybrid Plan <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="hybrid-provider" value="Die Stuttgarter"></div>
+          <div class="field"><label>Monthly Contribution (€)</label><input type="number" id="hybrid-contrib" min="0" step="0.01" placeholder="z.B. 150"></div>
+          <div class="field"><label>Beitragsgarantie (%)</label><input type="number" id="hybrid-guarantee" min="0" max="100" value="50"></div>
+          <div class="field"><label>Guaranteed Capital (€)</label><input type="number" id="hybrid-guarancap" min="0" placeholder="z.B. 54000"></div>
+          <div class="field"><label>Projected Capital CRK (€)</label><input type="number" id="hybrid-cap" min="0" placeholder="z.B. 320000"></div>
+          <div class="field"><label>Projected Monthly Pension CRK (€)</label><input type="number" id="hybrid-pension" min="0" placeholder="z.B. 950"></div>
+          <div class="field">
+            <label>Fund Allocation</label>
+            <div id="hybrid-funds"></div>
+            <button class="btn-add" onclick="addFundRow('hybrid-funds')">+ Add Fund</button>
+          </div>
+          <div class="field"><label>Notes (optional)</label><textarea id="hybrid-notes" rows="2"></textarea></div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="hybrid-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RÜRUP FIELDS -->
+      <div class="section-block hidden" id="section-ruerup">
+        <button class="section-toggle open" onclick="toggleSection(this)">
+          Rürup-Rente <span class="chevron">▼</span>
+        </button>
+        <div class="section-inner open">
+          <div class="field"><label>Provider</label><input type="text" id="ruerup-provider" placeholder="z.B. Allianz"></div>
+          <div class="field"><label>Monthly Contribution (€)</label><input type="number" id="ruerup-contrib" min="0" step="0.01" placeholder="z.B. 200"></div>
+          <div class="field"><label>Projected Capital CRK (€)</label><input type="number" id="ruerup-cap" min="0" placeholder="z.B. 250000"></div>
+          <div class="field"><label>Projected Monthly Pension CRK (€)</label><input type="number" id="ruerup-pension" min="0" placeholder="z.B. 800"></div>
+          <div class="field"><label>Estimated Tax Saving / Year (€)</label><input type="number" id="ruerup-tax" min="0" placeholder="z.B. 1400"></div>
+          <div class="field"><label>Notes (optional)</label><textarea id="ruerup-notes" rows="2"></textarea></div>
+          <div class="field">
+            <label>Weitere Vorteile / Stichpunkte</label>
+            <textarea id="ruerup-bullets" rows="3" placeholder="z.B. — Beitrag steuerlich absetzbar&#10;— Weil staatlich gefördert"></textarea>
+            <div class="field-hint">Ein Punkt pro Zeile, beginnend mit —</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="generate-btn" onclick="generateDocument()">Konzept generieren →</button>
+
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ─────────────────────────────────────────── -->
+  <main class="main-content" id="main-content">
+
+    <div class="output-placeholder" id="output-placeholder">
+      <div class="icon">📄</div>
+      <p>Kundenprofil ausfüllen, Produkte wählen und auf <strong>Konzept generieren</strong> klicken.</p>
+    </div>
+
+    <div id="document-output">
+      <div class="doc-actions">
+        <button class="doc-btn primary" onclick="window.print()">⬇ Als PDF herunterladen</button>
+        <button class="doc-btn" onclick="resetOutput()">← Formular bearbeiten</button>
+      </div>
+      <div class="document" id="the-document"></div>
+    </div>
+
+  </main>
+
+</div>
+
+<div class="doc-footer-print">
+  <span id="footer-conf">Streng vertraulich — nur für den adressierten Empfänger</span>
+  <span>Niall · Horbach Wirtschaftsberatung</span>
+</div>
+
+<script>
+// ─── LANGUAGE ────────────────────────────────────────────────────────────────
+// de = German output, en = English output (Expat)
+let LANG = 'de';
+
+const T = {
+  // document chrome
+  preparedByExpat:  { de: 'Erstellt von Niall | Horbach Wirtschaftsberatung', en: 'Prepared by Niall | Horbach Wirtschaftsberatung' },
+  preparedByDE:     { de: 'Erstellt von Niall | SPM Finanzlehrer — Horbach Wirtschaftsberatung', en: 'Prepared by Niall | SPM Finanzlehrer — Horbach Wirtschaftsberatung' },
+  createdOn:        { de: 'Erstellt am', en: 'Created on' },
+  retirementStart:  { de: 'Rentenbeginn:', en: 'Retirement starts:' },
+  docTitle:         { de: 'Ihre persönliche Finanzstrategie', en: 'Your Personal Financial Strategy' },
+  whyLabel:         { de: 'Warum das — speziell für Sie', en: 'Why this — for you specifically' },
+  fundAlloc:        { de: 'Fondsaufteilung', en: 'Fund Allocation' },
+  gtkTitle:         { de: 'Gut zu wissen', en: 'Good to Know' },
+  summaryTitle:     { de: 'Übersicht — Ihr Gesamtkonzept', en: 'Overview — Your Complete Strategy' },
+  colProduct:       { de: 'Produkt', en: 'Product' },
+  colMonthly:       { de: 'Monatlich', en: 'Monthly' },
+  colCapital:       { de: 'Projiziertes Kapital', en: 'Projected Capital' },
+  totalLabel:       { de: 'Gesamtbelastung pro Monat', en: 'Total monthly commitment' },
+  noProducts:       { de: 'Keine Produkte ausgewählt', en: 'No products selected' },
+  closing:          { de: 'Dieses Konzept ist ein Ausgangspunkt, keine endgültige Antwort. Mit jedem Einkommensanstieg und jeder Lebensveränderung sollte auch Ihre Strategie wachsen. Ich bin da, um sie gemeinsam mit Ihnen anzupassen — jedes Jahr, jeden Meilenstein, jede Veränderung.', en: 'This concept is a starting point, not a final answer. As your income and life situation evolve, so should your strategy. I\'m here to adjust it with you — every year, every milestone, every change.' },
+  confidential:     { de: 'Streng vertraulich', en: 'Strictly confidential' },
+  recipientOnly:    { de: 'Nur für den adressierten Empfänger', en: 'For the addressed recipient only' },
+  disclaimer:       { de: 'Alle Projektionen basieren auf CRK-Berechnungen der jeweiligen Anbieter. Keine Anlageberatung im Sinne des WpHG. Individuelle Beratung auf Anfrage.', en: 'All projections are based on CRK calculations provided by the respective product providers. Not investment advice. Individual consultation on request.' },
+  footerConf:       { de: 'Streng vertraulich — nur für den adressierten Empfänger', en: 'Strictly confidential — for the addressed recipient only' },
+  // callout labels
+  clMonPremium:     { de: 'Monatlicher Beitrag', en: 'Monthly Premium' },
+  clBUBenefit:      { de: 'Monatliche BU-Rente', en: 'Monthly BU Benefit' },
+  clDUBenefit:      { de: 'Monatliche DU-Rente', en: 'Monthly DU Benefit' },
+  clCoverUntil:     { de: (a) => `Absicherung bis ${a}`, en: (a) => `Cover Until ${a}` },
+  clMonContrib:     { de: 'Monatlicher Sparbeitrag', en: 'Monthly Contribution' },
+  clEffKosten:      { de: 'Effektivkostenquote', en: 'Effective Cost Rate' },
+  clCapCRK:         { de: 'Projiziertes Kapital (CRK)', en: 'Projected Capital (CRK)' },
+  clPension:        { de: 'Progn. Monatsrente', en: 'Projected Monthly Pension' },
+  clGuarFloor:      { de: (g) => `Garantiertes Mindestkapital (${g}%)`, en: (g) => `Guaranteed Floor (${g}%)` },
+  clTaxSaving:      { de: 'Steuerersparnis / Jahr', en: 'Est. Tax Saving / Year' },
+  // section subtitles
+  stBU:             { de: (p) => `${p} · BU-Versicherung`, en: (p) => `${p} · BU Cover` },
+  stDU:             { de: (p) => `${p} · DU-Versicherung`, en: (p) => `${p} · DU Cover` },
+  stDepot:          { de: (p) => p || 'Direktdepot', en: (p) => p || 'Direct Depot' },
+  stETF:            { de: (p) => `${p} · 0 % Garantie · Flexible AV`, en: (p) => `${p} · 0% Guarantee · Flexible Pension` },
+  stHybrid:         { de: (p, g) => `${p} · ${g}% Garantie · Flexible AV`, en: (p, g) => `${p} · ${g}% Guarantee · Flexible Pension` },
+  stRuerup:         { de: (p) => p || 'Basisrente', en: (p) => p || 'Basis Pension' },
+  // summary benefit texts for protection products
+  sumBU:            { de: (b) => `${b}/Monat ab BU`, en: (b) => `${b}/month from BU` },
+  sumDU:            { de: (b) => `${b}/Monat bei DU`, en: (b) => `${b}/month from DU` },
+  // profile line labels
+  plAge:            { de: (a) => `${a} Jahre`, en: (a) => `Age ${a}` },
+  plRenteDatum:     { de: (d) => `Rente ab ${d}`, en: (d) => `Retirement from ${d}` },
+  plRenteAlter:     { de: (a) => `Ziel-Rentenalter: ${a}`, en: (a) => `Target retirement age: ${a}` },
+  plHerkunft:       { de: (c) => `Herkunft: ${c}`, en: (c) => `Country of origin: ${c}` },
+};
+
+function t(key, ...args) {
+  const entry = T[key];
+  if (!entry) return key;
+  const v = entry[LANG] || entry['de'];
+  return typeof v === 'function' ? v(...args) : v;
+}
+
+function todayStr() {
+  const d = new Date();
+  const locale = LANG === 'en' ? 'en-GB' : 'de-DE';
+  return d.toLocaleDateString(locale, { day: '2-digit', month: 'long', year: 'numeric' });
+}
+function fmtDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  const locale = LANG === 'en' ? 'en-GB' : 'de-DE';
+  return d.toLocaleDateString(locale, { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+function fmt(n, decimals = 2) {
+  if (n === '' || n === null || n === undefined || isNaN(Number(n))) return '—';
+  return Number(n).toLocaleString('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }) + ' €';
+}
+function fmtPct(n) {
+  if (n === '' || n === null || n === undefined || isNaN(Number(n))) return '—';
+  return Number(n).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' %';
+}
+function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function checked(id) { const el = document.getElementById(id); return el ? el.checked : false; }
+function radio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
+
+function getFunds(containerId) {
+  const rows = document.querySelectorAll(`#${containerId} .fund-row`);
+  const funds = [];
+  rows.forEach(r => {
+    const inputs = r.querySelectorAll('input');
+    if (inputs[0] && inputs[1] && inputs[0].value.trim())
+      funds.push({ name: inputs[0].value.trim(), pct: parseFloat(inputs[1].value) || 0 });
+  });
+  return funds;
+}
+
+function parseBullets(raw) {
+  if (!raw || !raw.trim()) return [];
+  return raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+}
+
+// ─── UI ──────────────────────────────────────────────────────────────────────
+function toggleSection(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+function onExpatToggle() {
+  document.getElementById('expat-country-field').classList.toggle('hidden', !checked('f-expat'));
+}
+
+function onProductChange() {
+  const type = radio('clientType');
+  const isDU = type === 'Beamter';
+  document.getElementById('label-du').style.display = isDU ? '' : 'none';
+  if (!isDU) document.getElementById('cb-du').checked = false;
+  ['bu','du','depot','etf','hybrid','ruerup'].forEach(k => {
+    const show = checked(`cb-${k}`) && (k !== 'du' || isDU);
+    document.getElementById(`section-${k}`).classList.toggle('hidden', !show);
+  });
+  saveState();
+}
+
+document.querySelectorAll('input[name="clientType"]').forEach(el => el.addEventListener('change', onProductChange));
+
+function addFundRow(containerId) {
+  const container = document.getElementById(containerId);
+  if (container.querySelectorAll('.fund-row').length >= 5) return;
+  const row = document.createElement('div');
+  row.className = 'fund-row';
+  row.innerHTML = `<input type="text" placeholder="Fund name" oninput="saveState()">
+    <input type="number" placeholder="%" min="0" max="100" oninput="saveState()">
+    <button class="btn-remove" onclick="this.parentElement.remove();saveState()">×</button>`;
+  container.appendChild(row);
+}
+
+// ─── INTRO PARAGRAPHS ────────────────────────────────────────────────────────
+function getIntro(type, priority, isExpat, firstName) {
+  const n = firstName || (LANG === 'en' ? 'you' : 'Sie');
+  if (LANG === 'en') {
+    // Expat always English
+    if (priority === 'Flexibilität' || priority === 'Flexibility')
+      return `${firstName}'s situation requires solutions that travel. Every product in this concept has been specifically selected because it functions regardless of where you live — now or in the future. Flexible payout options, internationally portable coverage, and no dependency on a single country's social system.`;
+    if (priority === 'Sicherheit')
+      return `Living and working across borders creates gaps that standard financial products were never designed to fill. This concept closes those gaps first — then builds a stable long-term foundation that remains intact wherever life takes you next.`;
+    if (priority === 'Rendite')
+      return `An international profile is an advantage, not a complication — if structured correctly. This strategy focuses on maximum long-term growth while ensuring that every product remains fully accessible and transferable across your relevant jurisdictions.`;
+    return `Your cross-border situation demands a concept built for mobility. Each product here has been verified to work across the relevant jurisdictions — with full flexibility on how and where you ultimately receive your pension.`;
+  }
+  // German output
+  if (type === 'Student') {
+    if (priority === 'Sicherheit')
+      return `${firstName} — Sie stehen am Beginn Ihrer Laufbahn, und das ist der entscheidende Vorteil: Zeit. Diese Strategie ist so aufgebaut, dass sie das Aufgebaute schützt und es beständig wachsen lässt — mit einem Sicherheitsnetz ab dem ersten Tag. Die Konditionen, die Sie heute sichern, sind in zehn Jahren schlicht nicht mehr verfügbar.`;
+    if (priority === 'Rendite')
+      return `Jahrzehnte des Zinseszinseffekts beginnen mit einer einzigen frühen Entscheidung. Diese Strategie lenkt so viel wie möglich in produktive, kostengünstige Investments — und schützt gleichzeitig Ihre Arbeitskraft, damit nichts den Plan unterbricht.`;
+    if (priority === 'Flexibilität')
+      return `Das Studentenleben verändert sich schnell — diese Strategie ist dafür gebaut. Jedes Produkt hier lässt sich bei Bedarf pausieren, reduzieren oder aufstocken, ohne Strafgebühren oder Wertverlust. Flexibilität jetzt, Struktur später.`;
+    return `Der beste Zeitpunkt, ein finanzielles Fundament zu legen, ist bevor man es braucht. Dieses Konzept schafft die richtigen Strukturen, solange Ihre Gesundheit exzellent und Ihre Optionen am breitesten sind.`;
+  }
+  if (type === 'Referendar') {
+    if (priority === 'Absicherung')
+      return `Das Referendariat ist eine Übergangsphase — aber Ihr finanzieller Schutz sollte es nicht sein. Dieses Konzept behandelt Ihren aktuellen Status als Chance: Exzellente Konditionen sichern, bevor sich Ihr Beschäftigungsstatus und damit Ihr Risikoprofil dauerhaft verändern.`;
+    return `Das Referendariat ist einer der strategisch wichtigsten Momente für eine langfristige Finanzplanung. Die Konditionen, die jetzt verfügbar sind — bei Versicherungen wie bei Sparplänen — sind besser als alles, was in fünf Jahren angeboten wird. Dieses Konzept sichert sie.`;
+  }
+  if (type === 'Lehrer') {
+    if (priority === 'Sicherheit')
+      return `Eine Lehrerlaufbahn bietet echte Stabilität — und dieses Konzept ist dafür gemacht, sie zu ergänzen: die kleinen, aber wichtigen Lücken in der staatlichen Versorgung schließen und gleichzeitig beständig Vermögen aufbauen. Methodisch, durchdacht und auf eine ganze Karriere ausgelegt.`;
+    return `Lehrer haben vorhersehbare Einkommensentwicklungen und lange Berufszeiten — beides macht langfristige Planung besonders lohnend. Dieses Konzept ist auf Ihre spezifische Situation abgestimmt und nutzt Ihren Zeithorizont und Ihre Gehaltsentwicklung optimal.`;
+  }
+  if (type === 'Beamter') {
+    if (priority === 'Absicherung')
+      return `Als Beamter ist Ihr Einkommen gut abgesichert — aber der staatliche DU-Schutz hat spezifische Lücken, die die meisten Menschen erst entdecken, wenn es zu spät ist. Diese Strategie schließt diese Lücken präzise und baut gleichzeitig langfristiges Vermögen auf.`;
+    if (priority === 'Sicherheit')
+      return `Der Beamtenstatus bietet ein exzellentes Fundament. Dieses Konzept baut direkt darauf auf: Es schließt die Versorgungslücken, die auch Beamte betreffen, und lässt Vermögen über die Dienstjahre beständig wachsen.`;
+    return `Ihr Beamtenstatus schafft ein einzigartiges Finanzprofil — und einzigartige Chancen. Dieses Konzept ist spezifisch für Beamte strukturiert: DU-Risiko direkt adressiert und steuereffizientes Vermögen on top der soliden staatlichen Versorgung.`;
+  }
+  if (type === 'Selbstständig') {
+    if (priority === 'Absicherung')
+      return `Selbstständigkeit bedeutet, etwas aufzubauen — und alles, was Sie aufgebaut haben, ist gefährdet, wenn Ihre Gesundheit es erfordert. Dieses Konzept beginnt damit, Ihre Arbeitskraft zu schützen, und baut dann den systematischen Vermögensaufbau auf, den Angestellte über ihren Arbeitgeber erhalten.`;
+    if (priority === 'Rendite')
+      return `Selbstständige haben Zugang zu Altersvorsorgemodellen mit außergewöhnlicher Steuereffizienz — und die Freiheit, diese voll zu nutzen. Dieses Konzept lenkt Ihre Beiträge in die leistungsstärksten, steueroptimiertesten Strukturen, die verfügbar sind.`;
+    return `Das eigene Unternehmen zu führen ist ein langfristiger Akt. Dieses Konzept auch. Jedes Produkt hier wurde gewählt, weil es zu Ihrem Status als Selbstständige/r passt: volle Flexibilität, starke Steuervorteile und keine Abhängigkeit von einem Arbeitgeber.`;
+  }
+  return `Dieses Konzept wurde auf ${firstName}s spezifische Situation zugeschnitten — ${type}, Priorität: ${priority}. Jedes Produkt wurde ausgewählt, um als kohärentes System zu wirken, nicht als Sammlung einzelner Policen.`;
+}
+
+// ─── WHY-THIS TEXTS (DE + EN) ─────────────────────────────────────────────────
+function whyBU(type, age, provider, special, specialTxt, isExpat) {
+  if (LANG === 'en') {
+    let txt = '';
+    if (type === 'Student' || type === 'Referendar') {
+      txt += `At ${age || 'your age'} and in excellent health, you can lock in BU cover at the lowest possible premium — conditions that simply aren't available once you enter full employment. `;
+      txt += `${provider}'s ${special && specialTxt ? specialTxt : 'student rate'} gives you access to terms that close permanently the moment your status changes. `;
+      txt += `You can also increase your benefit later — without any new health questions — as your income grows.`;
+    } else if (type === 'Beamter') {
+      txt += `Even as a civil servant, the state's DU coverage has significant gaps. This BU policy through ${provider} acts as a private supplement, ensuring your income is fully protected. It's coordinated with your civil service protections to avoid overlap and maximise value.`;
+    } else if (type === 'Selbstständig') {
+      txt += `As a self-employed professional, you have no employer-funded sick pay and no state safety net. BU cover through ${provider} is structured for your profession and income level, with a benefit that genuinely replaces your working income if you can no longer practise.`;
+    } else {
+      txt += `Your income is your most valuable long-term asset. BU cover through ${provider} ensures that a health event doesn't derail everything else in this concept. At ${age || 'your current age'}, the premium is favourable and the terms are strong.`;
+    }
+    if (isExpat) txt += ` Importantly, this policy pays out worldwide — your cover travels with you regardless of where you're based.`;
+    return txt;
+  }
+  // German
+  let txt = '';
+  if (type === 'Student' || type === 'Referendar') {
+    txt += `Im Alter von ${age || 'Ihrem aktuellen Alter'} und in bester Gesundheit können Sie BU-Schutz zum niedrigstmöglichen Beitrag sichern — Konditionen, die nach dem Berufseinstieg schlicht nicht mehr verfügbar sind. `;
+    txt += `Der ${special && specialTxt ? specialTxt : 'Studententarif'} von ${provider} gibt Ihnen Zugang zu Bedingungen, die sich dauerhaft schließen, sobald sich Ihr Status ändert. `;
+    txt += `Sie können Ihre Rente später auch ohne erneute Gesundheitsfragen erhöhen — wenn Ihr Einkommen wächst.`;
+  } else if (type === 'Beamter') {
+    txt += `Auch als Beamter hat der staatliche DU-Schutz erhebliche Lücken — besonders in den frühen Dienstjahren. `;
+    txt += `Diese BU-Police über ${provider} wirkt als private Ergänzung und stellt sicher, dass Ihr Einkommen vollständig abgesichert ist. `;
+    txt += `Sie ist auf Ihre beamtenrechtliche Versorgung abgestimmt, um Überschneidungen zu vermeiden und den maximalen Nutzen zu erzielen.`;
+  } else if (type === 'Selbstständig') {
+    txt += `Als Selbstständige/r haben Sie kein Krankengeld vom Arbeitgeber und kein staatliches Sicherheitsnetz. BU-Schutz ist keine Option — er ist das Fundament. `;
+    txt += `${provider} ist auf Ihren Beruf und Ihr Einkommensniveau ausgerichtet, mit einer Rente, die Ihr Arbeitseinkommen tatsächlich ersetzt, wenn Sie nicht mehr arbeiten können.`;
+  } else {
+    txt += `Ihr Einkommen ist Ihr wertvollstes langfristiges Gut. BU-Schutz über ${provider} stellt sicher, dass ein gesundheitliches Ereignis nicht alles andere in diesem Konzept gefährdet. `;
+    txt += `Mit ${age || 'Ihrem aktuellen Alter'} sind der Beitrag günstig und die Konditionen stark — das jetzt zu sichern schützt sowohl Ihr Einkommen als auch Ihren Finanzplan.`;
+  }
+  if (isExpat) txt += ` Wichtig: Diese Police zahlt weltweit — Ihr Schutz reist mit Ihnen, egal wo Sie sich befinden.`;
+  return txt;
+}
+
+function whyDU(type, age, provider) {
+  if (LANG === 'en')
+    return `As a civil servant, your state DU provision depends on your years of service — and in the early years, the state pays far less than most people realise. ${provider || 'This policy'} closes that gap precisely, stepping in where the Beamtenversorgung falls short. At ${age || 'your current age'} and service level, this is the highest-leverage protection available.`;
+  return `Als Beamter hängt Ihre staatliche DU-Versorgung von Ihren Dienstjahren ab — und in den frühen Jahren zahlt der Staat weit weniger, als die meisten ahnen. ${provider || 'Diese Police'} schließt diese Lücke präzise und tritt genau dort ein, wo die Beamtenversorgung zu kurz greift. Bei Ihrem aktuellen Dienstalter ist das der wirkungsvollste Schutz, den Sie haben können.`;
+}
+
+function whyDepot(type, priority, provider, cost) {
+  if (LANG === 'en') {
+    let txt = `A direct ETF depot through ${provider || 'this provider'} is the simplest, most cost-efficient way to build long-term wealth. `;
+    if (priority === 'Rendite') txt += `With an effective cost rate of ${cost ? fmtPct(cost) : 'X%'}, you're keeping close to all of your returns — every basis point saved compounds significantly over decades.`;
+    else if (priority === 'Flexibilität') txt += `Unlike insurance-based products, a direct depot has no lock-in, no surrender charges, and full liquidity at all times. Your money is always accessible.`;
+    else txt += `It sits alongside the insurance-based elements of this concept as the liquid, accessible component — no lock-in, no surrender costs, full control.`;
+    return txt;
+  }
+  let txt = `Ein direktes ETF-Depot über ${provider || 'diesen Anbieter'} ist der einfachste und kosteneffizienteste Weg zum langfristigen Vermögensaufbau. `;
+  if (priority === 'Rendite') txt += `Mit einer Effektivkostenquote von ${cost ? fmtPct(cost) : 'X%'} behalten Sie nahezu alle Erträge — jeder gesparte Basispunkt wirkt sich über Jahrzehnte erheblich aus.`;
+  else if (priority === 'Flexibilität') txt += `Im Gegensatz zu versicherungsbasierten Produkten gibt es kein Lock-in, keine Rückkaufgebühren und volle Liquidität. Ihr Geld ist jederzeit verfügbar.`;
+  else txt += `Es steht neben den versicherungsbasierten Elementen als liquide, jederzeit zugängliche Komponente — kein Lock-in, keine Ausstiegskosten, volle Kontrolle.`;
+  return txt;
+}
+
+function whyETF(type, priority, provider, fondsRente, isExpat) {
+  if (LANG === 'en') {
+    let txt = `An ETF-based retirement insurance through ${provider} combines the tax efficiency of a life insurance policy with the growth potential of fully fund-based investing. `;
+    if (priority === 'Rendite') txt += `With a 0% guarantee, 100% of contributions go into growth-oriented funds — no portion is diverted to protect a floor. Over a long horizon, this is the highest-expected-return structure within the insurance wrapper.`;
+    else txt += `The insurance wrapper adds structure: a defined retirement date, pension option, and significant tax advantages on the payout side.`;
+    if (fondsRente) txt += ` The Fondsgebundener Rentenbezug option means your pension payments themselves stay invested — your money continues to grow even during the payout phase.`;
+    if (isExpat) txt += ` The lump sum or pension choice at maturity gives full flexibility on where and how you draw the capital — regardless of your country of residence.`;
+    return txt;
+  }
+  let txt = `Eine fondsgebundene Rentenversicherung über ${provider} verbindet die Steuereffizienz einer Lebensversicherung mit dem Wachstumspotenzial eines vollständig fondsbasierten Investments. `;
+  if (priority === 'Rendite') txt += `Mit 0% Garantie fließen 100% der Beiträge in wachstumsorientierte Fonds — kein Anteil wird zur Absicherung eines Garantiebodens verwendet. Über einen langen Horizont ist das die höchste erwartete Rendite im Versicherungsmantel.`;
+  else txt += `Der Versicherungsmantel bringt Struktur: einen definierten Rentenbeginn, eine Rentenperspektive und erhebliche Steuervorteile auf der Auszahlungsseite.`;
+  if (fondsRente) txt += ` Der Fondsgebundene Rentenbezug bedeutet, dass Ihre Rentenzahlungen selbst investiert bleiben — Ihr Geld wächst auch in der Auszahlungsphase weiter.`;
+  if (isExpat) txt += ` Die Wahl zwischen Einmalauszahlung und lebenslanger Rente bei Fälligkeit bietet volle Flexibilität — unabhängig von Ihrem Wohnsitzland.`;
+  return txt;
+}
+
+function whyHybrid(type, priority, provider, guarantee) {
+  if (LANG === 'en') {
+    let txt = `The Hybrid Plan through ${provider} offers a middle ground: a ${guarantee || 50}% guarantee floor that protects a defined portion of contributions, while the remainder remains fully invested in ETFs for growth. `;
+    if (priority === 'Sicherheit') txt += `For someone who prioritises security, this is particularly valuable — you get the certainty of a guaranteed floor while still participating meaningfully in market growth.`;
+    else txt += `It's a deliberate trade-off: some growth potential is exchanged for the certainty of a minimum outcome — reducing risk without eliminating it entirely.`;
+    return txt;
+  }
+  let txt = `Der Hybrid-Plan über ${provider} bietet einen Mittelweg: ein ${guarantee || 50}%-Garantieboden schützt einen definierten Anteil der Beiträge, während der Rest vollständig in ETFs investiert bleibt. `;
+  if (priority === 'Sicherheit') txt += `Für jemanden, der Sicherheit priorisiert, ist das besonders wertvoll — Sie erhalten die Gewissheit eines garantierten Mindestkapitals und partizipieren trotzdem am Marktwachstum.`;
+  else txt += `Es ist ein bewusster Kompromiss: etwas Renditepotenzial wird gegen die Sicherheit eines Mindestobjektivs eingetauscht — Risiko wird reduziert, nicht eliminiert.`;
+  return txt;
+}
+
+function whyRuerup(type, priority, provider) {
+  if (LANG === 'en') {
+    let txt = `A Rürup contract through ${provider || 'the selected provider'} is one of the most tax-efficient retirement vehicles available in Germany. `;
+    if (type === 'Selbstständig') txt += `For self-employed individuals especially, contributions are almost fully deductible — turning your retirement savings into an immediate tax saving each year, in addition to long-term growth.`;
+    else txt += `Contributions reduce your taxable income directly — providing a guaranteed tax saving every year alongside long-term investment growth.`;
+    return txt;
+  }
+  let txt = `Ein Rürup-Vertrag über ${provider || 'den ausgewählten Anbieter'} ist eines der steuereffizientesten Altersvorsorgemodelle in Deutschland. `;
+  if (type === 'Selbstständig') txt += `Besonders für Selbstständige sind die Beiträge nahezu vollständig steuerlich absetzbar — Ihre Altersvorsorgebeiträge werden zu einer sofortigen Steuerersparnis, zusätzlich zum langfristigen Wachstum.`;
+  else txt += `Die Beiträge mindern direkt Ihr zu versteuerndes Einkommen — das ergibt eine gesicherte Steuerersparnis jedes Jahr, begleitet vom langfristigen Investmentwachstum.`;
+  return txt;
+}
+
+// ─── GOOD TO KNOW ─────────────────────────────────────────────────────────────
+function gtkBU(type, isExpat, special, specialTxt) {
+  const p = [];
+  if (LANG === 'en') {
+    if (isExpat) p.push('This policy pays out worldwide — cover is not restricted to Germany or the EU.');
+    if (type === 'Student' || type === 'Referendar') {
+      p.push('Student / Referendar rates lock in permanently — your premium cannot increase simply because your job changes.');
+      p.push('Nachversicherungsgarantie: you can increase your benefit at key life events without new health checks.');
+    }
+    if (special && specialTxt) p.push(`Special condition applied: ${specialTxt} — this gives you access to terms not available on the standard rate.`);
+    p.push('BU cover pays if you can no longer perform your specific profession — not just any work. This is the critical distinction.');
+  } else {
+    if (isExpat) p.push('Diese Police zahlt weltweit — der Schutz ist nicht auf Deutschland oder die EU beschränkt.');
+    if (type === 'Student' || type === 'Referendar') {
+      p.push('Studenten-/Referendarstarife werden dauerhaft eingefroren — Ihr Beitrag steigt nicht, nur weil sich Ihr Beruf ändert.');
+      p.push('Nachversicherungsgarantie: Sie können Ihre Rente zu bestimmten Lebensereignissen ohne erneute Gesundheitsprüfung erhöhen.');
+    }
+    if (special && specialTxt) p.push(`Sonderkonditionen angewendet: ${specialTxt} — das gibt Ihnen Zugang zu Bedingungen, die über den Standardtarif nicht erhältlich sind.`);
+    p.push('BU zahlt, wenn Sie Ihren konkreten Beruf nicht mehr ausüben können — nicht erst, wenn Sie generell arbeitsunfähig sind. Das ist der entscheidende Unterschied.');
+  }
+  return p;
+}
+
+function gtkDU() {
+  if (LANG === 'en') return [
+    'DU cover specifically addresses Dienstunfähigkeit — the legal status under Beamtenrecht — distinct from standard BU.',
+    'State DU provision is often significantly reduced in the first years of service. This policy fills exactly that gap.',
+    'Benefits are coordinated with your Beamtenversorgung to ensure coverage without overlap.',
+  ];
+  return [
+    'DU-Schutz adressiert speziell die Dienstunfähigkeit — den rechtlichen Status nach Beamtenrecht — und ist klar von der BU zu unterscheiden.',
+    'Die staatliche DU-Versorgung ist oft erheblich reduziert in den ersten Dienstjahren. Diese Police füllt genau diese Lücke.',
+    'Die Leistungen sind auf Ihre Beamtenversorgung abgestimmt — kein Überschneiden, kein Doppelzählen.',
+  ];
+}
+
+function gtkDepot(cost) {
+  if (LANG === 'en') return [
+    `Your annual cost rate of ${cost ? fmtPct(cost) : 'X%'} means you keep the vast majority of your returns — low costs are one of the strongest predictors of long-term investment success.`,
+    'A direct depot has no lock-in, no surrender value calculation, and no complex insurance structure — full transparency and liquidity at all times.',
+    'ETF-based investing gives you broad diversification across hundreds or thousands of companies in a single fund.',
+  ];
+  return [
+    `Ihre jährliche Kostenquote von ${cost ? fmtPct(cost) : 'X%'} bedeutet, dass Sie den weitaus größten Teil Ihrer Erträge behalten — niedrige Kosten sind einer der stärksten Prädiktoren für langfristigen Anlageerfolg.`,
+    'Ein Direktdepot hat kein Lock-in, keinen Rückkaufwert und keine komplexe Versicherungsstruktur — volle Transparenz und Liquidität jederzeit.',
+    'ETF-basiertes Investieren gibt Ihnen breite Diversifikation über hunderte oder tausende Unternehmen in einem einzigen Fonds.',
+  ];
+}
+
+function gtkETF(fondsRente, isExpat) {
+  const p = [];
+  if (LANG === 'en') {
+    p.push('The insurance wrapper provides a significant tax advantage on the payout side: only a fraction of income is taxable if drawn after age 62 with a minimum 12-year term.');
+    if (fondsRente) p.push('Your pension payments themselves remain invested in ETFs — meaning your money keeps growing even during the payout phase.');
+    if (isExpat) p.push('At maturity, you choose between a lump sum and a lifetime pension — with full flexibility on the country of residence from which you draw it.');
+    p.push('0% Beitragsgarantie: all contributions go into the fund — no portion is used to guarantee a floor. This maximises long-term growth potential.');
+  } else {
+    p.push('Der Versicherungsmantel bietet einen erheblichen Steuervorteil auf der Auszahlungsseite: Nur ein Bruchteil der Erträge ist steuerpflichtig, wenn nach dem 62. Lebensjahr mit einer Mindestlaufzeit von 12 Jahren abgerufen wird.');
+    if (fondsRente) p.push('Ihre Rentenzahlungen selbst bleiben in ETFs investiert — Ihr Geld wächst auch in der Auszahlungsphase weiter.');
+    if (isExpat) p.push('Bei Fälligkeit wählen Sie zwischen Einmalauszahlung und lebenslanger Rente — mit voller Flexibilität bezüglich des Wohnsitzlandes.');
+    p.push('0% Beitragsgarantie: Alle Beiträge gehen in den Fonds — kein Anteil wird zur Garantieabsicherung verwendet. Das maximiert das langfristige Wachstumspotenzial.');
+  }
+  return p;
+}
+
+function gtkHybrid(guarantee, isExpat) {
+  const p = [];
+  if (LANG === 'en') {
+    p.push(`The ${guarantee || 50}% guarantee means at least that share of all contributions paid are guaranteed to be returned at maturity — a contractual commitment, not a projection.`);
+    p.push('The remaining portion is invested in ETFs, participating in market growth. The balance can be shifted at policy reviews.');
+    if (isExpat) p.push('Lump sum or pension at maturity — fully flexible regardless of country of residence.');
+  } else {
+    p.push(`Die ${guarantee || 50}%-Garantie bedeutet, dass mindestens dieser Anteil aller eingezahlten Beiträge bei Fälligkeit garantiert zurückgegeben wird — eine vertragliche Verpflichtung, keine Prognose.`);
+    p.push('Der verbleibende Anteil ist in ETFs investiert und partizipiert am Marktwachstum. Das Verhältnis kann bei Policenüberprüfungen angepasst werden.');
+    if (isExpat) p.push('Einmalauszahlung oder Rente bei Fälligkeit — vollständig flexibel unabhängig vom Wohnsitzland.');
+  }
+  return p;
+}
+
+function gtkRuerup(type) {
+  const p = [];
+  if (LANG === 'en') {
+    if (type === 'Selbstständig') {
+      p.push('As a Selbstständige/r, up to 94% of contributions are tax-deductible in 2024 — rising to 100% from 2025 onwards.');
+      p.push('The tax saving is immediate — you see the benefit in your next tax return, not just at retirement.');
+    } else {
+      p.push('Rürup contributions reduce your taxable income directly — the higher your income, the larger the saving.');
+    }
+    p.push('Unlike Riester, Rürup has no residency requirement — payouts are permitted worldwide.');
+    p.push('The contract is not inheritable and cannot be pledged as collateral — this is the trade-off for the significant tax advantages.');
+  } else {
+    if (type === 'Selbstständig') {
+      p.push('Als Selbstständige/r sind bis zu 94% der Beiträge in 2024 steuerlich absetzbar — ab 2025 steigt das auf 100%.');
+      p.push('Die Steuerersparnis ist sofort — Sie sehen den Vorteil in Ihrer nächsten Steuererklärung, nicht erst im Ruhestand.');
+    } else {
+      p.push('Rürup-Beiträge mindern direkt Ihr zu versteuerndes Einkommen — je höher das Einkommen, desto größer die Ersparnis.');
+    }
+    p.push('Anders als Riester hat Rürup keine Wohnsitzpflicht — Auszahlungen sind weltweit möglich.');
+    p.push('Der Vertrag ist nicht vererbbar und nicht pfändbar — das ist der Preis für die erheblichen Steuervorteile.');
+  }
+  return p;
+}
+
+// ─── RENDER HELPERS ──────────────────────────────────────────────────────────
+function renderCallouts(items) {
+  return `<div class="callouts">${items.map(i =>
+    `<div class="callout"><div class="callout-label">${i.label}</div><div class="callout-value">${i.value}</div></div>`
+  ).join('')}</div>`;
+}
+
+function renderFundChart(funds) {
+  if (!funds || !funds.length) return '';
+  const total = funds.reduce((s, f) => s + f.pct, 0);
+  return `<div class="fund-chart"><div class="fund-chart-title">${t('fundAlloc')}</div>${funds.map(f => {
+    const pct = total > 0 ? (f.pct / total * 100) : 0;
+    return `<div class="fund-bar-row"><span class="fund-bar-label">${f.name}</span><div class="fund-bar-track"><div class="fund-bar-fill" style="width:${pct.toFixed(1)}%"></div></div><span class="fund-bar-pct">${f.pct}%</span></div>`;
+  }).join('')}</div>`;
+}
+
+function renderGTK(points) {
+  if (!points || !points.length) return '';
+  return `<div class="good-to-know"><div class="good-to-know-title">${t('gtkTitle')}</div><ul>${points.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+}
+
+function renderCustomBullets(raw) {
+  const lines = parseBullets(raw);
+  if (!lines.length) return '';
+  return `<div class="custom-bullets">${lines.map(l => {
+    const text = l.startsWith('—') ? l.slice(1).trim() : l;
+    return `<div class="custom-bullet"><span class="custom-bullet-dot">—</span><span>${text}</span></div>`;
+  }).join('')}</div>`;
+}
+
+function renderSection(icon, name, subtitle, why, customBullets, callouts, funds, gtk) {
+  return `<div class="doc-section">
+    <div class="section-heading"><span class="section-icon">${icon}</span><h2 class="section-name">${name}</h2></div>
+    <div class="section-subtitle">${subtitle}</div>
+    <div class="why-label">${t('whyLabel')}</div>
+    <div class="why-box">${why}</div>
+    ${renderCustomBullets(customBullets)}
+    ${renderCallouts(callouts)}
+    ${renderFundChart(funds)}
+    ${renderGTK(gtk)}
+  </div>`;
+}
+
+// ─── MAIN GENERATE ────────────────────────────────────────────────────────────
+function generateDocument() {
+  const firstName = val('f-firstname') || (LANG === 'en' ? 'Client' : 'Kunde');
+  const lastName  = val('f-lastname')  || '';
+  const fullName  = [firstName, lastName].filter(Boolean).join(' ');
+  const type      = radio('clientType') || 'Student';
+  const age       = val('f-age');
+  const retAge    = val('f-retage') || '67';
+  const retDate   = val('f-retdate');
+  const isExpat   = checked('f-expat');
+  const country   = val('f-country');
+  const priority  = radio('priority') || 'Sicherheit';
+
+  // Set language based on client type
+  LANG = type === 'Expat' ? 'en' : 'de';
+
+  const hasBU     = checked('cb-bu');
+  const hasDU     = checked('cb-du');
+  const hasDepot  = checked('cb-depot');
+  const hasETF    = checked('cb-etf');
+  const hasHybrid = checked('cb-hybrid');
+  const hasRuerup = checked('cb-ruerup');
+
+  const preparedBy = type === 'Expat' ? t('preparedByExpat') : t('preparedByDE');
+  const intro = getIntro(type, priority, isExpat, firstName);
+
+  let sections = '';
+  const summaryRows = [];
+  let totalMonthly = 0;
+
+  // BU
+  if (hasBU) {
+    const provider  = val('bu-provider') || 'MetallRente';
+    const premium   = val('bu-premium');
+    const benefit   = val('bu-benefit');
+    const endAge    = val('bu-endage');
+    const special   = checked('bu-special');
+    const specialTxt = val('bu-special-txt');
+    const bullets   = val('bu-bullets');
+    const callouts  = [
+      { value: fmt(premium),  label: t('clMonPremium') },
+      { value: fmt(benefit),  label: t('clBUBenefit') },
+      { value: endAge ? t('clCoverUntil', endAge) : '—', label: LANG === 'en' ? 'Cover Until Age' : 'Absicherung bis' },
+    ];
+    sections += renderSection('🛡️', 'Berufsunfähigkeitsversicherung', t('stBU', provider),
+      whyBU(type, age, provider, special, specialTxt, isExpat), bullets, callouts, [], gtkBU(type, isExpat, special, specialTxt));
+    if (premium) { totalMonthly += Number(premium); summaryRows.push({ product: `BU (${provider})`, monthly: fmt(premium), capital: t('sumBU', fmt(benefit)) }); }
+  }
+
+  // DU
+  if (hasDU) {
+    const provider = val('du-provider');
+    const premium  = val('du-premium');
+    const benefit  = val('du-benefit');
+    const endAge   = val('du-endage');
+    const bullets  = val('du-bullets');
+    const callouts = [
+      { value: fmt(premium), label: t('clMonPremium') },
+      { value: fmt(benefit), label: t('clDUBenefit') },
+      { value: endAge ? t('clCoverUntil', endAge) : '—', label: LANG === 'en' ? 'Cover Until Age' : 'Absicherung bis' },
+    ];
+    sections += renderSection('⚖️', 'Dienstunfähigkeitsversicherung', t('stDU', provider || 'Anbieter'),
+      whyDU(type, age, provider), bullets, callouts, [], gtkDU());
+    if (premium) { totalMonthly += Number(premium); summaryRows.push({ product: `DU (${provider || 'Anbieter'})`, monthly: fmt(premium), capital: t('sumDU', fmt(benefit)) }); }
+  }
+
+  // Depot
+  if (hasDepot) {
+    const provider = val('depot-provider');
+    const contrib  = val('depot-contrib');
+    const cost     = val('depot-cost');
+    const funds    = getFunds('depot-funds');
+    const bullets  = val('depot-bullets');
+    const callouts = [
+      { value: fmt(contrib),               label: t('clMonContrib') },
+      { value: cost ? fmtPct(cost) : '—',  label: t('clEffKosten') },
+    ];
+    sections += renderSection('📈', 'Normales ETF-Depot', t('stDepot', provider),
+      whyDepot(type, priority, provider, cost), bullets, callouts, funds, gtkDepot(cost));
+    if (contrib) { totalMonthly += Number(contrib); summaryRows.push({ product: `ETF-Depot (${provider || 'Anbieter'})`, monthly: fmt(contrib), capital: LANG === 'en' ? 'Free capital accumulation' : 'Freier Vermögensaufbau' }); }
+  }
+
+  // ETF Plan
+  if (hasETF) {
+    const provider   = val('etf-provider') || 'Die Stuttgarter';
+    const contrib    = val('etf-contrib');
+    const fondsRente = checked('etf-fonds-rente');
+    const cap        = val('etf-cap');
+    const pension    = val('etf-pension');
+    const funds      = getFunds('etf-funds');
+    const bullets    = val('etf-bullets');
+    const callouts   = [
+      { value: fmt(contrib),             label: t('clMonContrib') },
+      { value: cap ? fmt(cap, 0) : '—',  label: t('clCapCRK') },
+      { value: pension ? fmt(pension) : '—', label: t('clPension') },
+    ];
+    sections += renderSection('🌱', 'ETF Investment Plan', t('stETF', provider),
+      whyETF(type, priority, provider, fondsRente, isExpat), bullets, callouts, funds, gtkETF(fondsRente, isExpat));
+    if (contrib) { totalMonthly += Number(contrib); summaryRows.push({ product: `ETF Plan (${provider})`, monthly: fmt(contrib), capital: cap ? fmt(cap, 0) : '—' }); }
+  }
+
+  // Hybrid
+  if (hasHybrid) {
+    const provider  = val('hybrid-provider') || 'Die Stuttgarter';
+    const contrib   = val('hybrid-contrib');
+    const guarantee = val('hybrid-guarantee') || '50';
+    const guaranCap = val('hybrid-guarancap');
+    const cap       = val('hybrid-cap');
+    const pension   = val('hybrid-pension');
+    const funds     = getFunds('hybrid-funds');
+    const bullets   = val('hybrid-bullets');
+    const callouts  = [
+      { value: fmt(contrib),                   label: t('clMonContrib') },
+      { value: guaranCap ? fmt(guaranCap, 0) : `${guarantee}%`, label: t('clGuarFloor', guarantee) },
+      { value: cap ? fmt(cap, 0) : '—',        label: t('clCapCRK') },
+      { value: pension ? fmt(pension) : '—',   label: t('clPension') },
+    ];
+    sections += renderSection('🏛️', 'Hybrid Investment Plan', t('stHybrid', provider, guarantee),
+      whyHybrid(type, priority, provider, guarantee), bullets, callouts, funds, gtkHybrid(guarantee, isExpat));
+    if (contrib) { totalMonthly += Number(contrib); summaryRows.push({ product: `Hybrid Plan (${provider})`, monthly: fmt(contrib), capital: cap ? fmt(cap, 0) : '—' }); }
+  }
+
+  // Rürup
+  if (hasRuerup) {
+    const provider = val('ruerup-provider');
+    const contrib  = val('ruerup-contrib');
+    const cap      = val('ruerup-cap');
+    const pension  = val('ruerup-pension');
+    const tax      = val('ruerup-tax');
+    const bullets  = val('ruerup-bullets');
+    const callouts = [
+      { value: fmt(contrib),             label: t('clMonContrib') },
+      { value: cap ? fmt(cap, 0) : '—',  label: t('clCapCRK') },
+      { value: pension ? fmt(pension) : '—', label: t('clPension') },
+      { value: tax ? fmt(tax, 0) : '—', label: t('clTaxSaving') },
+    ];
+    sections += renderSection('📊', 'Rürup-Rente', t('stRuerup', provider),
+      whyRuerup(type, priority, provider), bullets, callouts, [], gtkRuerup(type));
+    if (contrib) { totalMonthly += Number(contrib); summaryRows.push({ product: `Rürup (${provider || 'Anbieter'})`, monthly: fmt(contrib), capital: cap ? fmt(cap, 0) : '—' }); }
+  }
+
+  // Profile subtitle line
+  const profileParts = [type];
+  if (age)     profileParts.push(t('plAge', age));
+  if (retDate) profileParts.push(t('plRenteDatum', fmtDate(retDate)));
+  else if (retAge) profileParts.push(t('plRenteAlter', retAge));
+  profileParts.push(priority);
+  if (isExpat && country) profileParts.push(t('plHerkunft', country));
+  const profileLine = profileParts.join(' · ');
+
+  // Summary
+  const noProductsMsg = `<tr><td colspan="3" style="color:#aaa;font-style:italic;">${t('noProducts')}</td></tr>`;
+  const summaryHTML = `<div class="summary-section">
+    <div class="section-heading"><span class="section-icon">📋</span><h2 class="section-name">${t('summaryTitle')}</h2></div>
+    <table class="summary-table">
+      <thead><tr><th>${t('colProduct')}</th><th>${t('colMonthly')}</th><th>${t('colCapital')}</th></tr></thead>
+      <tbody>${summaryRows.map(r => `<tr><td>${r.product}</td><td>${r.monthly}</td><td>${r.capital}</td></tr>`).join('') || noProductsMsg}</tbody>
+    </table>
+    <div class="total-row">
+      <span class="total-label">${t('totalLabel')}</span>
+      <span class="total-value">${totalMonthly > 0 ? fmt(totalMonthly) : '—'}</span>
+    </div>
+    <p class="closing-para">${t('closing')}</p>
+  </div>`;
+
+  // Update print footer language
+  document.getElementById('footer-conf').textContent = t('footerConf');
+
+  const doc = `
+    <div class="doc-top-bar"></div>
+    <div class="doc-inner">
+      <div class="doc-header">
+        <div class="doc-header-top">
+          <div class="doc-logo-area">
+            <div class="doc-logo-name">Niall · Horbach Wirtschaftsberatung</div>
+            <div class="doc-logo-sub">${preparedBy}</div>
+          </div>
+          <div class="doc-date">
+            <div>${t('createdOn')} ${todayStr()}</div>
+            ${retDate ? `<div>${t('retirementStart')} ${fmtDate(retDate)}</div>` : ''}
+          </div>
+        </div>
+        <h1 class="doc-title">${t('docTitle')}<br><span class="doc-title-name">${fullName}</span></h1>
+        <div class="doc-subtitle">${profileLine}</div>
+        <p class="doc-intro">${intro}</p>
+      </div>
+
+      ${sections}
+      ${summaryHTML}
+
+      <div class="doc-signature">
+        <div class="sig-left">
+          <div>${t('confidential')}</div>
+          <div>${t('recipientOnly')}</div>
+          <div style="margin-top:10px;font-size:0.71rem;max-width:340px;line-height:1.6;">${t('disclaimer')}</div>
+        </div>
+        <div class="sig-right">
+          <div class="sig-name">Niall</div>
+          <div class="sig-title">Horbach Wirtschaftsberatung</div>
+          ${type !== 'Expat' ? '<div class="sig-title">SPM Finanzlehrer</div>' : ''}
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('the-document').innerHTML = doc;
+  document.getElementById('document-output').classList.add('visible');
+  document.getElementById('output-placeholder').style.display = 'none';
+  document.getElementById('main-content').scrollTop = 0;
+  saveState();
+}
+
+function resetOutput() {
+  document.getElementById('document-output').classList.remove('visible');
+  document.getElementById('output-placeholder').style.display = '';
+}
+
+// ─── PERSIST ─────────────────────────────────────────────────────────────────
+const PERSIST_IDS = [
+  'f-firstname','f-lastname','f-age','f-retage','f-retdate','f-expat','f-country',
+  'cb-bu','cb-du','cb-depot','cb-etf','cb-hybrid','cb-ruerup',
+  'bu-provider','bu-premium','bu-benefit','bu-endage','bu-special','bu-special-txt','bu-bullets',
+  'du-provider','du-premium','du-benefit','du-endage','du-bullets',
+  'depot-provider','depot-contrib','depot-cost','depot-notes','depot-bullets',
+  'etf-provider','etf-contrib','etf-fonds-rente','etf-cap','etf-pension','etf-notes','etf-bullets',
+  'hybrid-provider','hybrid-contrib','hybrid-guarantee','hybrid-guarancap','hybrid-cap','hybrid-pension','hybrid-notes','hybrid-bullets',
+  'ruerup-provider','ruerup-contrib','ruerup-cap','ruerup-pension','ruerup-tax','ruerup-notes','ruerup-bullets',
+];
+
+function saveState() {
+  const state = {};
+  PERSIST_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    state[id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  state.clientType = radio('clientType');
+  state.priority   = radio('priority');
+  ['depot-funds','etf-funds','hybrid-funds'].forEach(cid => {
+    state[cid] = [];
+    document.querySelectorAll(`#${cid} .fund-row`).forEach(r => {
+      const inp = r.querySelectorAll('input');
+      state[cid].push([inp[0]?.value || '', inp[1]?.value || '']);
+    });
+  });
+  try { localStorage.setItem('fcg_state_v2', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  let state;
+  try { state = JSON.parse(localStorage.getItem('fcg_state_v2')); } catch(e) {}
+  if (!state) { loadDefaults(); return; }
+
+  PERSIST_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el || state[id] === undefined) return;
+    if (el.type === 'checkbox') el.checked = state[id];
+    else el.value = state[id];
+  });
+  if (state.clientType) {
+    const r = document.querySelector(`input[name="clientType"][value="${state.clientType}"]`);
+    if (r) r.checked = true;
+  }
+  if (state.priority) {
+    const r = document.querySelector(`input[name="priority"][value="${state.priority}"]`);
+    if (r) r.checked = true;
+  }
+  ['depot-funds','etf-funds','hybrid-funds'].forEach(cid => {
+    if (!state[cid] || !state[cid].length) return;
+    state[cid].forEach(([name, pct]) => {
+      addFundRow(cid);
+      const rows = document.querySelectorAll(`#${cid} .fund-row`);
+      const last = rows[rows.length - 1];
+      if (last) { last.querySelectorAll('input')[0].value = name; last.querySelectorAll('input')[1].value = pct; }
+    });
+  });
+  onExpatToggle();
+  onProductChange();
+  const buSpecial = document.getElementById('bu-special');
+  if (buSpecial && buSpecial.checked) document.getElementById('bu-special-field').classList.remove('hidden');
+  const etfFR = document.getElementById('etf-fonds-rente');
+  if (etfFR && etfFR.checked) document.getElementById('etf-fonds-note').classList.remove('hidden');
+}
+
+function loadDefaults() {
+  document.getElementById('f-firstname').value = 'Maximilian';
+  document.getElementById('f-lastname').value  = 'Bauer';
+  document.getElementById('f-age').value       = '27';
+  document.getElementById('f-retage').value    = '67';
+  const rd = new Date(); rd.setFullYear(rd.getFullYear() + 40);
+  document.getElementById('f-retdate').value = rd.toISOString().split('T')[0];
+  document.querySelector('input[name="clientType"][value="Student"]').checked = true;
+  document.querySelector('input[name="priority"][value="Sicherheit"]').checked = true;
+
+  document.getElementById('cb-bu').checked    = true;
+  document.getElementById('cb-etf').checked   = true;
+  document.getElementById('cb-depot').checked = true;
+
+  document.getElementById('bu-provider').value = 'MetallRente';
+  document.getElementById('bu-premium').value  = '45';
+  document.getElementById('bu-benefit').value  = '1500';
+  document.getElementById('bu-endage').value   = '67';
+  document.getElementById('bu-special').checked = true;
+  document.getElementById('bu-special-txt').value = 'Ausbildungstarif';
+  document.getElementById('bu-special-field').classList.remove('hidden');
+  document.getElementById('bu-bullets').value = '— Beitrag steuerlich absetzbar\n— Günstigster Einstiegszeitpunkt Ihrer Karriere';
+
+  document.getElementById('etf-provider').value = 'Die Stuttgarter';
+  document.getElementById('etf-contrib').value  = '150';
+  document.getElementById('etf-cap').value      = '380000';
+  document.getElementById('etf-pension').value  = '1100';
+  document.getElementById('etf-bullets').value  = '— Steuervorteile durch Versicherungsmantel\n— Flexibler Rentenbezug ab 62';
+  addFundRow('etf-funds');
+  const er = document.querySelectorAll('#etf-funds .fund-row');
+  er[0].querySelectorAll('input')[0].value = 'MSCI World ETF'; er[0].querySelectorAll('input')[1].value = '70';
+  addFundRow('etf-funds');
+  const er2 = document.querySelectorAll('#etf-funds .fund-row');
+  er2[1].querySelectorAll('input')[0].value = 'Emerging Markets ETF'; er2[1].querySelectorAll('input')[1].value = '30';
+
+  document.getElementById('depot-provider').value = 'Scalable Capital';
+  document.getElementById('depot-contrib').value  = '100';
+  document.getElementById('depot-cost').value     = '0.15';
+  addFundRow('depot-funds');
+  const dr = document.querySelectorAll('#depot-funds .fund-row');
+  dr[0].querySelectorAll('input')[0].value = 'iShares Core MSCI World'; dr[0].querySelectorAll('input')[1].value = '100';
+
+  onProductChange();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('change', saveState);
+    el.addEventListener('input', saveState);
+  });
+  document.querySelectorAll('input[name="clientType"]').forEach(el => el.addEventListener('change', onProductChange));
+  onProductChange();
+});
+</script>
+</body>
+</html>

@@ -31,7 +31,7 @@
   />
 {:else}
 <div>
-  <CalcNav title="AV-Depot-Rechner" on:back={() => dispatch('back')} />
+  <CalcNav title="ETF Savings Plan Calculator" on:back={() => dispatch('back')} />
   <CalcStepperBar labels={DS_LABELS} {step} />
 
   <div class="fbody">
@@ -43,70 +43,70 @@
           {#if step === 0}
             <div class="grid grid-cols-2 gap-5 mb-4">
               <div class="flex flex-col gap-2">
-                <label class="lbl">Monatliche Sparrate</label>
-                <div class="sfx"><input type="number" step="25" bind:value={D.spar} /><span class="sfxt">€/Mo.</span></div>
+                <label class="lbl">Monthly Savings Rate</label>
+                <div class="sfx"><input type="number" step="25" bind:value={D.spar} /><span class="sfxt">€/mo.</span></div>
               </div>
               <div class="flex flex-col gap-2">
-                <label class="lbl">Startkapital (optional)</label>
+                <label class="lbl">Starting Capital (optional)</label>
                 <div class="sfx"><input type="number" step="1000" bind:value={D.startK} /><span class="sfxt">€</span></div>
               </div>
             </div>
             <div class="flex flex-col gap-2">
-              <label class="lbl">Anspardauer</label>
+              <label class="lbl">Savings Duration</label>
               <input class="inp" type="number" min="1" max="50" bind:value={D.lz} />
             </div>
 
           {:else if step === 1}
             <div class="grid grid-cols-2 gap-5 mb-4">
               <div class="flex flex-col gap-2">
-                <label class="lbl">Erwartete Rendite p.a. (ETF)</label>
+                <label class="lbl">Expected Return p.a. (ETF)</label>
                 <div class="sfx"><input type="number" step="0.1" bind:value={D.rendite} /><span class="sfxt">% p.a.</span></div>
-                <span class="hint">MSCI World Ø: 7–9 % nominal</span>
+                <span class="hint">MSCI World avg.: 7–9% nominal</span>
               </div>
               <div class="flex flex-col gap-2">
-                <label class="lbl">Inflation p.a.</label>
+                <label class="lbl">Annual Inflation</label>
                 <div class="sfx"><input type="number" step="0.1" bind:value={D.inf} /><span class="sfxt">% p.a.</span></div>
-                <span class="hint">Aktuell: ~2,1 %</span>
+                <span class="hint">Current: ~2.1%</span>
               </div>
             </div>
             {#if result}
               <div class="card" style="background:var(--bg2)">
-                <div class="ey mb-[10px]">AV-Depot-Hochrechnung</div>
+                <div class="ey mb-[10px]">ETF Savings Plan Projection</div>
                 <div class="stat text-[48px]">{de0.format(Math.round(result.fvG))} €</div>
-                <div class="text-xs text-fg3 font-mono mt-2">ETF-Depot nach Ansparphase</div>
+                <div class="text-xs text-fg3 font-mono mt-2">ETF portfolio after the savings phase</div>
               </div>
             {/if}
 
           {:else if step === 2}
             <div class="flex flex-col gap-2">
-              <label class="lbl">Gewünschte Entnahmedauer</label>
+              <label class="lbl">Desired Withdrawal Duration</label>
               <input class="inp" type="number" min="5" max="40" bind:value={D.entDauer} />
             </div>
             <div class="card mt-5">
-              <div class="ey mb-[10px]">4-%-Regel (William Bengen, 1994)</div>
-              <p class="text-[14px] text-fg2 leading-[1.6]">Jährlich 4 % des Depotwertes entnehmen — das Depot sollte dabei 30+ Jahre halten. Empirisch getestet an US-Aktienmarktdaten 1926–1994.</p>
+              <div class="ey mb-[10px]">The 4% Rule (William Bengen, 1994)</div>
+              <p class="text-[14px] text-fg2 leading-[1.6]">Withdraw 4% of your portfolio value annually — the portfolio should last 30+ years. Empirically tested against US stock market data from 1926–1994.</p>
             </div>
 
           {:else if step === 3}
             <div class="flex flex-col gap-5">
               <div class="flex flex-col gap-2">
-                <label class="lbl">Monatliche Wunsch-Entnahme aus dem AV-Depot</label>
+                <label class="lbl">Desired Monthly Withdrawal from Your ETF Portfolio</label>
                 <div class="sfx text-xl">
                   <input type="number" step="50" bind:value={D.zielEur} class="text-xl font-medium" />
-                  <span class="sfxt text-[15px]">€ / Monat</span>
+                  <span class="sfxt text-[15px]">€ / month</span>
                 </div>
               </div>
               {#if result}
                 <div class="card" style="border-color:rgba(255,107,107,.25)">
-                  <div class="ey mb-[10px]" style="color:var(--loss)">Vorschau</div>
+                  <div class="ey mb-[10px]" style="color:var(--loss)">Preview</div>
                   <div class="stat text-[48px]" style="color:{result.e4 >= D.zielEur ? 'var(--fg)' : 'var(--loss)'}">
-                    {fmtE(result.e4)}/Mo.
+                    {fmtE(result.e4)}/mo.
                   </div>
                   <div class="text-xs text-fg3 font-mono mt-2">
-                    ETF-Depot: {de0.format(Math.round(result.fvG))} € · Sparbuch: {de0.format(Math.round(result.fvSparB))} €
+                    ETF portfolio: {de0.format(Math.round(result.fvG))} € · Savings account: {de0.format(Math.round(result.fvSparB))} €
                   </div>
                   <div class="text-xs mt-[6px]" style="color:{result.luecke > 0 ? 'var(--loss)' : 'var(--fg)'}">
-                    {result.luecke > 0 ? 'Sparrate für Ziel: ' + fmtE(result.sparZ) + '/Mo.' : '✓ Ziel erreichbar'}
+                    {result.luecke > 0 ? 'Savings rate needed for goal: ' + fmtE(result.sparZ) + '/mo.' : '✓ Goal achievable'}
                   </div>
                 </div>
               {/if}
@@ -115,21 +115,21 @@
         </div>
 
         <CalcNavButtons
-          {step} labels={DS_LABELS} calcLabel="Ergebnis berechnen →"
+          {step} labels={DS_LABELS} calcLabel="Calculate Result →"
           on:back={back} on:next={next}
         />
       </div>
 
       <!-- Sidebar -->
       <aside class="calc-sidebar">
-        <div class="ey mb-[14px]">Depot-Vorschau</div>
+        <div class="ey mb-[14px]">Portfolio Preview</div>
         <div class="stat text-[40px]">{result ? de0.format(Math.round(result.fvG / 1000)) + 'k €' : '–'}</div>
-        <div class="text-fg3 text-[11px] font-mono mt-[6px] uppercase tracking-[.08em]">Depotgröße</div>
+        <div class="text-fg3 text-[11px] font-mono mt-[6px] uppercase tracking-[.08em]">Portfolio Size</div>
         {#if result}
           <div class="mt-4 pt-4 text-[13px]" style="border-top:1px solid var(--line)">
             <div class="flex items-center justify-between py-2 text-[13px]">
-              <span class="text-fg3">4%-Entnahme</span>
-              <span class="font-mono">{fmtE(result.e4)}/Mo.</span>
+              <span class="text-fg3">4% Withdrawal</span>
+              <span class="font-mono">{fmtE(result.e4)}/mo.</span>
             </div>
           </div>
         {/if}

@@ -1,5 +1,5 @@
-export const de0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
-export const de1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+export const de0 = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 });
+export const de1 = new Intl.NumberFormat('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 export const fmtE = n => de0.format(Math.round(Math.abs(n))) + ' €';
 export const fmtP = n => de1.format(n * 100) + ' %';
 
