@@ -24,13 +24,6 @@ export const VERGLEICHE = [
   { href: 'financial-planning-expats-germany/', label: 'Holistic Financial Planning' },
 ];
 
-export const STATS = [
-  { val: '5',     label: 'Free Calculators',   sub: 'No login, 100% in your browser' },
-  { val: '0 €',   label: 'Cost to Use',        sub: 'Always free, no signup required' },
-  { val: 'DE',    label: 'German Tax Law',     sub: 'Rules built for your new home' },
-  { val: 'EN',    label: 'Plain English',      sub: 'No jargon, no translation needed' },
-];
-
 export const PERSONAS = [
   { id: 'newcomer',     icon: '🧳', title: 'Newcomer',                 sub: 'Just relocated to Germany',        hint: 'New job, new tax system, new rules',         calcs: ['rente', 'cashflow', 'versicherung'] },
   { id: 'employed',     icon: '💼', title: 'Employed',                 sub: 'On a German payroll',              hint: 'Subject to German social insurance',         calcs: ['rente', 'depot', 'ruerup', 'cashflow'] },
