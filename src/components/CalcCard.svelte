@@ -17,9 +17,6 @@
   </div>
   <h3 class="card-title">{card.title}</h3>
   <p class="card-desc">{card.desc}</p>
-  <div class="card-tags">
-    {#each card.tags as tag}<span class="card-tag">{tag}</span>{/each}
-  </div>
   <div class="card-cta-row">
     <span>Start Calculator</span>
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
