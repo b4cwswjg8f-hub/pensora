@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cashflow Calculator — Household Budget 2025 — Thrive Abroad</title>
+<meta name="description" content="Analyze your monthly cashflow using the 50/15/15/10/10 rule. Shows your investing potential and emergency-fund target — built for expats in Germany.">
+<meta property="og:title" content="Cashflow Calculator — Household Budget 2025 — Thrive Abroad">
+<meta property="og:description" content="Analyze your monthly cashflow using the 50/15/15/10/10 rule. Shows your investing potential and emergency-fund target.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://thriveabroad.de/cashflow-rechner.html">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 24'%3E%3Crect x='3' y='2' width='3.2' height='20' rx='0.4' fill='%23b4c800'/%3E%3Ccircle cx='15' cy='8' r='5' fill='%23b4c800'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light;--bg:#FAF6EF;--bg1:#F1E9DD;--bg2:#ECE2D3;--line:rgba(36,30,25,.14);--fg:#241E19;--fg2:#5C5248;--fg3:#7A7166;--loss:#C0392B;--green:#b4c800;--rmd:12px;--rlg:18px;}
+html,body{min-height:100%;background:var(--bg);color:var(--fg);font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--line);background:rgba(250,246,239,.86);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px;letter-spacing:-.035em;color:var(--fg)}
+.btnp{height:44px;padding:0 22px;border-radius:999px;border:none;background:var(--green);color:#0A0A0A;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,box-shadow .2s,transform .1s}
+.btnp:hover{background:#c4d900;box-shadow:0 0 20px rgba(180,200,0,.3)}
+.btnp:active{transform:scale(0.98)}
+.btn{height:44px;padding:0 22px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg2);font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:border-color .15s,color .15s,background .15s}
+.btn:hover{border-color:rgba(180,200,0,.4);color:var(--fg)}
+.wrap{max-width:900px;margin:0 auto;padding:72px 56px}
+h1{font-size:64px;line-height:.98;letter-spacing:-.045em;font-weight:600;margin-bottom:24px}
+.lead{font-size:18px;color:var(--fg2);line-height:1.6;margin-bottom:40px}
+.intro{font-size:16px;color:var(--fg2);line-height:1.7;margin-bottom:48px}
+.intro p{margin-bottom:16px}
+.cta-box{background:var(--bg1);border:1px solid var(--line);border-radius:var(--rlg);padding:40px;margin-bottom:56px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+.cta-box h2{font-size:28px;font-weight:600;letter-spacing:-.025em;margin-bottom:8px}
+.cta-box p{font-size:15px;color:var(--fg2);max-width:52ch}
+.faq{margin-top:64px}
+.faq h2{font-size:32px;font-weight:600;letter-spacing:-.025em;margin-bottom:32px}
+.faq-item{padding:24px 0;border-top:1px solid var(--line)}
+.faq-item:last-child{border-bottom:1px solid var(--line)}
+.faq-q{font-size:17px;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
+.faq-a{font-size:15px;color:var(--fg2);line-height:1.65}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg);font-weight:600;font-family:'Geist Mono',ui-monospace,monospace;margin-bottom:18px;padding:5px 12px;border-radius:999px;background:rgba(180,200,0,.1);border:1px solid rgba(180,200,0,.25)}
+footer{border-top:1px solid var(--line);padding:40px 56px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--fg3)}
+footer a{color:var(--fg3);margin-left:24px}
+@media(max-width:700px){.wrap{padding:40px 24px}h1{font-size:40px}.cta-box{flex-direction:column}.nav{padding:14px 24px}footer{flex-direction:column;gap:16px;padding:32px 24px}}
+</style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[{"@type":"Question","name":"What is the 50/15/15/10/10 rule?","acceptedAnswer":{"@type":"Answer","text":"A rule of thumb for splitting your income: 50% fixed costs (rent, groceries, transport), 15% retirement savings (Rürup, ETFs, employer pension), 15% leisure and lifestyle, 10% insurance, and 10% wealth-building (ETF savings plan, cash reserve). We compare your actual numbers against these benchmarks."}},
+{"@type":"Question","name":"How big should my emergency fund be?","acceptedAnswer":{"@type":"Answer","text":"Financial planners recommend 3 months of net salary as a liquid reserve in an instant-access savings account (currently around 3% p.a.). At €3,000 net income, that's €9,000. Only once this buffer is in place should you invest for the long term."}},
+{"@type":"Question","name":"How much should I save for retirement?","acceptedAnswer":{"@type":"Answer","text":"As a minimum: 10–15% of net income. At €3,000 net, that's €300–450/month. Including employer contributions or tax benefits (e.g. from a Rürup plan), your effective out-of-pocket amount can be significantly lower."}},
+{"@type":"Question","name":"What should I do with money left over each month?","acceptedAnswer":{"@type":"Answer","text":"Invest 60–70% of what's left after all expenses into retirement savings or investing, and keep 30–40% as a liquidity buffer. A concrete plan is best worked out in a consultation."}}]
+}
+</script>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="./"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Thrive Abroad</a>
+  <div style="display:flex;gap:12px;align-items:center">
+    <a class="btn" href="./">← All Calculators</a>
+    <button class="btnp" onclick="window.location='./'">Calculate for Free</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="eyebrow">Free · Anonymous · No Login</div>
+  <h1>Cashflow Calculator — Monthly Financial Planning</h1>
+  <p class="lead">Analyze your monthly cashflow using the 50/15/15/10/10 rule. Shows your investing potential and emergency-fund target.</p>
+
+  <div class="cta-box">
+    <div>
+      <h2>Calculate for Free Now</h2>
+      <p>In 4 minutes, see your real retirement outlook — including inflation and real purchasing power.</p>
+    </div>
+    <div style="flex-shrink:0">
+      <button class="btnp" style="height:52px;padding:0 32px;font-size:16px" onclick="window.location='./#cashflow'">
+        Start Calculator →
+      </button>
+    </div>
+  </div>
+
+  <div class="intro"><p>The foundation of any solid financial plan is a controlled monthly cashflow. If you don't know what you're spending, you can't plan effectively. Our cashflow calculator shows you, based on the 50/15/15/10/10 rule, how to split your net income optimally.</p>
+<p>The split: 50% fixed costs (rent, food, transport), 15% retirement savings, 15% leisure, 10% insurance, 10% wealth-building. Plus: an emergency-fund target of 3 months' net salary in an instant-access account.</p></div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q">What is the 50/15/15/10/10 rule?</div><div class="faq-a">A rule of thumb for splitting your income: 50% fixed costs (rent, groceries, transport), 15% retirement savings (Rürup, ETFs, employer pension), 15% leisure and lifestyle, 10% insurance, and 10% wealth-building (ETF savings plan, cash reserve). We compare your actual numbers against these benchmarks.</div></div>
+<div class="faq-item"><div class="faq-q">How big should my emergency fund be?</div><div class="faq-a">Financial planners recommend 3 months of net salary as a liquid reserve in an instant-access savings account (currently around 3% p.a.). At €3,000 net income, that's €9,000. Only once this buffer is in place should you invest for the long term.</div></div>
+<div class="faq-item"><div class="faq-q">How much should I save for retirement?</div><div class="faq-a">As a minimum: 10–15% of net income. At €3,000 net, that's €300–450/month. Including employer contributions or tax benefits (e.g. from a Rürup plan), your effective out-of-pocket amount can be significantly lower.</div></div>
+<div class="faq-item"><div class="faq-q">What should I do with money left over each month?</div><div class="faq-a">Invest 60–70% of what's left after all expenses into retirement savings or investing, and keep 30–40% as a liquidity buffer. A concrete plan is best worked out in a consultation.</div></div>
+  </div>
+
+  <div class="cta-box" style="margin-top:64px;margin-bottom:0;border-color:var(--loss);background:rgba(192,57,43,.06)">
+    <div>
+      <h2 style="color:var(--loss)">See a gap in your plan?</h2>
+      <p>30 minutes, free — talk it through with an independent financial advisor.</p>
+    </div>
+    <div style="flex-shrink:0">
+      <button class="btnp" style="height:52px;padding:0 32px;font-size:16px;background:var(--loss);border-color:var(--loss)" onclick="window.open('https://tidycal.com/niallbradfield/kostenfreies-beratungsgesprach','_blank')">
+        Book a Call →
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a class="brand" href="./" style="font-size:15px"><svg width="22" height="24" viewBox="0 0 22 24" fill="currentColor" style="flex-shrink:0"><rect x="3" y="2" width="3.2" height="20" rx="0.4"/><circle cx="15" cy="8" r="5"/></svg> Thrive Abroad</a>
+  <div>
+    <a href="./">All Calculators</a>
+    <a href="impressum/">Impressum</a>
+    <a href="impressum/#datenschutz">Privacy Policy</a>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+# Thrive Abroad — Financial Planning for Expats in Germany
+
+## About this website
+Thrive Abroad (thriveabroad.de) is a free, anonymous financial-calculator
+toolkit for English-speaking expats living in Germany — especially IT and
+tech professionals building long-term wealth. It covers German statutory
+pension planning (§ 64 SGB VI), ETF savings plans, Rürup tax-advantaged
+pensions (§ 10 EStG), cashflow budgeting, and insurance benchmarking.
+
+Founder: Niall Bradfield, independent financial advisor, Stuttgart.
+No commission-based product sales. All calculations run locally in the
+browser, no login required.
+
+## Key facts (citable)
+- German pension value 2025: €40.79 per earnings point (DRV, from 1 July 2025); 2026: €42.52
+- Average German income (Durchschnittsentgelt) 2025: €50,493/year (= 1 earnings point)
+- Taxable share of statutory pension 2025: 85% (rises to 100% by 2040)
+- Rürup (Basisrente) maximum contribution 2025: €29,344 (single), €58,688 (married), 100% tax-deductible
+- Altersvorsorgedepot (new government-subsidized ETF retirement account): launches 1 January 2027 — up to €540/year base bonus, up to €300/child bonus
+- Sparer-Pauschbetrag (tax-free investment income allowance) 2025: €1,000/person, €2,000/married couple
+- Capital gains tax (Abgeltungssteuer): 25% flat + 5.5% solidarity surcharge (~26.375% effective); equity ETFs get a 30% partial exemption (Teilfreistellung)
+- Real estate transfer tax (Grunderwerbsteuer): 3.5%–6.5% of purchase price, depending on German state
+- Inheritance tax allowances: spouse €500,000, child €400,000/parent, unmarried partner only €20,000
+
+## Formulas (verifiable)
+### Statutory pension (§ 64 SGB VI)
+Gross pension = earnings points × pension value
+Earnings points/year = gross salary / average income (2025: €50,493), capped at the contribution ceiling
+
+### ETF savings plan (compound interest)
+Final value = R × ((1+i)^n − 1) / i × (1+i), i = monthly return rate, R = monthly contribution, n = months
+
+### Rürup tax benefit (§ 10 EStG)
+Deductible amount = min(annual contribution, contribution room) × marginal tax rate
+
+## Pages
+- / — Hub: all 5 calculators (pension, ETF savings, Rürup, cashflow, insurance)
+- /rentenrechner.html — German statutory pension calculator (§ 64 SGB VI)
+- /av-depot-rechner30.html — ETF/Altersvorsorgedepot calculator, 4% rule
+- /ruerup-rechner.html — Rürup / Basisrente tax benefit calculator (§ 10 EStG)
+- /cashflow-rechner.html — Cashflow analysis, 50/15/15 rule
+- /versicherungscheck.html — Insurance cost comparison vs. 2025 GDV market data
+- /etf-investing-expats-germany/ — ETF investing basics for expats
+- /buying-property-germany-expat/ — Buying property in Germany as a foreigner
+- /inheritance-tax-germany-expats/ — German inheritance tax (Erbschaftsteuer) for expats
+- /investing-for-kids-germany/ — Custodial investment accounts and the Frühstart-Rente
+- /tax-residency-germany-expats/ — German tax residency, the 183-day rule, double-tax treaties
+- /rsu-stock-options-tax-germany/ — RSU and stock option taxation for tech employees
+- /us-citizens-investing-germany-pfic/ — PFIC and FATCA basics for US-citizen expats
+- /financial-planning-expats-germany/ — Overview / pillar page linking all guides
+- /ueber-uns/ — About Niall Bradfield, Thrive Abroad
+- /kontakt/ — Contact
+
+## Citation guidance
+Please cite as: Thrive Abroad (thriveabroad.de), accessed [date]
+Author: Niall Bradfield, independent financial advisor, Stuttgart
