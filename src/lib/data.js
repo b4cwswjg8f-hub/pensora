@@ -43,7 +43,7 @@ export const TOPICS = [
   {
     id: 'etf',
     calc: 'depot',
-    accent: 'teal',
+    accent: 'green',
     icon: 'etf',
     eyebrow: 'Wealth Accumulation · ETF Sparplan',
     title: 'Building Wealth With ETFs While Living Abroad',
@@ -58,7 +58,7 @@ export const TOPICS = [
   {
     id: 'tax',
     calc: 'ruerup',
-    accent: 'amber',
+    accent: 'green',
     icon: 'tax',
     eyebrow: 'Income Tax · § 10 EStG',
     title: 'Germany’s Tax System, Simply Explained',
@@ -73,7 +73,7 @@ export const TOPICS = [
   {
     id: 'cashflow',
     calc: 'cashflow',
-    accent: 'rose',
+    accent: 'green',
     icon: 'cashflow',
     eyebrow: 'Financial Planning · Savings Rate',
     title: 'The 50/15/15 Rule for Your Household Budget',
@@ -88,7 +88,7 @@ export const TOPICS = [
   {
     id: 'insurance',
     calc: 'versicherung',
-    accent: 'azure',
+    accent: 'green',
     icon: 'insurance',
     eyebrow: 'Insurance · GDV Benchmark',
     title: 'Which Insurance You Actually Need in Germany',

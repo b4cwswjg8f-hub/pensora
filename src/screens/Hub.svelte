@@ -26,7 +26,7 @@
   $: otherCards = selectedPersona ? CARDS.filter(c => !selectedPersona.calcs.includes(c.id)) : CARDS;
 </script>
 
-<div>
+<div class="theme-warm">
   <HubNav on:navigate={e => go(e.detail)} />
 
   <!-- Persona modal -->
@@ -58,9 +58,16 @@
     <!-- ── HERO ── -->
     <section class="hero">
       <div class="hero-content">
-        <div class="ey-pill mb-5">Built for Expats in Germany</div>
+        <div class="hero-trust">
+          <img
+            src="{import.meta.env.BASE_URL}assets/Pensora-ProfilePicture.png"
+            alt="Niall Bradfield"
+            class="hero-trust-photo"
+          />
+          <span class="hero-trust-text">Independent financial advisor for expats in Germany — Niall Bradfield, Stuttgart</span>
+        </div>
         <h1 class="hero-title">
-          Build wealth.<br/><span class="hero-muted">In your new home.</span>
+          Build wealth.<br/><span class="hero-accent">In your new home.</span>
         </h1>
         <p class="hero-lead">
           Five precise calculators for expats in Germany — pension, ETF investing, taxes, cashflow and insurance.
