@@ -4,7 +4,8 @@
   import CalcCard from '../components/CalcCard.svelte';
   import SiteFooter from '../components/SiteFooter.svelte';
   import Search from '../components/Search.svelte';
-  import { CARDS, PERSONAS, BOOK_URL } from '../lib/data.js';
+  import TopicSection from '../components/TopicSection.svelte';
+  import { CARDS, PERSONAS, TOPICS, BOOK_URL } from '../lib/data.js';
 
   const dispatch = createEventDispatcher();
   const go = (name) => dispatch('navigate', name);
@@ -81,10 +82,25 @@
       </div>
     </section>
 
+    <!-- ── TOPIC ARTICLES ── -->
+    <section class="topics-section">
+      <div class="section-header topics-header">
+        <div>
+          <div class="ey-pill mb-4">Learn First, Then Calculate</div>
+          <h2 class="section-title">Understanding Money in Germany</h2>
+        </div>
+        <p class="section-sub topics-sub">Five plain-language guides — pension, investing, tax, budgeting and insurance — each with the numbers behind it.</p>
+      </div>
+
+      {#each TOPICS as topic, i}
+        <TopicSection {topic} reverse={i % 2 === 1} on:navigate={e => go(e.detail)} />
+      {/each}
+    </section>
+
     <!-- ── CALCULATOR CARDS ── -->
     <section class="cards-section" id="rechner">
       <div class="section-header">
-        <h2 class="section-title">{selectedPersona ? `For you — ${selectedPersona.title}` : 'All Calculators'}</h2>
+        <h2 class="section-title">{selectedPersona ? `For you — ${selectedPersona.title}` : 'All Calculators at a Glance'}</h2>
         <div class="flex items-center gap-3">
           {#if selectedPersona}
             <button class="persona-reset" on:click={() => selectedPersona = null}>× Show all</button>
