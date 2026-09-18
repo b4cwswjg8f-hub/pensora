@@ -31,8 +31,8 @@
     let svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">`;
     [0, 0.25, 0.5, 0.75, 1].forEach(f => {
       const y = ys(f * maxV);
-      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
-      svg += `<text x="${pad - 6}" y="${(y + 3).toFixed(1)}" fill="#8a8a8a" font-size="9" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f * maxV))}€</text>`;
+      svg += `<line x1="${pad}" x2="${w - pad}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}" stroke="rgba(36,30,25,.14)" stroke-width="1" ${f > 0 ? 'stroke-dasharray="2 3"' : ''}/>`;
+      svg += `<text x="${pad - 6}" y="${(y + 3).toFixed(1)}" fill="#8a7f74" font-size="9" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f * maxV))}€</text>`;
     });
     vKeys.forEach((k, i) => {
       const x = pad + i * (bw * 2 + gap);
@@ -42,7 +42,7 @@
       svg += `<rect x="${x + bw + 2}" y="${ys(avg).toFixed(1)}" width="${bw - 2}" height="${yh(avg).toFixed(1)}" fill="#e5e5e5" opacity=".2" rx="2" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="2 2"/>`;
       // Short label
       const short = k.split(' ')[0].replace(/[()]/g, '').substring(0, 8);
-      svg += `<text x="${(x + bw).toFixed(1)}" y="${(h - pad + 16).toFixed(1)}" fill="#8a8a8a" font-size="8" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${short}</text>`;
+      svg += `<text x="${(x + bw).toFixed(1)}" y="${(h - pad + 16).toFixed(1)}" fill="#8a7f74" font-size="8" font-family="'Geist Mono',ui-monospace" text-anchor="middle">${short}</text>`;
     });
     svg += `</svg>`;
     return svg;
@@ -169,7 +169,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Save Your Result</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(36,30,25,.05);border:1px solid rgba(36,30,25,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Save as PDF
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">Enter your email · ready to print instantly</p>

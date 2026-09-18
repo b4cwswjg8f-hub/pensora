@@ -56,8 +56,8 @@
     let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">`;
     [0,.25,.5,.75,1].forEach(f => {
       const yg = baseY - sc(f * maxVal);
-      s += `<line x1="${padL}" x2="${w-padR}" y1="${yg.toFixed(1)}" y2="${yg.toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1" ${f>0?'stroke-dasharray="3 3"':''}/>`;
-      s += `<text x="${padL-8}" y="${(yg+3).toFixed(1)}" fill="#8a8a8a" font-size="10" font-family="'Geist Mono',monospace" text-anchor="end">${de0.format(Math.round(f*maxVal))}€</text>`;
+      s += `<line x1="${padL}" x2="${w-padR}" y1="${yg.toFixed(1)}" y2="${yg.toFixed(1)}" stroke="rgba(36,30,25,.14)" stroke-width="1" ${f>0?'stroke-dasharray="3 3"':''}/>`;
+      s += `<text x="${padL-8}" y="${(yg+3).toFixed(1)}" fill="#8a7f74" font-size="10" font-family="'Geist Mono',monospace" text-anchor="end">${de0.format(Math.round(f*maxVal))}€</text>`;
     });
     const glY = baseY - sc(goal);
     s += `<line x1="${padL}" x2="${w-padR}" y1="${glY.toFixed(1)}" y2="${glY.toFixed(1)}" stroke="rgba(251,191,36,.4)" stroke-width="1" stroke-dasharray="6 4"/>`;
@@ -78,8 +78,8 @@
       if (ph > 28) s += `<text x="${(x2+bw/2).toFixed(1)}" y="${(py+ph/2+5).toFixed(1)}" fill="rgba(74,222,128,.95)" font-size="14" font-weight="700" text-anchor="middle" font-family="'Geist Mono',monospace">✓ ${fmtE(actual)}</text>`;
     }
     const lblY = baseY + 18;
-    s += `<text x="${(x1+bw/2).toFixed(1)}" y="${lblY}" fill="#8a8a8a" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Retirement Goal</text>`;
-    s += `<text x="${(x2+bw/2).toFixed(1)}" y="${lblY}" fill="#8a8a8a" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Real Pension${luecke>0?' + Gap':' ✓'}</text>`;
+    s += `<text x="${(x1+bw/2).toFixed(1)}" y="${lblY}" fill="#8a7f74" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Retirement Goal</text>`;
+    s += `<text x="${(x2+bw/2).toFixed(1)}" y="${lblY}" fill="#8a7f74" font-size="10" text-anchor="middle" font-family="'Geist Mono',monospace">Real Pension${luecke>0?' + Gap':' ✓'}</text>`;
     s += `</svg>`;
     return s;
   })();
@@ -146,14 +146,14 @@
     <div class="ey" style="margin-bottom:20px">Pension Forecast · Age {R.rentAlter} · Pension value €40.79 (DRV 2025)</div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
-      <div style="padding:32px;border-radius:var(--rlg);background:{realOk?'rgba(255,255,255,0.04)':'var(--loss-dim)'};border:2px solid {realOk?'var(--fg)':'var(--loss)'}">
+      <div style="padding:32px;border-radius:var(--rlg);background:{realOk?'rgba(36,30,25,.04)':'var(--loss-dim)'};border:2px solid {realOk?'var(--fg)':'var(--loss)'}">
         <div class="ey" style="color:{realOk?'var(--fg3)':'var(--loss)'};margin-bottom:16px">Your Real Purchasing Power in Retirement · {r.rentJ}</div>
         <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
           <span class="stat" style="font-size:80px;color:{realOk?'var(--fg)':'var(--loss)'}">{de0.format(Math.round(r.nettoR))}</span>
           <span style="font-size:22px;color:var(--fg2)">€/mo.</span>
         </div>
         <div style="font-size:13px;color:var(--fg3);margin-bottom:16px">= today's purchasing power of your pension in {r.jbr} years ({R.inf}% inflation)</div>
-        <div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:12px;color:var(--fg3)">
+        <div style="padding:12px 16px;background:rgba(36,30,25,.05);border-radius:var(--rmd);font-size:12px;color:var(--fg3)">
           Nominal pension: <span style="font-family:var(--mono);color:var(--fg)">{fmtE(r.netto)}/mo.</span> ·
           Inflation loss: <span style="font-family:var(--mono);color:var(--loss)">−{fmtE(r.netto-r.nettoR)}/mo.</span>
         </div>
@@ -166,7 +166,7 @@
         </div>
         <div style="font-size:13px;color:rgba(255,107,107,.6);margin-bottom:16px">vs. retirement goal {fmtE(R.zielEur)}/mo. net</div>
         {#if realLuecke > 0}
-          <div style="padding:12px 16px;background:rgba(0,0,0,.3);border-radius:var(--rmd);font-size:13px;color:var(--loss);font-weight:600">
+          <div style="padding:12px 16px;background:rgba(36,30,25,.05);border-radius:var(--rmd);font-size:13px;color:var(--loss);font-weight:600">
             = {de0.format(lifetimeLoss)} € less over {r.jruh} years of retirement
           </div>
         {:else}
@@ -238,7 +238,7 @@
         <div class="cardf" style="padding:28px">
           <div class="ey" style="margin-bottom:6px">Is It Enough for Everyday Life?</div>
           <div style="font-size:13px;color:var(--fg3);margin-bottom:20px">Avg. 2-person household Germany 2025 · Destatis reference values</div>
-          <div style="position:relative;height:48px;background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden;margin-bottom:16px">
+          <div style="position:relative;height:48px;background:rgba(36,30,25,.06);border-radius:8px;overflow:hidden;margin-bottom:16px">
             {#each (() => { let x=0; return KOSTEN.map(k => { const pct = k.val / Math.max(r.nettoR, KOSTEN_TOT) * 100; const left = x; x+=pct; return {...k, pct, left}; }); })() as k}
               <div style="position:absolute;top:0;left:{k.left.toFixed(1)}%;width:{k.pct.toFixed(1)}%;height:100%;background:{k.color};opacity:.55"></div>
             {/each}
@@ -278,7 +278,7 @@
           <div class="card" style="padding:28px">
             <div class="ey" style="margin-bottom:14px">What Others in Your Situation Have Chosen</div>
             {#each recos as rec}
-              <div style="padding:16px;background:rgba(255,255,255,.03);border:1px solid var(--line2);border-radius:10px;margin-bottom:10px">
+              <div style="padding:16px;background:rgba(36,30,25,.03);border:1px solid var(--line2);border-radius:10px;margin-bottom:10px">
                 <div style="font-size:14px;font-weight:600;margin-bottom:6px">{rec.icon} {rec.title}</div>
                 <div style="font-size:13px;color:var(--fg2);line-height:1.6;margin-bottom:10px">{rec.text}</div>
                 <button class="btn btng" style="height:34px;font-size:12px" on:click={() => dispatch('navigate', rec.nav)}>{rec.cta}</button>
@@ -293,7 +293,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Save Your Result</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(36,30,25,.05);border:1px solid rgba(36,30,25,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Financial Plan as PDF
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">Enter your email · ready to print instantly</p>

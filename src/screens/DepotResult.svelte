@@ -31,9 +31,9 @@
     const path=arr=>arr.map((v,i)=>`${i===0?'M':'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
     return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block">
       <defs><linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#60a5fa" stop-opacity=".3"/><stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/></linearGradient></defs>
-      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="rgba(255,255,255,.12)" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
-        <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#8a8a8a" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
-      ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#8a8a8a" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Year ${Math.round(f*lz)}</text>`).join('')}
+      ${[0,.25,.5,.75,1].map(f=>`<line x1="${pad}" x2="${w-pad}" y1="${ys(f*maxY).toFixed(1)}" y2="${ys(f*maxY).toFixed(1)}" stroke="rgba(36,30,25,.14)" stroke-width="1" ${f>0?'stroke-dasharray="2 3"':''}/>
+        <text x="${pad-6}" y="${(ys(f*maxY)+3).toFixed(1)}" fill="#8a7f74" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="end">${de0.format(Math.round(f*maxY/1000))}k</text>`).join('')}
+      ${[0,.25,.5,.75,1].map(f=>`<text x="${xs(Math.round(f*(pts-1))).toFixed(1)}" y="${h-pad+16}" fill="#8a7f74" font-size="10" font-family="'Geist Mono',ui-monospace" text-anchor="middle">Year ${Math.round(f*lz)}</text>`).join('')}
       <path d="M${xs(0)},${h-pad} ${etf.map((v,i)=>`L${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ')} L${xs(pts-1)},${h-pad} Z" fill="url(#dg)"/>
       <path d="${path(etf)}" stroke="#60a5fa" stroke-width="2" fill="none"/>
       <path d="${path(etfR)}" stroke="#4ade80" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
@@ -119,7 +119,7 @@
       <aside style="position:sticky;top:88px">
         <div class="card" style="margin-bottom:12px;padding:20px">
           <div class="ey" style="margin-bottom:8px">Save Your Result</div>
-          <button class="btn" style="width:100%;height:48px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
+          <button class="btn" style="width:100%;height:48px;background:rgba(36,30,25,.05);border:1px solid rgba(36,30,25,.18);border-radius:8px;font-size:14px;font-weight:600;gap:8px" on:click={() => showFinanzplan = true}>
             ⬇ Save as PDF
           </button>
           <p style="font-size:11px;color:var(--fg4);margin-top:8px;text-align:center;line-height:1.4">Enter your email · ready to print instantly</p>

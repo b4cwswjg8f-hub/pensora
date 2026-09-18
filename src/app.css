@@ -2,19 +2,20 @@
 
 /* ─── DESIGN TOKENS ─────────────────────────────────────────────── */
 @theme {
-  --color-bg:    #0C0C0E;
-  --color-bg1:   #131316;
-  --color-bg2:   #1A1A1E;
-  --color-bg3:   #232327;
-  --color-bg4:   #2E2E33;
-  --color-line:  #212125;
-  --color-line2: #2C2C31;
-  --color-line3: #3D3D44;
-  --color-fg:    #F6F6F5;
-  --color-fg2:   #AFAFB6;
-  --color-fg3:   #8B8B92;
-  --color-fg4:   #6C6C73;
-  --color-loss:  #FF6B6B;
+  /* Warm palette — the single site-wide theme (Hub, calculators, articles). */
+  --color-bg:    #FAF6EF;
+  --color-bg1:   #F1E9DD;
+  --color-bg2:   #ECE2D3;
+  --color-bg3:   #E3D6C2;
+  --color-bg4:   #D8C8AF;
+  --color-line:  rgba(36,30,25,.10);
+  --color-line2: rgba(36,30,25,.16);
+  --color-line3: rgba(36,30,25,.26);
+  --color-fg:    #241E19;
+  --color-fg2:   #5C5248;
+  --color-fg3:   #7A7166;
+  --color-fg4:   #948A7E;
+  --color-loss:  #C0392B;
   --color-green: #b4c800;
   --color-green-dim: rgba(180,200,0,.14);
   --color-amber: #fbbf24;
@@ -22,9 +23,9 @@
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, monospace;
 
-  --shadow-sm: 0 1px 4px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
-  --shadow-md: 0 4px 16px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06);
+  --shadow-sm: 0 1px 4px rgba(36,30,25,.12), 0 0 0 1px rgba(36,30,25,.05);
+  --shadow-md: 0 4px 16px rgba(36,30,25,.14), 0 0 0 1px rgba(36,30,25,.05);
+  --shadow-lg: 0 12px 40px rgba(36,30,25,.18), 0 0 0 1px rgba(36,30,25,.05);
 }
 
 /* ─── BASE ───────────────────────────────────────────────────────── */
@@ -54,49 +55,12 @@
     --glow-p:   0 0 0 3px rgba(180,200,0,.16), 0 0 20px rgba(180,200,0,.1);
   }
 
-  /* ── Warm theme (Hub/marketing pages) ──────────────────────────────
-     Scoped override of the token set above. Calculator screens keep the
-     dark palette for now; this is applied via a `.theme-warm` wrapper
-     class so nothing outside the Hub is touched in this pass. */
-  .theme-warm {
-    color-scheme: light;
-    /* `color` inherits its already-computed value from `body` (which sits
-       outside this scope), so elements with no explicit `color` of their
-       own (e.g. .section-title) would otherwise keep the dark-mode --fg
-       baked in by body. Re-declaring color here re-triggers resolution
-       against the overrides below, and normal inheritance carries it on. */
-    color: var(--color-fg);
-    /* Both layers are set explicitly and independently here — Tailwind's
-       generated utilities (e.g. `text-fg`, `bg-bg1`) read --color-fg/
-       --color-bg1 directly, while our own component CSS reads the plain
-       --fg/--bg aliases. An inherited `--alias: var(--color-x)` declared
-       at :root does NOT get re-resolved against an inner scope's override
-       of --color-x, so both must be redeclared here, not just one. */
-    --color-bg:    #FAF6EF; --color-bg1:  #F1E9DD;
-    --color-bg2:   #ECE2D3; --color-bg3:  #E3D6C2;
-    --color-bg4:   #D8C8AF;
-    --color-line:  rgba(36,30,25,.10); --color-line2: rgba(36,30,25,.16); --color-line3: rgba(36,30,25,.26);
-    --color-fg:    #241E19; --color-fg2: #5C5248;
-    --color-fg3:   #7A7166; --color-fg4: #948A7E;
-    /* Single accent color across the whole site: the original brand lime. */
-    --color-green: #b4c800; --color-green-dim: rgba(180,200,0,.14);
-
-    --bg:  var(--color-bg);  --bg1: var(--color-bg1);
-    --bg2: var(--color-bg2); --bg3: var(--color-bg3); --bg4: var(--color-bg4);
-    --line: var(--color-line); --line2: var(--color-line2); --line3: var(--color-line3);
-    --fg:  var(--color-fg);  --fg2: var(--color-fg2);
-    --fg3: var(--color-fg3); --fg4: var(--color-fg4);
-    --green: var(--color-green); --green-dim: var(--color-green-dim);
-
-    --glow-p: 0 0 0 3px rgba(180,200,0,.16), 0 0 20px rgba(180,200,0,.1);
-  }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     min-height: 100%;
     background: var(--bg);
     color: var(--fg);
-    color-scheme: dark;
+    color-scheme: light;
   }
   body {
     font-family: var(--sans);
@@ -143,9 +107,9 @@
 
   /* ── Nav ── */
   .nav {
-    @apply flex items-center justify-between sticky top-0 z-50 h-[60px] px-[52px]
-           border-b border-white/[.08];
-    background: rgba(10,10,10,.85);
+    @apply flex items-center justify-between sticky top-0 z-50 h-[60px] px-[52px];
+    border-bottom: 1px solid rgba(36,30,25,.08);
+    background: rgba(250,246,239,.86);
     backdrop-filter: blur(32px) saturate(200%);
     -webkit-backdrop-filter: blur(32px) saturate(200%);
   }
@@ -176,35 +140,17 @@
   .btnp:hover  { background: #c4d900; border-color: #c4d900; color: #0A0A0A; box-shadow: 0 0 24px rgba(180,200,0,.25); }
   .btnp:active { transform: scale(0.98); }
 
-  .btno { background: transparent; border-color: rgba(255,255,255,.2); color: var(--fg); }
-  .btno:hover { background: var(--green-dim); border-color: rgba(180,200,0,.5); color: var(--green); }
+  .btno { background: transparent; border-color: rgba(36,30,25,.22); color: var(--fg); }
+  /* Lime text directly on a lime-tinted light background reads at ~1.5:1
+     contrast — illegible. Keep the lime tint as a background touch but set
+     legible ink text on top of it (same reasoning as .ey-pill below). */
+  .btno:hover { background: var(--green-dim); border-color: rgba(180,200,0,.5); color: var(--fg); }
 
   .btng { border-color: transparent; color: var(--fg2); }
-  .btng:hover { color: var(--fg); background: rgba(255,255,255,.06); border-color: transparent; }
+  .btng:hover { color: var(--fg); background: rgba(36,30,25,.05); border-color: transparent; }
 
   .btnlg { @apply h-[50px] px-8 text-[15px] rounded-lg; }
   .btnxl { @apply h-[58px] px-10 text-base font-semibold rounded-lg tracking-[-0.01em]; }
-
-  /* ── Warm-theme overrides for shared chrome (nav, buttons) ── */
-  .theme-warm .nav {
-    border-bottom-color: rgba(36,30,25,.08);
-    background: rgba(250,246,239,.86);
-  }
-  .theme-warm .nav-link:hover,
-  .theme-warm .ddtrig:hover,
-  .theme-warm .dditem:hover,
-  .theme-warm .btng:hover { background: rgba(36,30,25,.05); }
-  .theme-warm .ddmenu {
-    background: #FFFDF9; border-color: rgba(36,30,25,.10);
-    box-shadow: 0 20px 48px rgba(36,30,25,.14), 0 0 0 1px rgba(36,30,25,.05);
-  }
-  /* .btnp needs no override: dark text on lime already has good contrast
-     on both the old dark bg and the new cream one. */
-  .theme-warm .btno { border-color: rgba(36,30,25,.22); }
-  /* Lime text directly on a lime-tinted light card reads at ~1.5:1 contrast
-     — fine on the old dark bg, illegible on cream. Keep the lime tint as a
-     background/border touch but set legible ink text on top of it. */
-  .theme-warm .ey-pill, .theme-warm .btno:hover { color: var(--fg); }
 
   /* ── Cards ── */
   .card {
@@ -231,7 +177,7 @@
   }
   .ey-pill {
     @apply inline-flex items-center text-[11px] tracking-[.08em] uppercase font-semibold font-mono;
-    color: var(--green);
+    color: var(--fg);
     padding: 6px 14px;
     border-radius: 999px;
     background: var(--green-dim);
@@ -386,7 +332,7 @@
     padding: 6px 10px; border-radius: 6px; background: none; border: none;
     font-family: inherit;
   }
-  .nav-link:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+  .nav-link:hover { color: var(--fg); background: rgba(36,30,25,.05); }
 
   /* Dropdown */
   .ddwrap { position: relative; }
@@ -398,18 +344,18 @@
     font-family: inherit; font-weight: 500; border-radius: 6px;
     transition: color .15s, background .15s;
   }
-  .ddtrig:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+  .ddtrig:hover { color: var(--fg); background: rgba(36,30,25,.05); }
   .ddtrig svg { transition: transform .2s var(--ease); margin-top: 1px; }
   .ddwrap:hover .ddtrig { color: var(--fg); }
   .ddwrap:hover .ddtrig svg { transform: rotate(180deg); }
   .ddmenu {
     position: absolute; top: calc(100% + 8px); left: 50%;
     transform: translateX(-50%) translateY(-4px);
-    background: rgba(10,10,10,.98); border: 1px solid rgba(255,255,255,.1);
+    background: #FFFDF9; border: 1px solid rgba(36,30,25,.10);
     border-radius: 14px; padding: 8px; min-width: 200px;
     opacity: 0; visibility: hidden;
     transition: opacity .18s var(--ease), visibility .18s, transform .18s var(--ease);
-    box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+    box-shadow: 0 20px 48px rgba(36,30,25,.14), 0 0 0 1px rgba(36,30,25,.05);
     z-index: 200;
     backdrop-filter: blur(20px);
   }
@@ -429,7 +375,7 @@
     font-family: inherit; cursor: pointer; text-decoration: none;
     transition: background .1s, color .1s;
   }
-  .dditem:hover { background: rgba(255,255,255,.06); color: var(--fg); }
+  .dditem:hover { background: rgba(36,30,25,.05); color: var(--fg); }
   .dd-num { font-family: var(--mono); color: var(--fg4); font-size: 10px; flex-shrink: 0; width: 18px; }
   .dd-text { display: flex; flex-direction: column; gap: 1px; }
   .dd-title { font-size: 13px; font-weight: 500; color: var(--fg2); transition: color .1s; }
@@ -461,7 +407,7 @@
   .card-cta::before {
     content: "";
     @apply absolute inset-0 pointer-events-none;
-    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.04) 0%, transparent 70%);
+    background: radial-gradient(ellipse at 50% 0%, rgba(36,30,25,.03) 0%, transparent 70%);
   }
   .kpi-cell { transition: background .2s; }
   .kpi-cell:hover { background: var(--bg2); }
@@ -494,13 +440,13 @@
   .calc-card:hover {
     border-color: var(--line3);
     transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08);
+    box-shadow: 0 12px 40px rgba(36,30,25,.16), 0 0 0 1px rgba(36,30,25,.08);
     background: var(--bg2);
   }
   .calc-card:active { transform: translateY(-1px) scale(0.99); }
   .calc-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+    background: linear-gradient(90deg, transparent, rgba(180,200,0,.5), transparent);
     opacity: 0; transition: opacity .22s;
   }
   .calc-card:hover::before { opacity: 1; }
@@ -622,38 +568,38 @@
     cursor: pointer; font-family: var(--mono); padding: 4px 8px;
     border-radius: 6px; transition: color .15s, background .15s;
   }
-  .persona-reset:hover { color: var(--fg); background: rgba(255,255,255,.06); }
+  .persona-reset:hover { color: var(--fg); background: rgba(36,30,25,.05); }
   .persona-backdrop {
     position: fixed; inset: 0; z-index: 900;
-    background: rgba(0,0,0,.65); backdrop-filter: blur(6px);
+    background: rgba(36,30,25,.55); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center; padding: 24px;
   }
   .persona-modal {
-    background: var(--bg1); border: 1px solid rgba(255,255,255,.1);
+    background: var(--bg1); border: 1px solid rgba(36,30,25,.10);
     border-radius: 20px; padding: 36px; max-width: 560px; width: 100%;
     position: relative;
-    box-shadow: 0 24px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06);
+    box-shadow: 0 24px 80px rgba(36,30,25,.25);
   }
   .persona-close {
     position: absolute; top: 16px; right: 16px;
     width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(255,255,255,.08); border: none; cursor: pointer;
+    background: rgba(36,30,25,.06); border: none; cursor: pointer;
     font-size: 13px; color: var(--fg3);
     display: flex; align-items: center; justify-content: center;
     transition: background .15s, color .15s;
   }
-  .persona-close:hover { background: rgba(255,255,255,.14); color: var(--fg); }
+  .persona-close:hover { background: rgba(36,30,25,.12); color: var(--fg); }
   .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .persona-card {
     display: flex; flex-direction: column; gap: 4px;
     padding: 18px 16px; border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03);
+    border: 1px solid rgba(36,30,25,.10); background: var(--bg);
     cursor: pointer; text-align: left; font-family: inherit;
     transition: border-color .18s, background .18s, transform .18s, box-shadow .18s;
   }
   .persona-card:hover {
     border-color: var(--green); background: var(--bg2);
-    transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.4);
+    transform: translateY(-2px); box-shadow: 0 8px 24px rgba(36,30,25,.18);
   }
   .persona-icon  { font-size: 28px; margin-bottom: 4px; }
   .persona-title { font-size: 16px; font-weight: 700; color: var(--fg); letter-spacing: -.02em; }
@@ -757,14 +703,14 @@
   }
   .gate-modal {
     position: relative; background: var(--bg1);
-    border: 1px solid rgba(255,255,255,.1); border-radius: 20px;
+    border: 1px solid rgba(36,30,25,.10); border-radius: 20px;
     padding: 44px 40px 36px; max-width: 420px; width: 100%;
-    box-shadow: 0 24px 80px rgba(0,0,0,.5);
+    box-shadow: 0 24px 80px rgba(36,30,25,.22);
     animation: slideUp .22s cubic-bezier(0.16,1,0.3,1) both;
   }
   .gate-icon {
     width: 56px; height: 56px; border-radius: 14px;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    background: rgba(36,30,25,.05); border: 1px solid rgba(36,30,25,.10);
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 20px; color: var(--fg);
   }
@@ -773,12 +719,12 @@
   .gate-field { margin-bottom: 14px; }
   .gate-input {
     width: 100%; height: 50px; padding: 0 16px;
-    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14);
+    background: var(--bg); border: 1px solid rgba(36,30,25,.16);
     border-radius: 10px; color: var(--fg); font-size: 16px; font-family: inherit;
     outline: none; transition: border-color .15s, background .15s;
     -webkit-text-fill-color: var(--fg);
   }
-  .gate-input:focus { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); }
+  .gate-input:focus { border-color: var(--green); background: var(--bg); }
   .gate-input.err { border-color: var(--loss); }
   .gate-error { font-size: 12px; color: var(--loss); margin-top: 6px; }
   .gate-btn {
@@ -789,11 +735,11 @@
     display: flex; align-items: center; justify-content: center; gap: 8px;
     transition: background .15s, transform .1s;
   }
-  .gate-btn:hover:not(:disabled) { background: #d8d8d8; }
+  .gate-btn:hover:not(:disabled) { background: #3A2F26; }
   .gate-btn:active { transform: scale(0.98); }
   .gate-btn:disabled { opacity: .6; cursor: default; }
   .gate-spinner {
-    width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.25);
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.25);
     border-top-color: var(--bg); border-radius: 50%;
     animation: spin .7s linear infinite;
   }
@@ -801,11 +747,11 @@
   .gate-close {
     position: absolute; top: 16px; right: 16px;
     width: 32px; height: 32px; border-radius: 8px;
-    border: none; background: rgba(255,255,255,.08); color: var(--fg3);
+    border: none; background: rgba(36,30,25,.06); color: var(--fg3);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: background .15s, color .15s;
   }
-  .gate-close:hover { background: rgba(255,255,255,.14); color: var(--fg); }
+  .gate-close:hover { background: rgba(36,30,25,.12); color: var(--fg); }
 }
 
 /* ─── ANIMATIONS ─────────────────────────────────────────────────── */
@@ -907,7 +853,7 @@
   .card  { border-radius: 12px !important; padding: 16px !important; }
   .calc-sticky-cta {
     position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px;
-    background: rgba(10,10,10,.92); backdrop-filter: blur(12px);
+    background: rgba(250,246,239,.92); backdrop-filter: blur(12px);
     border-top: 1px solid var(--line); z-index: 100;
   }
   .fp-overlay { padding: 0; }

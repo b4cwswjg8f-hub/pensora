@@ -14,10 +14,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{color-scheme:dark;--bg:#000;--bg1:#0a0a0a;--bg2:#111;--line:#1c1c1c;--fg:#fafafa;--fg2:#a3a3a3;--fg3:#6b6b6b;--loss:#FF6B6B;--green:#b4c800;--rmd:12px;--rlg:18px;}
+:root{color-scheme:light;--bg:#FAF6EF;--bg1:#F1E9DD;--bg2:#ECE2D3;--line:rgba(36,30,25,.14);--fg:#241E19;--fg2:#5C5248;--fg3:#7A7166;--loss:#C0392B;--green:#b4c800;--rmd:12px;--rlg:18px;}
 html,body{min-height:100%;background:var(--bg);color:var(--fg);font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55;letter-spacing:-.01em}
 a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;border-bottom:1px solid var(--line);background:rgba(250,246,239,.86);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
 .brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:17px;letter-spacing:-.035em;color:var(--fg)}
 .btnp{height:44px;padding:0 22px;border-radius:999px;border:none;background:var(--green);color:#0A0A0A;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s,box-shadow .2s,transform .1s}
 .btnp:hover{background:#c4d900;box-shadow:0 0 20px rgba(180,200,0,.3)}
@@ -44,7 +44,7 @@ td:last-child,th:last-child{text-align:right}
 .faq-item:last-child{border-bottom:1px solid var(--line)}
 .faq-q{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
 .faq-a{font-size:14.5px;color:var(--fg2);line-height:1.65}
-.eyebrow{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:600;font-family:'Geist Mono',ui-monospace,monospace;margin-bottom:18px;padding:5px 12px;border-radius:999px;background:rgba(180,200,0,.1);border:1px solid rgba(180,200,0,.25)}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg);font-weight:600;font-family:'Geist Mono',ui-monospace,monospace;margin-bottom:18px;padding:5px 12px;border-radius:999px;background:rgba(180,200,0,.1);border:1px solid rgba(180,200,0,.25)}
 footer{border-top:1px solid var(--line);padding:40px 56px;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--fg3)}
 footer a{color:var(--fg3);margin-left:24px}
 @media(max-width:700px){.wrap{padding:40px 24px}h1{font-size:36px}.cta-box{flex-direction:column}.nav{padding:14px 24px}footer{flex-direction:column;gap:16px;padding:32px 24px}}
@@ -102,7 +102,7 @@ footer a{color:var(--fg3);margin-left:24px}
 
   <div class="cta-box" style="border-color:var(--green);background:rgba(180,200,0,.06)">
     <div>
-      <h2 style="color:var(--green)">Plan ahead, not in a crisis</h2>
+      <h2 style="color:var(--fg)">Plan ahead, not in a crisis</h2>
       <p>Estate and inheritance planning is easiest — and cheapest — done early, not after the fact. Let's talk through your situation.</p>
     </div>
     <div style="flex-shrink:0">
